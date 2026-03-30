@@ -7,6 +7,10 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    @media (max-width: 768px) {
+      .survey-layout { flex-direction: column !important; }
+      .vignette-sidebar { width: 100% !important; position: relative !important; top: auto !important; }
+    }
   </style>
 </head>
 <body>
@@ -618,130 +622,159 @@ const Card = ({ children, style={} }) =>
     boxShadow:"0 2px 12px rgba(27,43,94,0.07)", ...style }}, children);
 
 const PageWrap = ({ children }) =>
-  h('div', { style: { maxWidth:760, margin:"0 auto", padding:"40px 20px 80px" }}, children);
+  h('div', { style: { maxWidth:800, margin:"0 auto", padding:"40px 24px 80px" }}, children);
 
 const PrimaryBtn = ({ children, onClick, disabled }) =>
   h('button', { onClick, disabled,
     style: { background: disabled ? "#B0BAD0" : navy, color:white, border:"none",
-      borderRadius:10, padding:"14px 28px", fontSize:15, fontWeight:600,
+      borderRadius:10, padding:"16px 32px", fontSize:15, fontWeight:600,
       cursor: disabled ? "not-allowed" : "pointer", display:"block", width:"100%",
       fontFamily:ffs, letterSpacing:"0.01em", transition:"background 0.2s" }},
     children);
 
+// Scroll to top utility
+const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+
 // ─── CONSENT SCREEN ──────────────────────────────────────────────────────────
 function ConsentScreen({ onAgree }) {
+  const [agreed, setAgreed] = useState(false);
   const lang = useLang();
   const t = (en, ko) => T(en, ko, lang);
-  const [agreed, setAgreed] = useState(false);
 
-  const bp = { fontSize:13, color:txt, lineHeight:1.75, margin:"0 0 10px" };
-  const ulp = { fontSize:13, color:txt, lineHeight:1.75, margin:"6px 0 10px", paddingLeft:20 };
+  const bp = { fontSize:14, color:txt, lineHeight:1.8, margin:"0 0 12px" };
+  const ulp = { fontSize:14, color:txt, lineHeight:1.8, margin:"6px 0 12px", paddingLeft:22 };
 
   const sections = [
-    { n:"1", en:"Purpose of the Study", ko:"연구 목적",
-      body: t(
-        h('p', {style:bp}, "You are invited to participate in a research study examining how pediatric clinicians evaluate and modify AI-generated rubric frameworks for clinical history-taking. The study aims to understand variability among clinicians and the degree of alignment between clinician judgment and AI-generated rubrics."),
-        h('p', {style:bp}, "본 연구는 대규모 언어모델(LLM)이 생성한 임상 병력 청취 평가 루브릭 프레임워크를 소아 진료 전문가들이 어떻게 평가하고 수정하는지를 분석하기 위한 연구입니다.")
-      )},
-    { n:"2", en:"Procedures", ko:"연구 절차",
-      body: t(
-        h('div', null, h('p', {style:bp}, "If you agree to participate, you will complete an online survey reviewing rubric frameworks for five standardized pediatric emergency vignettes. The survey takes approximately 45–60 minutes."), h('ul', {style:ulp}, h('li', null, "A. Indicate whether each item should be included in the rubric."), h('li', null, "B. Rank items within each domain by importance."))),
-        h('div', null, h('p', {style:bp}, "연구 참여에 동의하시면 온라인 설문조사를 수행하게 됩니다. 약 45–60분이 소요됩니다."))
-      )},
-    { n:"3", en:"Voluntary Participation", ko:"자발적 참여",
-      body: t(
-        h('p', {style:bp}, "Your participation is entirely voluntary. You may withdraw at any time without penalty."),
-        h('p', {style:bp}, "본 연구 참여는 전적으로 자발적입니다.")
-      )},
-    { n:"4", en:"Risks", ko:"위험성",
-      body: t(
-        h('p', {style:bp}, "There are no foreseeable risks beyond the time required to complete the survey."),
-        h('p', {style:bp}, "본 연구 참여로 인한 위험은 설문 완료에 소요되는 시간 외에는 없습니다.")
-      )},
-    { n:"5", en:"Benefits", ko:"이익",
-      body: t(
-        h('p', {style:bp}, "There is no direct benefit to you, but findings may improve AI assessment frameworks in medical education."),
-        h('p', {style:bp}, "직접적인 개인적 이익은 없으나, 연구 결과는 의료 교육에서 AI 평가 프레임워크 개선에 기여할 수 있습니다.")
-      )},
-    { n:"6", en:"Confidentiality", ko:"비밀 보장",
-      body: t(
-        h('p', {style:bp}, "Your responses will be anonymized and stored securely. No identifying information will be collected."),
-        h('p', {style:bp}, "귀하의 응답은 익명으로 처리되어 안전하게 저장됩니다.")
-      )},
-    { n:"7", en:"Contact Information", ko:"연락처",
-      body: t(
-        h('p', {style:bp}, "For questions, contact PI Meong Hi Son, MD, Department of Emergency Medicine, Samsung Medical Center."),
-        h('p', {style:bp}, "문의사항은 PI 손명희 교수(삼성서울병원 응급의학과)에게 연락하십시오.")
-      )},
-    { n:"8", en:"Agreement", ko:"동의",
-      body: t(
-        h('p', {style:bp}, "By checking the box below, you confirm that you have read and understood this consent form, and agree to participate voluntarily."),
-        h('p', {style:bp}, "아래 확인란에 체크하여 이 동의서를 읽고 이해하였으며 자발적으로 참여에 동의함을 확인합니다.")
-      )},
+    { n:"1", en:"Purpose of the Study", ko:"연구 목적", body: t(
+      h('div', null,
+        h('p', {style:bp}, "You are invited to participate in a research study examining how pediatric clinicians evaluate and modify assessment rubric frameworks for clinical history-taking generated by large language models (LLMs)."),
+        h('p', {style:bp}, "The study aims to understand variability among clinicians and the degree of alignment between clinician judgment and AI-generated rubrics.")),
+      h('div', null,
+        h('p', {style:bp}, "본 연구는 대규모 언어모델(LLM)이 생성한 임상 병력 청취 평가 루브릭 프레임워크를 소아 진료 전문가들이 어떻게 평가하고 수정하는지를 분석하기 위한 연구입니다."),
+        h('p', {style:bp}, "본 연구의 목적은 의료진 간 평가 기준의 변이(variability)를 이해하고, 의료진의 판단과 AI가 생성한 루브릭 간의 정렬 정도(alignment)를 분석하는 것입니다.")))
+    },
+    { n:"2", en:"Procedures", ko:"연구 절차", body: t(
+      h('div', null,
+        h('p', {style:bp}, "If you agree to participate, you will complete an online survey. You will review rubric frameworks associated with five standardized pediatric emergency clinical vignettes. For each rubric, you will:"),
+        h('ul', {style:ulp},
+          h('li', null, "A. Indicate whether you agree that each item should be included in the rubric."),
+          h('li', null, "B. Rank the items within each domain in order of importance according to your clinical judgment.")),
+        h('p', {style:bp}, "The survey is expected to take approximately 45–60 minutes to complete.")),
+      h('div', null,
+        h('p', {style:bp}, "연구 참여에 동의하시면 온라인 설문조사를 수행하게 됩니다. 참여자는 소아 응급 상황을 기반으로 한 5개의 표준화된 임상 시나리오와 해당 시나리오에 대한 평가 루브릭을 검토하게 됩니다. 각 루브릭에 대해 다음을 수행합니다:"),
+        h('ul', {style:ulp},
+          h('li', null, "A. 해당 항목이 평가 기준에 포함되는 것이 적절한지 여부를 표시합니다."),
+          h('li', null, "B. 각 영역 내 항목을 임상적 판단에 따라 중요도 순서로 순위를 매겨 주십시오.")),
+        h('p', {style:bp}, "설문 완료에는 약 45–60분 정도가 소요될 것으로 예상됩니다.")))
+    },
+    { n:"3", en:"Voluntary Participation and Right to Withdraw", ko:"자발적 참여 및 철회 권리", body: t(
+      h('p', {style:bp}, "Your participation is entirely voluntary. You may choose not to participate or to withdraw from the study at any time without penalty or loss of benefits to which you are otherwise entitled."),
+      h('p', {style:bp}, "본 연구 참여는 전적으로 자발적입니다. 참여자는 언제든지 연구 참여를 거부하거나 중단할 수 있으며, 이에 따른 어떠한 불이익도 발생하지 않습니다."))
+    },
+    { n:"4", en:"Risks and Discomforts", ko:"예상되는 위험 및 불편", body: t(
+      h('p', {style:bp}, "There are no foreseeable physical or psychological risks associated with participation. The primary burden is the time required to complete the survey and potential survey fatigue."),
+      h('p', {style:bp}, "본 연구 참여로 인해 예상되는 신체적 또는 심리적 위험은 없습니다. 다만 설문 응답에 소요되는 시간으로 인해 일시적인 설문 피로(survey fatigue)가 발생할 수 있습니다."))
+    },
+    { n:"5", en:"Benefits", ko:"기대되는 이익", body: t(
+      h('p', {style:bp}, "There is no direct benefit to you from participating in this study. However, the findings may contribute to improving assessment frameworks and the responsible use of AI in medical education."),
+      h('p', {style:bp}, "본 연구 참여로 인한 직접적인 개인적 이익은 없습니다. 그러나 연구 결과는 의료 교육에서 AI 기반 평가 프레임워크 개선 및 책임 있는 AI 활용에 기여할 수 있습니다."))
+    },
+    { n:"6", en:"Confidentiality", ko:"개인정보 보호", body: t(
+      h('p', {style:bp}, "All data collected will be anonymized and stored securely. No personally identifiable information will be collected. Data will be used solely for the purposes of this research study and associated academic publications."),
+      h('p', {style:bp}, "수집된 모든 데이터는 익명으로 처리되어 안전하게 저장됩니다. 개인 식별 정보는 수집되지 않습니다. 데이터는 본 연구 및 관련 학술 발표 목적으로만 사용됩니다."))
+    },
+    { n:"7", en:"Questions", ko:"문의 사항", body: t(
+      h('p', {style:bp}, "If you have questions about this study, please contact the Principal Investigator: Meong Hi Son, MD, Department of Emergency Medicine, Samsung Medical Center, Seoul, Republic of Korea."),
+      h('p', {style:bp}, "연구에 관한 문의 사항이 있으시면 연구 책임자에게 연락하십시오: 손명희 교수, 삼성서울병원 응급의학과, 대한민국 서울."))
+    },
   ];
 
   return h(PageWrap, null,
-    h('div', {style:{textAlign:"center", padding:"48px 0 32px"}},
-      h('div', {style:{width:64, height:64, borderRadius:"50%", background:navyL,
+    // Header
+    h('div', {style:{textAlign:"center", padding:"48px 0 36px"}},
+      h('div', {style:{width:68, height:68, borderRadius:"50%", background:navyL,
         border:"2px solid "+navyBd, display:"flex", alignItems:"center",
-        justifyContent:"center", margin:"0 auto 20px"}},
-        h('svg', {width:28, height:28, viewBox:"0 0 24 24", fill:"none",
-          stroke:navy, strokeWidth:2, strokeLinecap:"round"},
+        justifyContent:"center", margin:"0 auto 24px"}},
+        h('svg', {width:30, height:30, viewBox:"0 0 24 24", fill:"none", stroke:navy,
+          strokeWidth:2, strokeLinecap:"round", strokeLinejoin:"round"},
           h('path', {d:"M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"}),
-          h('polyline', {points:"14 2 14 8 20 8"}))
-      ),
-      h('h1', {style:{fontSize:20, fontWeight:700, color:navy, margin:"0 0 6px", fontFamily:ff}},
+          h('polyline', {points:"14 2 14 8 20 8"}))),
+      h('h1', {style:{fontSize:22, fontWeight:700, color:navy, margin:"0 0 8px",
+        fontFamily:ff, lineHeight:1.4}},
         t("Evaluating AI-Generated Rubric Frameworks for Clinical History-Taking Assessment",
           "임상 병력 청취 평가를 위한 AI 생성 루브릭 프레임워크 평가")),
     ),
 
-    h(Card, {style:{padding:"28px 36px", marginBottom:24}},
-      h('div', {style:{background:navy, borderRadius:8, padding:"16px 20px", marginBottom:20}},
-        h('p', {style:{color:white, fontSize:13, fontWeight:600, margin:"0 0 6px"}},
+    h(Card, {style:{overflow:"hidden", marginBottom:28}},
+      // Navy header
+      h('div', {style:{background:navy, padding:"22px 32px"}},
+        h('p', {style:{color:white, fontSize:15, fontWeight:700, margin:"0 0 10px"}},
           t("Your clinical expertise matters — and so does this research.",
-            "귀하의 임상 전문성이 중요합니다.")),
-        h('p', {style:{color:"rgba(255,255,255,0.85)", fontSize:12, margin:0, lineHeight:1.6}},
-          t("As AI tools begin to shape clinical assessment, your judgments are essential. This study asks whether AI-generated rubrics reflect how expert clinicians actually think.",
-            "AI 도구가 임상 평가를 변화시키기 시작하면서, 귀하의 판단이 필수적입니다."))),
+            "귀하의 임상 전문성이 중요합니다 — 그리고 이 연구도 마찬가지입니다.")),
+        h('p', {style:{color:"rgba(255,255,255,0.85)", fontSize:13, margin:0, lineHeight:1.7}},
+          t("As AI tools begin to shape how clinical competence is assessed, the judgments of experienced pediatric clinicians like you are essential. This study asks a simple but important question: do AI-generated rubrics for clinical history-taking actually reflect how expert clinicians think?",
+            "AI 도구가 임상 역량 평가 방식을 변화시키기 시작하면서, 귀하와 같은 경험 있는 소아과 임상의의 판단이 필수적입니다."))),
 
-      h('div', {style:{display:"grid", gridTemplateColumns:"1fr 1fr", gap:0,
-        border:"1px solid "+cardBd, borderRadius:8, overflow:"hidden", marginBottom:20}},
-        h('div', {style:{padding:"16px 20px", borderRight:"1px solid "+cardBd}},
-          h('p', {style:{fontSize:10, fontWeight:700, color:muted, textTransform:"uppercase",
-            letterSpacing:"0.08em", margin:"0 0 4px"}}, t("PRINCIPAL INVESTIGATOR","연구 책임자")),
-          h('p', {style:{fontSize:13, fontWeight:700, color:navy, margin:"0 0 2px"}}, "Meong Hi Son, MD"),
-          h('p', {style:{fontSize:12, color:muted, margin:0}}, t("Department of Emergency Medicine, Samsung Medical Center","삼성서울병원 응급의학과"))),
-        h('div', {style:{padding:"16px 20px"}},
-          h('p', {style:{fontSize:10, fontWeight:700, color:muted, textTransform:"uppercase",
-            letterSpacing:"0.08em", margin:"0 0 4px"}}, t("STUDY TITLE","연구 제목")),
-          h('p', {style:{fontSize:12, color:txt, margin:0, lineHeight:1.5}},
-            t("Evaluating Human and AI Variability in Validating AI-Generated Rubric Frameworks",
-              "AI 생성 루브릭 프레임워크 검증에서의 인간과 AI 변이성 평가")))
+      // PI + Study title
+      h('div', {style:{display:"grid", gridTemplateColumns:"1fr 1fr",
+        borderBottom:"1px solid "+cardBd}},
+        h('div', {style:{padding:"18px 28px", borderRight:"1px solid "+cardBd}},
+          h('p', {style:{fontSize:10, fontWeight:700, color:muted,
+            textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 5px"}},
+            t("PRINCIPAL INVESTIGATOR","연구 책임자")),
+          h('p', {style:{fontSize:14, fontWeight:700, color:navy, margin:"0 0 3px"}}, "Meong Hi Son, MD"),
+          h('p', {style:{fontSize:13, color:muted, margin:0, lineHeight:1.5}},
+            t("Department of Emergency Medicine","응급의학과")),
+          h('p', {style:{fontSize:13, color:muted, margin:0}},
+            t("Samsung Medical Center","삼성서울병원"))),
+        h('div', {style:{padding:"18px 28px"}},
+          h('p', {style:{fontSize:10, fontWeight:700, color:muted,
+            textTransform:"uppercase", letterSpacing:"0.08em", margin:"0 0 5px"}},
+            t("STUDY TITLE","연구 제목")),
+          h('p', {style:{fontSize:13, color:txt, margin:0, lineHeight:1.6}},
+            t("Evaluating Human and AI Variability in Validating AI-Generated Rubric Frameworks for Clinical History-Taking Assessment",
+              "임상 병력 청취 평가를 위한 AI 생성 루브릭 프레임워크 검증에서 인간과 AI의 변이성 평가")))
       ),
 
-      sections.map(sec =>
-        h('div', {key:sec.n, style:{borderTop:"1px solid "+cardBd, paddingTop:16, marginTop:16}},
-          h('h3', {style:{fontSize:13, fontWeight:700, color:navy, margin:"0 0 8px"}},
-            t(sec.n+". "+sec.en, sec.n+". "+sec.ko)),
-          sec.body
+      // Sections
+      h('div', {style:{padding:"8px 28px 0"}},
+        sections.map(sec =>
+          h('div', {key:sec.n, style:{borderTop:"1px solid "+cardBd, paddingTop:20, marginTop:20}},
+            h('h3', {style:{fontSize:14, fontWeight:700, color:navy, margin:"0 0 12px"}},
+              t(sec.n+". "+sec.en, sec.n+". "+sec.ko)),
+            sec.body
+          )
         )
       ),
 
-      h('div', {style:{background:navyL, border:"1px solid "+navyBd, borderRadius:8,
-        padding:"14px 18px", marginTop:20}},
-        h('label', {style:{display:"flex", gap:12, alignItems:"flex-start", cursor:"pointer"}},
+      // Section 8 — Agreement (bottom of card)
+      h('div', {style:{padding:"24px 28px 28px", borderTop:"1px solid "+cardBd,
+        background:"#FAFBFD"}},
+        h('p', {style:{fontSize:14, fontWeight:700, color:navy, margin:"0 0 10px"}},
+          t("8. Consent Statement","8. 연구 참여 동의")),
+        h('p', {style:{fontSize:14, color:txt, lineHeight:1.7, margin:"0 0 10px"}},
+          t('By selecting "I agree to participate in this study" below, you confirm that:',
+            '아래 "본 연구 참여에 동의합니다"를 선택함으로써 다음 사항을 확인합니다:')),
+        h('ul', {style:{fontSize:14, color:txt, lineHeight:1.9, paddingLeft:22,
+          margin:"0 0 20px", listStyleType:"disc"}},
+          h('li', null, t("You have read and understood the information above.",
+            "위 설명을 읽고 이해하였습니다.")),
+          h('li', null, t("You voluntarily agree to participate in this study.",
+            "본 연구에 자발적으로 참여하는 것에 동의합니다."))
+        ),
+        h('label', {style:{display:"flex", alignItems:"flex-start", gap:12,
+          marginBottom:24, cursor:"pointer"}},
           h('input', {type:"checkbox", checked:agreed,
             onChange: e => setAgreed(e.target.checked),
-            style:{marginTop:2, accentColor:navy, width:16, height:16, flexShrink:0}}),
-          h('span', {style:{fontSize:13, color:txt, lineHeight:1.6}},
-            t("I agree to participate in this study",
-              "본 연구에 참여하는 것에 동의합니다"))
-        )
+            style:{marginTop:3, width:18, height:18, cursor:"pointer",
+              accentColor:navy, flexShrink:0}}),
+          h('span', {style:{fontSize:14, fontWeight:600, color:txt, lineHeight:1.5}},
+            t("I agree to participate in this study","본 연구 참여에 동의합니다"))
+        ),
+        h(PrimaryBtn, {onClick: () => { scrollTop(); onAgree(); }, disabled: !agreed},
+          t("Continue →","계속 →"))
       )
-    ),
-
-    h(PrimaryBtn, {onClick: onAgree, disabled: !agreed},
-      t("Continue to Instructions →", "지침으로 계속 →"))
+    )
   );
 }
 
@@ -751,51 +784,58 @@ function InstrScreen({ onStart }) {
   const t = (en, ko) => T(en, ko, lang);
 
   const steps = [
-    { num:1, en:"Read the clinical vignette", ko:"임상 시나리오 읽기" },
-    { num:2, en:"Part A — Review each rubric item and indicate Agree or Disagree", ko:"파트 A — 각 루브릭 항목 검토 후 동의/비동의 표시" },
-    { num:3, en:"Part B — Rank items within each domain by clinical importance", ko:"파트 B — 각 영역 내 항목을 임상 중요도에 따라 순위 지정" },
-    { num:4, en:"Submit your responses for each rubric before moving to the next", ko:"다음으로 넘어가기 전에 각 루브릭에 대한 응답 제출" },
+    { num:1, en:"Read the clinical vignette carefully, including vital signs and physical exam findings.",
+      ko:"활력징후 및 신체 검진 소견을 포함하여 임상 시나리오를 주의 깊게 읽으세요." },
+    { num:2, en:"Part A — For each rubric item, indicate whether you Agree or Disagree that it should be included. You may add optional comments for each item.",
+      ko:"파트 A — 각 루브릭 항목에 대해 포함되어야 한다고 동의하는지 비동의하는지 표시하세요. 각 항목에 선택적 의견을 추가할 수 있습니다." },
+    { num:3, en:"Part B — Rank the items within each domain in order of importance according to your clinical judgment.",
+      ko:"파트 B — 임상적 판단에 따라 각 영역 내 항목을 중요도 순서로 순위를 매기세요." },
+    { num:4, en:"Submit your responses for each rubric. You will then move on to the next rubric automatically.",
+      ko:"각 루브릭에 대한 응답을 제출하세요. 이후 자동으로 다음 루브릭으로 이동합니다." },
   ];
 
   return h(PageWrap, null,
-    h('div', {style:{textAlign:"center", marginBottom:32}},
-      h('h1', {style:{fontSize:22, fontWeight:700, color:navy, fontFamily:ff, marginBottom:8}},
+    h('div', {style:{textAlign:"center", marginBottom:36}},
+      h('h1', {style:{fontSize:24, fontWeight:700, color:navy, fontFamily:ff, marginBottom:10}},
         t("Instructions", "지침")),
-      h('p', {style:{fontSize:14, color:muted}},
-        t("Please read carefully before starting.", "시작하기 전에 주의 깊게 읽어주세요."))),
+      h('p', {style:{fontSize:15, color:muted, lineHeight:1.6}},
+        t("Please read carefully before starting the survey.",
+          "설문을 시작하기 전에 주의 깊게 읽어주세요."))),
 
-    h(Card, {style:{padding:"24px 32px", marginBottom:20}},
-      h('p', {style:{fontSize:13, fontWeight:700, color:navy, margin:"0 0 12px"}},
+    h(Card, {style:{padding:"22px 32px", marginBottom:20}},
+      h('p', {style:{fontSize:14, fontWeight:700, color:navy, margin:"0 0 10px"}},
         t("What you'll be reviewing:", "검토하실 내용:")),
-      h('p', {style:{fontSize:13, color:txt, lineHeight:1.7, margin:0}},
-        t("You will review 4 AI-generated rubric frameworks for each of 5 pediatric emergency cases (20 rubrics total). Each rubric is designed to assess clinical history-taking competency.",
-          "5개의 소아 응급 사례 각각에 대해 4개의 AI 생성 루브릭 프레임워크를 검토합니다 (총 20개의 루브릭)."))),
+      h('p', {style:{fontSize:14, color:txt, lineHeight:1.75, margin:0}},
+        t("You will review 4 AI-generated rubric frameworks for each of 5 pediatric emergency cases (20 rubrics total). Each rubric is designed to assess clinical history-taking competency in pediatric emergency settings.",
+          "5개의 소아 응급 사례 각각에 대해 4개의 AI 생성 루브릭 프레임워크를 검토합니다 (총 20개의 루브릭). 각 루브릭은 소아 응급 환경에서의 임상 병력 청취 역량을 평가하도록 설계되었습니다."))),
 
     steps.map(s =>
-      h(Card, {key:s.num, style:{padding:"16px 24px", marginBottom:12, display:"flex", gap:16, alignItems:"flex-start"}},
-        h('div', {style:{width:32, height:32, borderRadius:"50%", background:navyL,
+      h(Card, {key:s.num, style:{padding:"20px 28px", marginBottom:14,
+        display:"flex", gap:18, alignItems:"flex-start"}},
+        h('div', {style:{width:38, height:38, borderRadius:"50%", background:navyL,
           border:"2px solid "+navyBd, display:"flex", alignItems:"center",
-          justifyContent:"center", flexShrink:0}},
-          h('span', {style:{fontSize:13, fontWeight:700, color:navy}}, s.num)),
-        h('p', {style:{fontSize:13, color:txt, lineHeight:1.6, margin:0}},
-          t(s.en, s.ko))
+          justifyContent:"center", flexShrink:0, marginTop:1}},
+          h('span', {style:{fontSize:15, fontWeight:700, color:navy}}, s.num)),
+        h('p', {style:{fontSize:14, color:txt, lineHeight:1.7, margin:0}}, t(s.en, s.ko))
       )
     ),
 
-    h(Card, {style:{padding:"16px 20px", marginBottom:24,
+    h(Card, {style:{padding:"18px 24px", marginBottom:32,
       background:amberBg, border:"1px solid "+amberBd}},
-      h('div', {style:{display:"flex", gap:10, alignItems:"flex-start"}},
-        h('span', {style:{fontSize:16}}, "⚠"),
+      h('div', {style:{display:"flex", gap:12, alignItems:"flex-start"}},
+        h('div', {style:{width:30, height:30, borderRadius:"50%", background:amber,
+          display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0}},
+          h('span', {style:{color:white, fontSize:14, fontWeight:700}}, "!")),
         h('div', null,
-          h('p', {style:{fontSize:13, color:amber, fontWeight:700, margin:"0 0 4px"}},
-            t("Keep in mind", "참고하세요")),
-          h('ul', {style:{fontSize:12, color:amber, margin:0, paddingLeft:16, lineHeight:1.7}},
-            h('li', null, t("Base your judgments on your own clinical experience and expertise.",
-              "귀하의 임상 경험과 전문성을 바탕으로 판단하십시오.")),
+          h('p', {style:{fontSize:14, fontWeight:700, color:amber, margin:"0 0 8px"}},
+            t("Keep in mind","참고하세요")),
+          h('ul', {style:{fontSize:13, color:amber, margin:0, paddingLeft:18, lineHeight:1.8}},
+            h('li', null, t("Base your judgments on your own clinical experience and expertise, not on the AI's apparent intent.",
+              "AI의 명백한 의도가 아닌 귀하 자신의 임상 경험과 전문성을 바탕으로 판단하십시오.")),
             h('li', null, t("There are no right or wrong answers — we want your genuine expert opinion.",
               "정답이나 오답은 없습니다 — 귀하의 진정한 전문가 의견을 원합니다.")))))),
 
-    h(PrimaryBtn, {onClick: onStart},
+    h(PrimaryBtn, {onClick: () => { scrollTop(); onStart(); }},
       t("Begin Survey →", "설문 시작 →"))
   );
 }
@@ -810,17 +850,37 @@ function SurveyScreen({ caseData, rubric, ci, ri, totalR, doneR, isLast, onSubmi
   const [d1Order, setD1Order] = useState(() => [...rubric.d1].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
   const [d2Order, setD2Order] = useState(() => [...rubric.d2].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
   const [finalCmt, setFinalCmt] = useState("");
-  const [activeTab, setActiveTab] = useState("vignette");
 
   const pct = Math.round((doneR / totalR) * 100);
-  const allAnswered = Object.keys(partA).length === (rubric.d1.length + rubric.d2.length);
+  const totalItems = rubric.d1.length + rubric.d2.length;
+  const answeredItems = Object.keys(partA).length;
+  const allAnswered = answeredItems === totalItems;
+
+  // What comes next?
+  const nextLabel = () => {
+    const nr = ri + 1;
+    if (nr < caseData.rubrics.length) {
+      return t("Save & Continue to Case "+(ci+1)+", Rubric "+(nr+1)+" →",
+               "저장 후 사례 "+(ci+1)+", 기준표 "+(nr+1)+"로 →");
+    }
+    const nc = ci + 1;
+    if (nc < CASES.length) {
+      return t("Save & Continue to Case "+(nc+1)+" →",
+               "저장 후 사례 "+(nc+1)+"로 →");
+    }
+    return t("Submit All Responses ✓", "모든 응답 제출 ✓");
+  };
 
   const submit = () => {
     if (!allAnswered) {
-      alert(t("Please answer all items before submitting.", "제출 전 모든 항목에 답해주세요."));
+      alert(t(
+        "Please answer all " + totalItems + " items before submitting. (" + answeredItems + "/" + totalItems + " completed)",
+        "제출 전 모든 " + totalItems + "개 항목에 답해주세요. (" + answeredItems + "/" + totalItems + " 완료)"
+      ));
       return;
     }
     onSubmit(rubric.id, { partA, comments, d1Order, d2Order, finalCmt });
+    scrollTop();
   };
 
   const moveItem = (order, setOrder, idx, dir) => {
@@ -831,222 +891,292 @@ function SurveyScreen({ caseData, rubric, ci, ri, totalR, doneR, isLast, onSubmi
     setOrder(next);
   };
 
-  const domainPanel = (domain, items, order, setOrder) => {
-    const label = domain === 1
-      ? t("Domain 1: General History-Taking", "영역 1: 일반 병력 청취")
-      : t("Domain 2: Case-Specific Reasoning", "영역 2: 사례별 임상 추론");
-    const pts = domain === 1 ? rubric.d1pts : rubric.d2pts;
+  // Render rubric items for Part A
+  const partAItems = (items) =>
+    items.map((item, idx) => {
+      const ans = partA[item.id];
+      const raw = t(item.en, item.ko);
+      const col = raw.indexOf(":");
+      const lbl = col > -1 ? raw.slice(0, col) : raw;
+      const body = col > -1 ? raw.slice(col) : "";
+      return h('div', {key:item.id, style:{
+        padding:"20px 24px",
+        background: ans===true ? greenBg : ans===false ? redBg : white,
+        borderTop: idx > 0 ? "1px solid "+cardBd : "none",
+        transition:"background 0.2s"}},
+        // Item text
+        h('p', {style:{fontSize:14, color:txt, margin:"0 0 12px", lineHeight:1.7}},
+          h('strong', {style:{color:navy}}, lbl), body),
+        // Explanation box
+        h('div', {style:{
+          background: ans===true ? "#E6F5EE" : ans===false ? "#FAE8E8" : "#F4F6FA",
+          border:"1px solid "+(ans===true ? greenBd : ans===false ? redBd : cardBd),
+          borderRadius:8, padding:"10px 14px", marginBottom:14}},
+          h('p', {style:{fontSize:11, fontWeight:700,
+            color: ans===true ? green : ans===false ? red : muted,
+            textTransform:"uppercase", letterSpacing:"0.06em", margin:"0 0 4px"}},
+            t("Explanation","설명")),
+          h('p', {style:{fontSize:13,
+            color: ans===true ? "#1A4D2E" : ans===false ? "#5C1111" : "#4A5568",
+            lineHeight:1.6, margin:0}}, t(item.xEn, item.xKo))),
+        // Agree/Disagree buttons
+        h('div', {style:{display:"flex", gap:10}},
+          h('button', {
+            onClick: () => setPartA(p => ({...p, [item.id]: true})),
+            style:{flex:1, padding:"10px 0", borderRadius:8, fontSize:13, fontWeight:600,
+              border:"2px solid "+(ans===true ? green : cardBd),
+              background: ans===true ? greenBg : white,
+              color: ans===true ? green : muted,
+              cursor:"pointer", transition:"all 0.15s"}},
+            "✓ "+t("Agree","동의")),
+          h('button', {
+            onClick: () => setPartA(p => ({...p, [item.id]: false})),
+            style:{flex:1, padding:"10px 0", borderRadius:8, fontSize:13, fontWeight:600,
+              border:"2px solid "+(ans===false ? red : cardBd),
+              background: ans===false ? redBg : white,
+              color: ans===false ? red : muted,
+              cursor:"pointer", transition:"all 0.15s"}},
+            "✗ "+t("Disagree","비동의"))),
+        // Comment textarea - only show after answering
+        ans !== undefined && h('textarea', {
+          placeholder: t("Optional comment for this item...","이 항목에 대한 선택적 의견..."),
+          value: comments[item.id] || "",
+          onChange: e => setComments(c => ({...c, [item.id]: e.target.value})),
+          style:{width:"100%", marginTop:10, padding:"9px 12px", fontSize:13,
+            border:"1px solid "+cardBd, borderRadius:8, resize:"vertical",
+            fontFamily:ffs, boxSizing:"border-box", minHeight:56,
+            background:"rgba(255,255,255,0.8)"}})
+      );
+    });
 
-    return h('div', {style:{marginBottom:24}},
-      // Domain header
-      h('div', {style:{background:navyL, border:"1px solid "+navyBd, borderRadius:"10px 10px 0 0",
-        padding:"12px 18px", display:"flex", justifyContent:"space-between", alignItems:"center"}},
-        h('span', {style:{fontSize:13, fontWeight:700, color:navy}}, label),
-        h('span', {style:{fontSize:12, color:muted}}, pts + t(" pts", "점"))
-      ),
-
-      // Part A items
-      h('div', {style:{border:"1px solid "+cardBd, borderRadius:"0 0 10px 10px", overflow:"hidden"}},
-        items.map((item, idx) => {
-          const ans = partA[item.id];
-          const raw = t(item.en, item.ko);
-          const col = raw.indexOf(":");
-          const lbl = col > -1 ? raw.slice(0, col) : raw;
-          const body = col > -1 ? raw.slice(col) : "";
-          return h('div', {key:item.id, style:{
-            padding:"16px 18px",
-            background: ans===true ? greenBg : ans===false ? redBg : white,
-            borderTop: idx > 0 ? "1px solid "+cardBd : "none",
-            transition:"background 0.15s"}},
-            h('p', {style:{fontSize:13, color:txt, margin:"0 0 6px", lineHeight:1.6}},
-              h('strong', {style:{color:navy}}, lbl), body),
-            h('div', {style:{background: ans===true ? "#E6F5EE" : ans===false ? "#FAE8E8" : "#F4F6FA",
-              border:"1px solid "+(ans===true ? greenBd : ans===false ? redBd : cardBd),
-              borderRadius:6, padding:"8px 12px", marginBottom:12}},
-              h('p', {style:{fontSize:10, fontWeight:700,
-                color: ans===true ? green : ans===false ? red : muted,
-                textTransform:"uppercase", letterSpacing:"0.06em", margin:"0 0 3px"}},
-                t("Explanation","설명")),
-              h('p', {style:{fontSize:12, color: ans===true ? "#1A4D2E" : ans===false ? "#5C1111" : "#4A5568",
-                lineHeight:1.55, margin:0}},
-                t(item.xEn, item.xKo))
-            ),
-            h('div', {style:{display:"flex", gap:8}},
-              h('button', {
-                onClick: () => setPartA(p => ({...p, [item.id]: true})),
-                style:{flex:1, padding:"8px", borderRadius:6, fontSize:12, fontWeight:600,
-                  border:"2px solid "+(ans===true ? green : cardBd),
-                  background: ans===true ? greenBg : white, color: ans===true ? green : muted,
-                  cursor:"pointer", transition:"all 0.15s"}},
-                "✓ "+t("Agree","동의")),
-              h('button', {
-                onClick: () => setPartA(p => ({...p, [item.id]: false})),
-                style:{flex:1, padding:"8px", borderRadius:6, fontSize:12, fontWeight:600,
-                  border:"2px solid "+(ans===false ? red : cardBd),
-                  background: ans===false ? redBg : white, color: ans===false ? red : muted,
-                  cursor:"pointer", transition:"all 0.15s"}},
-                "✗ "+t("Disagree","비동의"))
-            ),
-            h('textarea', {
-              placeholder: t("Optional comment...","선택적 의견..."),
-              value: comments[item.id] || "",
-              onChange: e => setComments(c => ({...c, [item.id]: e.target.value})),
-              style:{width:"100%", marginTop:8, padding:"8px 10px", fontSize:12,
-                border:"1px solid "+cardBd, borderRadius:6, resize:"vertical",
-                fontFamily:ffs, boxSizing:"border-box", minHeight:52}})
-          );
-        })
-      ),
-
-      // Part B ranking
-      h('div', {style:{marginTop:16}},
-        h('p', {style:{fontSize:12, fontWeight:700, color:navy, margin:"0 0 8px"}},
-          t("Part B — Rank by importance (drag to reorder):",
-            "파트 B — 중요도에 따라 순위 지정:")),
-        order.map((id, idx) => {
-          const item = items.find(i => i.id === id);
-          if (!item) return null;
-          const raw = t(item.en, item.ko);
-          const col = raw.indexOf(":");
-          const lbl = col > -1 ? raw.slice(0, col) : raw;
-          return h('div', {key:id, style:{display:"flex", alignItems:"center", gap:8,
-            padding:"8px 12px", background:white, border:"1px solid "+cardBd,
-            borderRadius:6, marginBottom:6}},
-            h('span', {style:{fontSize:11, fontWeight:700, color:navyMid, minWidth:20}},
-              "#"+(idx+1)),
-            h('span', {style:{fontSize:12, color:txt, flex:1}}, lbl),
-            h('div', {style:{display:"flex", flexDirection:"column", gap:2}},
-              h('button', {onClick:()=>moveItem(order,setOrder,idx,-1),
-                disabled:idx===0,
-                style:{padding:"2px 8px", fontSize:10, border:"1px solid "+cardBd,
-                  borderRadius:4, background:white, cursor:"pointer",
-                  opacity:idx===0?0.3:1}}, "▲"),
-              h('button', {onClick:()=>moveItem(order,setOrder,idx,1),
-                disabled:idx===order.length-1,
-                style:{padding:"2px 8px", fontSize:10, border:"1px solid "+cardBd,
-                  borderRadius:4, background:white, cursor:"pointer",
-                  opacity:idx===order.length-1?0.3:1}}, "▼")
-            )
-          );
-        })
-      )
+  // Part B ranking for a domain
+  const partBRanking = (items, order, setOrder, domainLabel) =>
+    h('div', {style:{marginBottom:28}},
+      h('p', {style:{fontSize:13, fontWeight:700, color:navy, margin:"0 0 12px",
+        padding:"0 0 8px", borderBottom:"1px solid "+cardBd}},
+        domainLabel),
+      order.map((id, idx) => {
+        const item = items.find(i => i.id === id);
+        if (!item) return null;
+        const raw = t(item.en, item.ko);
+        const lbl = raw.indexOf(":") > -1 ? raw.slice(0, raw.indexOf(":")) : raw;
+        return h('div', {key:id, style:{
+          display:"flex", alignItems:"center", gap:12,
+          padding:"12px 16px", background:white,
+          border:"1px solid "+cardBd, borderRadius:8,
+          marginBottom:8, boxShadow:"0 1px 3px rgba(0,0,0,0.04)"}},
+          h('span', {style:{fontSize:12, fontWeight:700, color:navyMid,
+            minWidth:26, textAlign:"center", background:navyL,
+            borderRadius:6, padding:"3px 6px"}}, "#"+(idx+1)),
+          h('span', {style:{fontSize:13, color:txt, flex:1, lineHeight:1.5}}, lbl),
+          h('div', {style:{display:"flex", flexDirection:"column", gap:3}},
+            h('button', {onClick:()=>moveItem(order,setOrder,idx,-1), disabled:idx===0,
+              style:{padding:"2px 10px", fontSize:12, border:"1px solid "+cardBd,
+                borderRadius:5, background:white, cursor:"pointer",
+                opacity:idx===0?0.3:1, lineHeight:1.5}}, "▲"),
+            h('button', {onClick:()=>moveItem(order,setOrder,idx,1),
+              disabled:idx===order.length-1,
+              style:{padding:"2px 10px", fontSize:12, border:"1px solid "+cardBd,
+                borderRadius:5, background:white, cursor:"pointer",
+                opacity:idx===order.length-1?0.3:1, lineHeight:1.5}}, "▼"))
+        );
+      })
     );
-  };
+
+  const isD1Label = t("Domain 1: General History-Taking","영역 1: 일반 병력 청취");
+  const isD2Label = t("Domain 2: Case-Specific Diagnostic Reasoning","영역 2: 사례별 진단 추론");
 
   return h('div', {style:{background:pageBg, minHeight:"100vh", fontFamily:ffs}},
-    // Progress bar
+
+    // Top progress bar
+    h('div', {style:{height:4, background:navyBd}},
+      h('div', {style:{height:"100%", background:navy,
+        width:pct+"%", transition:"width 0.5s"}})),
+
+    // Sticky breadcrumb bar
     h('div', {style:{background:white, borderBottom:"1px solid "+cardBd,
-      padding:"12px 24px", position:"sticky", top:52, zIndex:90}},
-      h('div', {style:{maxWidth:760, margin:"0 auto"}},
-        h('div', {style:{display:"flex", justifyContent:"space-between",
-          alignItems:"center", marginBottom:6}},
-          h('span', {style:{fontSize:12, fontWeight:600, color:navy}},
-            t("Case "+(ci+1)+" / Rubric "+(ri+1),
-              "사례 "+(ci+1)+" / 기준표 "+(ri+1))),
-          h('span', {style:{fontSize:12, color:muted}}, doneR+" / "+totalR+" "+t("rubrics","기준표"))),
-        h('div', {style:{height:6, background:navyL, borderRadius:3, overflow:"hidden"}},
-          h('div', {style:{height:"100%", width:pct+"%", background:navyMid,
-            borderRadius:3, transition:"width 0.3s"}}))
-      )
+      padding:"10px 28px", position:"sticky", top:52, zIndex:90,
+      display:"flex", alignItems:"center", justifyContent:"space-between",
+      flexWrap:"wrap", gap:8}},
+      h('div', {style:{display:"flex", alignItems:"center", gap:8, flexWrap:"wrap"}},
+        h('span', {style:{fontSize:13, color:muted}},
+          t("Case "+(ci+1),"사례 "+(ci+1))),
+        h('span', {style:{color:muted}}, "›"),
+        h('span', {style:{fontSize:13, fontWeight:700, color:navy}},
+          t(rubric.label_en, rubric.label_ko)),
+        h('span', {style:{fontSize:12, color:muted}},
+          "("+t(caseData.en.split(":")[0].trim(), caseData.ko.split(":")[0].trim())+")")
+      ),
+      h('span', {style:{fontSize:12, color:muted}},
+        answeredItems+"/"+totalItems+" "+t("items","항목")+" • "+doneR+"/"+totalR+" "+t("rubrics","기준표"))
     ),
 
-    h('div', {style:{maxWidth:760, margin:"0 auto", padding:"24px 20px 80px"}},
-      // Tabs
-      h('div', {style:{display:"flex", gap:0, marginBottom:20, borderRadius:8,
-        overflow:"hidden", border:"1px solid "+cardBd}},
-        ["vignette","partA","partB"].map(tab =>
-          h('button', {key:tab, onClick:()=>setActiveTab(tab),
-            style:{flex:1, padding:"10px", fontSize:12, fontWeight:600,
-              border:"none", cursor:"pointer",
-              background: activeTab===tab ? navy : white,
-              color: activeTab===tab ? white : muted,
-              borderRight: tab!=="partB" ? "1px solid "+cardBd : "none"}},
-            tab==="vignette" ? t("Vignette","임상 시나리오") :
-            tab==="partA" ? t("Part A — Items","파트 A — 항목") :
-            t("Part B — Ranking","파트 B — 순위"))
+    // Two-column layout: sticky vignette LEFT + content RIGHT
+    h('div', {style:{maxWidth:1100, margin:"0 auto", padding:"24px 24px 80px",
+      display:"flex", gap:24, alignItems:"flex-start"}},
+
+      // LEFT: sticky vignette sidebar
+      h('div', {style:{width:340, flexShrink:0, position:"sticky", top:102}},
+        h(Card, {style:{padding:"20px 22px", marginBottom:16}},
+          h('h2', {style:{fontSize:14, fontWeight:700, color:navy, margin:"0 0 16px",
+            fontFamily:ff, lineHeight:1.5, borderBottom:"1px solid "+cardBd, paddingBottom:12}},
+            t(caseData.en, caseData.ko)),
+          caseData.vignette.rows.map((r,i) =>
+            h('div', {key:i, style:{
+              borderTop: i>0 ? "1px solid "+cardBd : "none",
+              padding:"10px 0"}},
+              h('p', {style:{fontSize:11, fontWeight:700, color:muted,
+                textTransform:"uppercase", letterSpacing:"0.04em", margin:"0 0 3px"}},
+                t(r.en, r.ko)),
+              h('p', {style:{fontSize:13, color:txt, lineHeight:1.6, margin:0}},
+                t(r.val_en, r.val_ko))
+            )
+          )
+        ),
+        h('div', {style:{display:"grid", gridTemplateColumns:"1fr", gap:12}},
+          h(Card, {style:{padding:"14px 16px"}},
+            h('p', {style:{fontSize:11, fontWeight:700, color:muted,
+              textTransform:"uppercase", letterSpacing:"0.06em", margin:"0 0 8px"}},
+              t("Vital Signs","활력 징후")),
+            caseData.vignette.vitals.map((v,i) =>
+              h('div', {key:i, style:{display:"flex", justifyContent:"space-between",
+                fontSize:12, padding:"4px 0",
+                borderTop: i>0 ? "1px solid "+cardBd : "none"}},
+                h('span', {style:{color:muted}}, t(v.en, v.ko)),
+                h('span', {style:{color:txt, fontWeight:500}}, t(v.val_en, v.val_ko)))
+            )
+          ),
+          h(Card, {style:{padding:"14px 16px"}},
+            h('p', {style:{fontSize:11, fontWeight:700, color:muted,
+              textTransform:"uppercase", letterSpacing:"0.06em", margin:"0 0 8px"}},
+              t("Physical Exam","신체 검진")),
+            caseData.vignette.exam.map((e,i) =>
+              h('div', {key:i, style:{fontSize:12, padding:"4px 0",
+                borderTop: i>0 ? "1px solid "+cardBd : "none"}},
+                h('span', {style:{color:muted, fontWeight:600}}, t(e.en, e.ko)+": "),
+                h('span', {style:{color:txt}}, t(e.val_en, e.val_ko)))
+            )
+          )
         )
       ),
 
-      // Vignette tab
-      activeTab==="vignette" && h('div', null,
-        h(Card, {style:{padding:"20px 24px", marginBottom:16}},
-          h('h2', {style:{fontSize:15, fontWeight:700, color:navy, margin:"0 0 12px", fontFamily:ff}},
-            t(caseData.en, caseData.ko)),
-          caseData.vignette.rows.map((r,i) =>
-            h('div', {key:i, style:{display:"flex", gap:0, borderTop:i>0?"1px solid "+cardBd:"none",
-              padding:"10px 0"}},
-              h('div', {style:{minWidth:140, fontSize:11, fontWeight:700, color:muted,
-                textTransform:"uppercase", paddingTop:2}}, t(r.en, r.ko)),
-              h('div', {style:{fontSize:13, color:txt, lineHeight:1.6}}, t(r.val_en, r.val_ko))
-            )
-          )
-        ),
-        h('div', {style:{display:"grid", gridTemplateColumns:"1fr 1fr", gap:12}},
-          h(Card, {style:{padding:"16px 20px"}},
-            h('p', {style:{fontSize:11, fontWeight:700, color:muted,
-              textTransform:"uppercase", margin:"0 0 8px"}}, t("Vital Signs","활력 징후")),
-            caseData.vignette.vitals.map((v,i) =>
-              h('div', {key:i, style:{display:"flex", justifyContent:"space-between",
-                fontSize:12, padding:"4px 0", borderTop:i>0?"1px solid "+cardBd:"none"}},
-                h('span', {style:{color:muted}}, t(v.en, v.ko)),
-                h('span', {style:{color:txt, fontWeight:500}}, t(v.val_en, v.val_ko))
-              )
-            )
-          ),
-          h(Card, {style:{padding:"16px 20px"}},
-            h('p', {style:{fontSize:11, fontWeight:700, color:muted,
-              textTransform:"uppercase", margin:"0 0 8px"}}, t("Physical Exam","신체 검진")),
-            caseData.vignette.exam.map((e,i) =>
-              h('div', {key:i, style:{fontSize:12, padding:"4px 0",
-                borderTop:i>0?"1px solid "+cardBd:"none"}},
-                h('span', {style:{color:muted, fontWeight:600}}, t(e.en, e.ko)+": "),
-                h('span', {style:{color:txt}}, t(e.val_en, e.val_ko))
-              )
-            )
-          )
-        ),
-        h('div', {style:{marginTop:16, textAlign:"right"}},
-          h('button', {onClick:()=>setActiveTab("partA"),
-            style:{background:navy, color:white, border:"none", borderRadius:8,
-              padding:"10px 20px", fontSize:13, fontWeight:600, cursor:"pointer"}},
-            t("Go to Part A →","파트 A로 →")))
-      ),
+      // RIGHT: rubric content
+      h('div', {style:{flex:1, minWidth:0}},
 
-      // Part A tab
-      activeTab==="partA" && h('div', null,
-        h(Card, {style:{padding:"16px 20px", marginBottom:16,
+        // Rubric header
+        h(Card, {style:{padding:"16px 22px", marginBottom:20,
           background:navyL, border:"1px solid "+navyBd}},
-          h('p', {style:{fontSize:12, fontWeight:700, color:navy, margin:"0 0 4px"}},
-            t("Rubric: "+rubric.label_en, "기준표: "+rubric.label_ko)),
-          h('p', {style:{fontSize:11, color:muted, margin:0}},
-            t("For each item below, indicate whether it should be included in the rubric.",
-              "아래 각 항목에 대해 루브릭에 포함되어야 하는지 표시하십시오."))
+          h('div', {style:{display:"flex", justifyContent:"space-between", alignItems:"center"}},
+            h('div', null,
+              h('p', {style:{fontSize:12, fontWeight:700, color:muted,
+                textTransform:"uppercase", letterSpacing:"0.06em", margin:"0 0 3px"}},
+                t("RUBRIC ASSESSMENT","루브릭 평가")),
+              h('p', {style:{fontSize:15, fontWeight:700, color:navy, margin:0}},
+                t(rubric.label_en, rubric.label_ko))),
+            h('div', {style:{textAlign:"right"}},
+              h('p', {style:{fontSize:11, color:muted, margin:"0 0 2px"}},
+                t("Total points","총 점수")),
+              h('p', {style:{fontSize:16, fontWeight:700, color:navyMid, margin:0}},
+                (rubric.d1pts + rubric.d2pts)+"pts"))
+          ),
+          // Threshold/rationale note
+          (rubric.threshold_en || rubric.rationale_en) &&
+            h('div', {style:{
+              background: rubric.threshold_en ? redBg : amberBg,
+              border:"1px solid "+(rubric.threshold_en ? redBd : amberBd),
+              borderRadius:8, padding:"10px 14px", marginTop:12,
+              fontSize:12, color: rubric.threshold_en ? red : amber, lineHeight:1.6}},
+              t(rubric.threshold_en || rubric.rationale_en,
+                rubric.threshold_ko || rubric.rationale_ko))
         ),
-        domainPanel(1, rubric.d1, d1Order, setD1Order),
-        domainPanel(2, rubric.d2, d2Order, setD2Order),
-        h('div', {style:{marginTop:16, textAlign:"right"}},
-          h('button', {onClick:()=>setActiveTab("partB"),
-            style:{background:navy, color:white, border:"none", borderRadius:8,
-              padding:"10px 20px", fontSize:13, fontWeight:600, cursor:"pointer"}},
-            t("Go to Part B →","파트 B로 →")))
-      ),
 
-      // Part B tab
-      activeTab==="partB" && h('div', null,
-        h(Card, {style:{padding:"16px 20px", marginBottom:16}},
-          h('p', {style:{fontSize:12, fontWeight:700, color:navy, margin:"0 0 4px"}},
-            t("Final Comments (optional)","최종 의견 (선택사항)")),
+        // ── PART A ──────────────────────────────────────────────────────────
+        h('div', {style:{marginBottom:32}},
+          h('div', {style:{display:"flex", alignItems:"center", gap:12, marginBottom:16}},
+            h('div', {style:{background:navy, color:white, borderRadius:6,
+              padding:"4px 10px", fontSize:12, fontWeight:700, flexShrink:0}},
+              t("Part A","파트 A")),
+            h('p', {style:{fontSize:13, color:muted, margin:0}},
+              t("Indicate whether each item should be included in the rubric",
+                "각 항목이 루브릭에 포함되어야 하는지 표시하십시오"))
+          ),
+
+          // Domain 1
+          h('div', {style:{marginBottom:24}},
+            h('div', {style:{background:navyL, border:"1px solid "+navyBd,
+              borderRadius:"10px 10px 0 0", padding:"12px 18px",
+              display:"flex", justifyContent:"space-between", alignItems:"center"}},
+              h('div', null,
+                h('span', {style:{fontSize:14, fontWeight:700, color:navy}}, isD1Label),
+                rubric.d1desc_en && h('p', {style:{fontSize:12, color:muted,
+                  margin:"3px 0 0", lineHeight:1.5}},
+                  t(rubric.d1desc_en, rubric.d1desc_ko))
+              ),
+              h('span', {style:{fontSize:12, fontWeight:700, color:navyMid,
+                flexShrink:0, marginLeft:12}},
+                rubric.d1pts+t(" pts"," 점"))
+            ),
+            h('div', {style:{border:"1px solid "+cardBd, borderTop:"none",
+              borderRadius:"0 0 10px 10px", overflow:"hidden"}},
+              partAItems(rubric.d1))
+          ),
+
+          // Domain 2
+          h('div', {style:{marginBottom:8}},
+            h('div', {style:{background:navyL, border:"1px solid "+navyBd,
+              borderRadius:"10px 10px 0 0", padding:"12px 18px",
+              display:"flex", justifyContent:"space-between", alignItems:"center"}},
+              h('div', null,
+                h('span', {style:{fontSize:14, fontWeight:700, color:navy}}, isD2Label),
+                rubric.d2desc_en && h('p', {style:{fontSize:12, color:muted,
+                  margin:"3px 0 0", lineHeight:1.5}},
+                  t(rubric.d2desc_en, rubric.d2desc_ko))
+              ),
+              h('span', {style:{fontSize:12, fontWeight:700, color:navyMid,
+                flexShrink:0, marginLeft:12}},
+                rubric.d2pts+t(" pts"," 점"))
+            ),
+            h('div', {style:{border:"1px solid "+cardBd, borderTop:"none",
+              borderRadius:"0 0 10px 10px", overflow:"hidden"}},
+              partAItems(rubric.d2))
+          )
+        ),
+
+        // ── PART B ──────────────────────────────────────────────────────────
+        h('div', {style:{marginBottom:28, padding:"24px",
+          background:white, border:"1px solid "+cardBd, borderRadius:12,
+          boxShadow:"0 2px 12px rgba(27,43,94,0.07)"}},
+          h('div', {style:{display:"flex", alignItems:"center", gap:12, marginBottom:20}},
+            h('div', {style:{background:navyMid, color:white, borderRadius:6,
+              padding:"4px 10px", fontSize:12, fontWeight:700, flexShrink:0}},
+              t("Part B","파트 B")),
+            h('p', {style:{fontSize:13, color:muted, margin:0}},
+              t("Rank items within each domain by clinical importance (use arrows)",
+                "임상 중요도에 따라 각 영역 내 항목 순위 지정 (화살표 사용)"))
+          ),
+          partBRanking(rubric.d1, d1Order, setD1Order,
+            t("Domain 1 — "+isD1Label.replace("Domain 1: ",""),
+              "영역 1 — "+isD1Label.replace("영역 1: ",""))),
+          partBRanking(rubric.d2, d2Order, setD2Order,
+            t("Domain 2 — "+isD2Label.replace("Domain 2: ",""),
+              "영역 2 — "+isD2Label.replace("영역 2: ","")))
+        ),
+
+        // Final comment
+        h(Card, {style:{padding:"20px 24px", marginBottom:20}},
+          h('p', {style:{fontSize:14, fontWeight:700, color:navy, margin:"0 0 10px"}},
+            t("Overall Comment on This Rubric (optional)","이 루브릭에 대한 전반적인 의견 (선택사항)")),
           h('textarea', {
-            placeholder: t("Any overall comments about this rubric?","이 루브릭에 대한 전반적인 의견이 있으신가요?"),
+            placeholder: t("Any overall comments or suggestions for improving this rubric?",
+              "이 루브릭 개선을 위한 전반적인 의견이나 제안이 있으신가요?"),
             value: finalCmt,
             onChange: e => setFinalCmt(e.target.value),
-            style:{width:"100%", padding:"10px 12px", fontSize:13, border:"1px solid "+cardBd,
-              borderRadius:8, resize:"vertical", fontFamily:ffs, boxSizing:"border-box",
-              minHeight:80}})
+            style:{width:"100%", padding:"12px 14px", fontSize:14,
+              border:"1px solid "+cardBd, borderRadius:8, resize:"vertical",
+              fontFamily:ffs, boxSizing:"border-box", minHeight:90}})
         ),
-        h(PrimaryBtn, {onClick: submit, disabled: !allAnswered},
-          isLast ? t("Submit All Responses ✓","모든 응답 제출 ✓") :
-                   t("Save & Continue →","저장 후 계속 →"))
+
+        h(PrimaryBtn, {onClick: submit, disabled: !allAnswered}, nextLabel())
       )
     )
   );
@@ -1090,48 +1220,51 @@ function DoneScreen({ responses }) {
   };
 
   return h(PageWrap, null,
-    h('div', {style:{textAlign:"center", padding:"48px 0 32px"}},
-      h('div', {style:{width:72, height:72, borderRadius:"50%",
+    h('div', {style:{textAlign:"center", padding:"56px 0 36px"}},
+      h('div', {style:{width:80, height:80, borderRadius:"50%",
         background:"linear-gradient(135deg,"+navy+","+navyMid+")",
-        margin:"0 auto 20px", display:"flex", alignItems:"center", justifyContent:"center"}},
-        h('svg', {width:32, height:32, viewBox:"0 0 24 24", fill:"none",
+        margin:"0 auto 24px", display:"flex", alignItems:"center", justifyContent:"center"}},
+        h('svg', {width:36, height:36, viewBox:"0 0 24 24", fill:"none",
           stroke:white, strokeWidth:2.5, strokeLinecap:"round", strokeLinejoin:"round"},
           h('path', {d:"M20 6L9 17l-5-5"}))),
-      h('h1', {style:{fontSize:22, fontWeight:700, color:navy, margin:"0 0 10px", fontFamily:ffs}},
+      h('h1', {style:{fontSize:26, fontWeight:700, color:navy, margin:"0 0 12px", fontFamily:ffs}},
         t("Survey Complete","설문 완료")),
-      h('p', {style:{fontSize:14, color:muted, margin:"0 auto", maxWidth:460, lineHeight:1.7}},
-        t("Thank you for your time and clinical expertise. Your responses will contribute directly to our research.",
-          "귀하의 시간과 임상 전문성에 감사드립니다. 귀하의 응답은 연구에 직접 기여할 것입니다."))
+      h('p', {style:{fontSize:15, color:muted, margin:"0 auto", maxWidth:500, lineHeight:1.75}},
+        t("Thank you for your time and clinical expertise. Your responses will contribute directly to our research on AI-generated rubric frameworks.",
+          "귀하의 시간과 임상 전문성에 감사드립니다. 귀하의 응답은 AI 생성 루브릭 프레임워크에 관한 연구에 직접 기여할 것입니다."))
     ),
-    h(Card, {style:{padding:"28px 32px"}},
-      h('p', {style:{fontSize:13, color:muted, textAlign:"center", margin:"0 0 20px"}},
-        t("Participant ID: "+pid, "참여자 ID: "+pid)),
+    h(Card, {style:{padding:"32px 36px"}},
+      h('p', {style:{fontSize:14, color:muted, textAlign:"center", margin:"0 0 24px"}},
+        t("Your Participant ID: "+pid, "참여자 ID: "+pid)),
 
-      status==="idle" && h('div', {style:{marginBottom:16}},
+      status==="idle" && h('div', {style:{marginBottom:20}},
         h(PrimaryBtn, {onClick:submit}, t("Submit Responses →","응답 제출 →"))),
 
-      status==="sending" && h('div', {style:{textAlign:"center", padding:"14px", marginBottom:16,
-        background:navyL, borderRadius:10, color:navy, fontSize:14, fontWeight:600}},
-        t("Submitting…","제출 중…")),
+      status==="sending" && h('div', {style:{textAlign:"center", padding:"16px", marginBottom:20,
+        background:navyL, borderRadius:10, color:navy, fontSize:15, fontWeight:600}},
+        t("Submitting your responses…","응답을 제출하는 중…")),
 
-      status==="success" && h('div', {style:{textAlign:"center", padding:"14px", marginBottom:16,
-        background:greenBg, border:"1px solid "+greenBd, borderRadius:10,
-        color:green, fontSize:14, fontWeight:600}},
-        "✓ "+t("Responses submitted successfully!","응답이 성공적으로 제출되었습니다!")),
+      status==="success" && h('div', {style:{textAlign:"center", padding:"20px", marginBottom:20,
+        background:greenBg, border:"1px solid "+greenBd, borderRadius:10}},
+        h('p', {style:{color:green, fontSize:16, fontWeight:700, margin:"0 0 6px"}},
+          "✓ "+t("Responses submitted successfully!","응답이 성공적으로 제출되었습니다!")),
+        h('p', {style:{color:green, fontSize:13, margin:0}},
+          t("Your data has been saved. Thank you for participating.",
+            "데이터가 저장되었습니다. 참여해 주셔서 감사합니다."))),
 
-      status==="error" && h('div', {style:{marginBottom:16}},
-        h('div', {style:{textAlign:"center", padding:"14px", marginBottom:12,
+      status==="error" && h('div', {style:{marginBottom:20}},
+        h('div', {style:{textAlign:"center", padding:"14px", marginBottom:14,
           background:redBg, border:"1px solid "+redBd, borderRadius:10,
           color:red, fontSize:13}},
-          t("Submission failed. Please download your responses.",
-            "제출에 실패했습니다. 응답을 다운로드해 주세요.")),
+          t("Submission failed. Please download your responses and email them to the research team.",
+            "제출에 실패했습니다. 응답을 다운로드하여 연구팀에 이메일로 보내주세요.")),
         h(PrimaryBtn, {onClick:submit}, t("Try Again","다시 시도"))),
 
-      h('div', {style:{borderTop:"1px solid "+cardBd, paddingTop:16, textAlign:"center"}},
-        h('p', {style:{fontSize:12, color:muted, margin:"0 0 10px"}},
-          t("Download a backup of your responses:","응답 백업 다운로드:")),
+      h('div', {style:{borderTop:"1px solid "+cardBd, paddingTop:20, textAlign:"center"}},
+        h('p', {style:{fontSize:13, color:muted, margin:"0 0 10px"}},
+          t("Download a backup copy of your responses:","응답 백업 사본 다운로드:")),
         h('a', {href:url, download:"rubric_responses_"+pid+".json",
-          style:{color:navyMid, fontSize:13, fontWeight:600, textDecoration:"underline"}},
+          style:{color:navyMid, fontSize:14, fontWeight:600, textDecoration:"underline"}},
           t("Download JSON backup","JSON 백업 다운로드")))
     )
   );
@@ -1163,22 +1296,29 @@ function App() {
     }
   }, [ci, ri, curCase]);
 
+  const t = (en, ko) => T(en, ko, lang);
+
   return h(LangCtx.Provider, {value:lang},
     h('div', {style:{minHeight:"100vh", background:pageBg, fontFamily:ffs}},
-      // Header
-      h('div', {style:{background:navy, padding:"0 28px", height:52, display:"flex",
-        alignItems:"center", justifyContent:"space-between", position:"sticky", top:0, zIndex:100}},
-        h('span', {style:{color:white, fontSize:15, fontWeight:600, letterSpacing:"0.01em"}},
-          "Evaluating AI-Generated Rubrics in Pediatric Emergency Cases"),
+      // Sticky header
+      h('div', {style:{background:navy, padding:"0 28px", height:52,
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+        position:"sticky", top:0, zIndex:100,
+        boxShadow:"0 2px 8px rgba(0,0,0,0.2)"}},
+        h('span', {style:{color:white, fontSize:14, fontWeight:600,
+          letterSpacing:"0.01em", flex:1, marginRight:16}},
+          t("Evaluating AI-Generated Rubrics in Pediatric Emergency Cases",
+            "소아 응급 환자 사례에서 AI 생성 루브릭 평가")),
         h('div', {style:{display:"flex", gap:4}},
           ["en","ko"].map(l =>
             h('button', {key:l, onClick:()=>setLang(l),
-              style:{padding:"5px 14px", borderRadius:6, border:"1px solid",
+              style:{padding:"5px 12px", borderRadius:6, border:"1px solid",
                 borderColor: lang===l ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
-                background: lang===l ? "rgba(255,255,255,0.15)" : "transparent",
-                color: lang===l ? white : "rgba(255,255,255,0.6)",
-                fontSize:13, fontWeight:600, cursor:"pointer", fontFamily:ffs}},
-              l==="en" ? "EN" : "한국어"))
+                background: lang===l ? "rgba(255,255,255,0.18)" : "transparent",
+                color: lang===l ? white : "rgba(255,255,255,0.65)",
+                fontSize:12, fontWeight:700, cursor:"pointer", fontFamily:ffs}},
+              l==="en" ? "EN" : "한국어")
+          )
         )
       ),
 
