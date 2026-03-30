@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #F0F3F8; margin: 0; }
+    .header { background: #1B2B5E; color: white; padding: 14px 28px; display: flex; justify-content: space-between; }
+    .card { background: white; border-radius: 12px; padding: 32px; max-width: 700px; margin: 40px auto; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .btn { background: #1B2B5E; color: white; border: none; border-radius: 10px; padding: 14px 28px; font-size: 15px; cursor: pointer; width: 100%; margin-top: 20px; }
+    .btn:disabled { background: #B0BAD0; cursor: not-allowed; }
+    label { display: flex; gap: 12px; align-items: center; cursor: pointer; font-size: 14px; }
+    h2 { color: #1B2B5E; margin-bottom: 16px; }
+    p { color: #4A5568; line-height: 1.7; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    const { useState, createElement: h } = React;
+
+    // SUPABASE CONFIG
+    const SUPABASE_URL = "https://qydinydhytepqptcvslb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5ZGlueWRoeXRlcHFwdGN2c2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Mjk0NTUsImV4cCI6MjA5MDQwNTQ1NX0.ZniqFMfctWHgbA4dJSlrvlFxWRcRfCrVuA9S3gjcA5o";
+
+    function App() {
+      const [step, setStep] = useState('consent'); // consent | survey | done
+      const [agreed, setAgreed] = useState(false);
+      const [status, setStatus] = useState('idle');
+      const pid = 'P-' + Math.random().toString(36).slice(2,8).toUpperCase();
+
+      const testSubmit = async () => {
+        setStatus('sending');
+        try {
+          const rows = [{
+            participant_id: pid,
+            case_no: 1, rubric_no: 1,
+            item_id: 'test-item-1',
+            agreed: true,
+            comment: 'test comment',
+            d1_ranking: 'item1 > item2',
+            d2_ranking: 'item3 > item4',
+            overall_comment: 'test submission from GitHub Pages'
+          }];
+          const res = await fetch(SUPABASE_URL + '/rest/v1/responses', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify(rows)
+          });
+          if (res.ok) setStatus('success');
+          else { const t = await res.text(); setStatus('error:' + t); }
+        } catch(e) { setStatus('error:' + e.message); }
+      };
+
+      if (step === 'consent') return h('div', null,
+        h('div', {className:'header'},
+          h('span', null, 'Evaluating AI-Generated Rubrics'),
+          h('button', {style:{background:'rgba(255,255,255,0.15)',color:'white',border:'1px solid rgba(255,255,255,0.5)',borderRadius:6,padding:'4px 12px',cursor:'pointer'}}, 'EN')
+        ),
+        h('div', {className:'card'},
+          h('h2', null, 'Informed Consent'),
+          h('p', null, 'You are invited to participate in a research study examining how pediatric clinicians evaluate AI-generated rubric frameworks.'),
+          h('p', null, 'The survey takes approximately 45-60 minutes to complete.'),
+          h('label', null,
+            h('input', {type:'checkbox', checked:agreed, onChange:e=>setAgreed(e.target.checked)}),
+            'I agree to participate in this study'
+          ),
+          h('button', {className:'btn', disabled:!agreed, onClick:()=>setStep('survey')}, 'Continue →')
+        )
+      );
+
+      if (step === 'survey') return h('div', null,
+        h('div', {className:'header'}, h('span', null, 'Evaluating AI-Generated Rubrics')),
+        h('div', {className:'card'},
+          h('h2', null, '🎉 Framework is working!'),
+          h('p', null, 'This confirms React renders correctly on GitHub Pages.'),
+          h('p', null, 'Now testing Supabase connection...'),
+          h('p', {style:{fontWeight:'bold', color:'#1B2B5E'}}, 'Participant ID: ' + pid),
+          status === 'idle' && h('button', {className:'btn', onClick:testSubmit}, 'Test Submit to Supabase →'),
+          status === 'sending' && h('p', {style:{color:'#2D4A8A'}}, 'Sending...'),
+          status === 'success' && h('div', null,
+            h('p', {style:{color:'green', fontWeight:'bold'}}, '✓ Data sent to Supabase successfully!'),
+            h('p', null, 'Check your Supabase Table Editor to see the row.')
+          ),
+          status.startsWith('error') && h('div', null,
+            h('p', {style:{color:'red'}}, '✗ Error: ' + status),
+            h('button', {className:'btn', onClick:testSubmit}, 'Try Again')
+          )
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+  </script>
+</body>
+</html>
