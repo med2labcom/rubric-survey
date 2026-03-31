@@ -3,17 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Evaluating AI-Generated Rubrics — Pediatric Emergency Cases</title>
+  <title>PREVIEW — Rubric Survey</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    #preview-bar {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+      background: #1B2B5E; color: white; padding: 8px 16px;
+      display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+      font-size: 12px; font-family: monospace;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+    }
+    #preview-bar span { color: rgba(255,255,255,0.6); margin-right: 4px; }
+    #preview-bar button {
+      padding: 4px 10px; background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3); border-radius: 4px;
+      color: white; cursor: pointer; font-size: 11px; font-family: monospace;
+    }
+    #preview-bar button:hover { background: rgba(255,255,255,0.25); }
+    #preview-bar button.active { background: #2D4A8A; border-color: white; }
   </style>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root" style="padding-bottom: 44px;"></div>
+  <div id="preview-bar">
+    <span>🔍 PREVIEW</span>
+    <button onclick="jumpTo(0)" id="btn-0">Consent</button>
+    <button onclick="jumpTo(1)" id="btn-1">Instructions</button>
+    <button onclick="jumpTo(2,0,0)" id="btn-c1r1">C1 R1</button>
+    <button onclick="jumpTo(2,0,1)" id="btn-c1r2">C1 R2</button>
+    <button onclick="jumpTo(2,0,2)" id="btn-c1r3">C1 R3</button>
+    <button onclick="jumpTo(2,0,3)" id="btn-c1r4">C1 R4</button>
+    <button onclick="jumpTo(2,1,0)" id="btn-c3r1">C3 R1</button>
+    <button onclick="jumpTo(2,2,0)" id="btn-c4r1">C4 R1</button>
+    <button onclick="jumpTo(2,3,0)" id="btn-c5r1">C5 R1</button>
+    <button onclick="jumpTo(3)" id="btn-done">Done Screen</button>
+    <span style="margin-left:8px; color:rgba(255,255,255,0.4)">No data sent to Supabase in preview mode</span>
+  </div>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <script>
+// Preview mode - intercept Supabase calls
+const SUPABASE_URL = "https://qydinydhytepqptcvslb.supabase.co";
+const SUPABASE_KEY = "PREVIEW_MODE";
+const _origFetch = window.fetch;
+window.fetch = (url, opts) => {
+  if (url && url.includes('supabase')) {
+    console.log('[PREVIEW] Blocked Supabase call:', url);
+    return Promise.resolve({ ok: true, text: () => Promise.resolve('') });
+  }
+  return _origFetch(url, opts);
+};
+
 
 const h = React.createElement;
 const { useState, useCallback, createContext, useContext } = React;
@@ -1345,7 +1386,101 @@ function App() {
 }
 
 
-ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+
+// Preview: expose jump function
+let _setStep, _setCi, _setRi;
+
+// Patch App to expose state setters
+const _OrigApp = App;
+function App() {
+  return _OrigApp();
+}
+
+// Use a global event to trigger navigation
+window._previewTarget = null;
+window.jumpTo = (step, ci=0, ri=0) => {
+  window._previewTarget = {step, ci, ri};
+  window.dispatchEvent(new CustomEvent('preview-jump'));
+  document.querySelectorAll('#preview-bar button').forEach(b => b.classList.remove('active'));
+  const map = {0:'btn-0',1:'btn-1',3:'btn-done'};
+  if (step===2) {
+    const key = `btn-c${[1,3,4,5][ci]}r${ri+1}`;
+    const el = document.getElementById(key);
+    if(el) el.classList.add('active');
+  } else if(map[step]) {
+    document.getElementById(map[step])?.classList.add('active');
+  }
+};
+
+// Wrap App to support preview jumps
+const PreviewApp = () => {
+  const [step, setStepR] = React.useState(0);
+  const [ci, setCiR] = React.useState(0);
+  const [ri, setRiR] = React.useState(0);
+  const [lang, setLang] = React.useState("en");
+  const [responses, setResponses] = React.useState({});
+
+  React.useEffect(() => {
+    const handler = () => {
+      const t = window._previewTarget;
+      if (t) { setStepR(t.step); setCiR(t.ci); setRiR(t.ri); window._previewTarget = null; }
+    };
+    window.addEventListener('preview-jump', handler);
+    return () => window.removeEventListener('preview-jump', handler);
+  }, []);
+
+  const totalR = CASES.reduce((s,c)=>s+c.rubrics.length, 0);
+  const doneR = CASES.slice(0,ci).reduce((s,c)=>s+c.rubrics.length, 0) + ri;
+  const curCase = CASES[ci];
+  const curRubric = curCase ? curCase.rubrics[ri] : null;
+
+  const advance = React.useCallback((id, data) => {
+    setResponses(r => ({...r, [id]: data}));
+    const nr = ri + 1;
+    if (nr < curCase.rubrics.length) { setRiR(nr); }
+    else {
+      const nc = ci + 1;
+      if (nc < CASES.length) { setCiR(nc); setRiR(0); }
+      else { setStepR(3); }
+    }
+  }, [ci, ri, curCase]);
+
+  const STEP = {CONSENT:0, INSTR:1, SURVEY:2, DONE:3};
+  const h = React.createElement;
+
+  return h(LangCtx.Provider, {value:lang},
+    h('div', {style:{minHeight:"100vh", background:pageBg, fontFamily:ffs}},
+      h('div', {style:{background:navy, padding:"0 28px", height:52,
+        display:"flex", alignItems:"center", justifyContent:"space-between",
+        position:"sticky", top:0, zIndex:100}},
+        h('span', {style:{color:"white", fontSize:14, fontWeight:600}},
+          T("Evaluating AI-Generated Rubrics in Pediatric Emergency Cases",
+            "소아 응급 환자 사례에서 AI 생성 루브릭 평가", lang)),
+        h('div', {style:{display:"flex", gap:4}},
+          ["en","ko"].map(l =>
+            h('button', {key:l, onClick:()=>setLang(l),
+              style:{padding:"5px 12px", borderRadius:6, border:"1px solid",
+                borderColor: lang===l ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.3)",
+                background: lang===l ? "rgba(255,255,255,0.18)" : "transparent",
+                color: lang===l ? "white" : "rgba(255,255,255,0.65)",
+                fontSize:12, fontWeight:700, cursor:"pointer"}},
+              l==="en" ? "EN" : "한국어"))
+        )
+      ),
+      step===0 && h(ConsentScreen, {onAgree:()=>setStepR(1)}),
+      step===1 && h(InstrScreen, {onStart:()=>setStepR(2)}),
+      step===2 && curRubric && h(SurveyScreen, {key:curRubric.id,
+        caseData:curCase, rubric:curRubric,
+        ci, ri, totalR, doneR, isLast:doneR+1>=totalR, onSubmit:advance}),
+      step===3 && h(DoneScreen, {responses})
+    )
+  );
+};
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(PreviewApp));
+
+// Auto-highlight consent on load
+document.getElementById('btn-0').classList.add('active');
   </script>
 </body>
 </html>
