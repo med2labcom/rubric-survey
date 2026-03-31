@@ -58,8 +58,6 @@ window.fetch = (url, opts) => {
 
 const h = React.createElement;
 const { useState, useCallback, createContext, useContext } = React;
-const SUPABASE_URL = "https://qydinydhytepqptcvslb.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5ZGlueWRoeXRlcHFwdGN2c2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Mjk0NTUsImV4cCI6MjA5MDQwNTQ1NX0.ZniqFMfctWHgbA4dJSlrvlFxWRcRfCrVuA9S3gjcA5o";
 
 const LangCtx = createContext("en");
 const useLang = () => useContext(LangCtx);
