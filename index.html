@@ -1740,7 +1740,7 @@ function DoneScreen({ responses, preSubmitState }) {
           "Authorization":"Bearer "+SUPABASE_KEY,"Prefer":"return=minimal"},
         body:JSON.stringify(rows)
       });
-      if(res.ok) setStatus("success");
+      if(res.ok) { setStatus("success"); try{localStorage.removeItem(LS_KEY);}catch(e){} }
       else { console.error(await res.text()); setStatus("error"); }
     } catch(e){ console.error(e); setStatus("error"); }
   };
@@ -1803,18 +1803,31 @@ function DoneScreen({ responses, preSubmitState }) {
 }
 
 // ─── MAIN APP ────────────────────────────────────────────────────────────────
+const LS_KEY = "rubric_survey_session_v1";
+
 function App() {
-  const [lang, setLang] = useState("en");
-  const [step, setStep] = useState("consent");
-  const [ci, setCi] = useState(0);
-  const [ri, setRi] = useState(0);
-  const [partAData, setPartAData] = useState(null);
-  const [responses, setResponses] = useState({});
+  // ── Restore from localStorage if available ──────────────────────────────
+  const saved = (() => { try { const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null; } catch(e){return null;} })();
+
+  const [lang, setLang] = useState(saved?.lang || "en");
+  const [step, setStep] = useState(saved?.step || "consent");
+  const [ci, setCi] = useState(saved?.ci || 0);
+  const [ri, setRi] = useState(saved?.ri || 0);
+  const [partAData, setPartAData] = useState(saved?.partAData || null);
+  const [responses, setResponses] = useState(saved?.responses || {});
 
   const totalR = CASES.reduce((s,c)=>s+c.rubrics.length,0);
   const doneR  = CASES.slice(0,ci).reduce((s,c)=>s+c.rubrics.length,0)+ri;
   const curCase   = CASES[ci];
   const curRubric = curCase ? curCase.rubrics[ri] : null;
+
+  // ── Autosave to localStorage on every state change ──────────────────────
+  React.useEffect(() => {
+    if (step === "consent") return; // don't save before they start
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({lang,step,ci,ri,partAData,responses}));
+    } catch(e) {}
+  }, [lang, step, ci, ri, partAData, responses]);
 
   const goPartB = useCallback((aData)=>{ setPartAData(aData); setStep("partB"); scrollTop(); },[]);
   const submitRubric = useCallback((id,data)=>{
