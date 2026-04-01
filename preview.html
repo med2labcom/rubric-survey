@@ -1412,14 +1412,14 @@ function InstrScreen({ onStart }) {
         t("An AI was given 5 pediatric emergency case vignettes and asked to generate assessment rubrics for evaluating a clinician's history-taking performance. You will review whether the AI's rubric items are appropriate and how they should be ranked in importance.",
           "4개의 소아 응급 사례 각각에 대해 4개의 AI 생성 루브릭 프레임워크 (총 16개). 각 루브릭은 두 파트로 구성됩니다: 항목 평가(파트 A)와 항목 순위 매기기(파트 B)."))),
     steps.map(s =>
-      h(Card,{key:s.num,style:{padding:"18px 24px",marginBottom:12,display:"flex",gap:18,alignItems:"flex-start"}},
-        h('div',{style:{width:32,height:32,borderRadius:"50%",background:navy,color:white,
+      h(Card,{key:s.num,style:{padding:"16px 20px",marginBottom:10,display:"flex",gap:16,alignItems:"flex-start"}},
+        h('div',{style:{width:30,height:30,borderRadius:"50%",background:navy,
           display:"flex",alignItems:"center",
-          justifyContent:"center",flexShrink:0,marginTop:2}},
-          h('span',{style:{fontSize:14,fontWeight:700,color:white}},s.num)),
+          justifyContent:"center",flexShrink:0,marginTop:1}},
+          h('span',{style:{fontSize:13,fontWeight:700,color:white,fontFamily:ffs}},s.num)),
         h('div',null,
-          h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:"0 0 5px"}},t(s.en,s.ko)),
-          h('p',{style:{fontSize:13,color:muted,lineHeight:1.6,margin:0}},t(s.descEn,s.descKo))))
+          h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:"0 0 4px",lineHeight:1.4}},t(s.en,s.ko)),
+          h('p',{style:{fontSize:13,color:txt,lineHeight:1.65,margin:0}},t(s.descEn,s.descKo))))
     ),
     h(Card,{style:{padding:"18px 24px",marginBottom:32,background:amberBg,border:"1px solid "+amberBd}},
       h('div',{style:{display:"flex",gap:12,alignItems:"flex-start"}},
@@ -1889,6 +1889,11 @@ window.pjump = function(step, ci, ri) {
   if(ids[step]){var el=document.getElementById(ids[step]);if(el)el.classList.add('on');}
 };
 
+// Inline layout — does not depend on const SL (defined after App in shared)
+var PvLayout = function(p) {
+  return h('div',{style:{maxWidth:1140,margin:'0 auto',padding:'28px 24px 80px',display:'flex',gap:24,alignItems:'flex-start'}},p.children);
+};
+
 function PreviewApp() {
   var useState=React.useState, useCallback=React.useCallback, useEffect=React.useEffect;
   var _l=useState('en'); var lang=_l[0],setLang=_l[1];
@@ -1960,9 +1965,9 @@ function PreviewApp() {
       h(StickyHeader,{lang:lang,setLang:setLang,doneR:doneR,totalR:totalR,breadcrumb:breadcrumb}),
       step==='consent'&&h(ConsentScreen,{onAgree:function(){setStep('instr');scrollTop();}}),
       step==='instr'&&h(InstrScreen,{onStart:function(){setStep('partA');scrollTop();}}),
-      step==='partA'&&curRubric&&h(SL,null,h(PartAScreen,{key:'A-'+curRubric.id,
+      step==='partA'&&curRubric&&h(PvLayout,null,h(PartAScreen,{key:'A-'+curRubric.id,
         caseData:curCase,rubric:curRubric,ci:ci,ri:ri,doneR:doneR,totalR:totalR,onNext:goPartB})),
-      step==='partB'&&curRubric&&h(SL,null,h(PartBScreen,{key:'B-'+curRubric.id,
+      step==='partB'&&curRubric&&h(PvLayout,null,h(PartBScreen,{key:'B-'+curRubric.id,
         caseData:curCase,rubric:curRubric,ci:ci,ri:ri,doneR:doneR,totalR:totalR,
         isLast:doneR+1>=totalR,onSubmit:submitRubric,partAData:partAData})),
       step==='done'&&doneEl
