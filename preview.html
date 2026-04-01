@@ -1,42 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>PREVIEW — Rubric Survey</title>
-  <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;padding-bottom:46px}
-    #pb{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1B2B5E;color:white;
-      padding:7px 14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;
-      font-size:12px;font-family:monospace;box-shadow:0 -2px 8px rgba(0,0,0,0.3);}
-    #pb span{color:rgba(255,255,255,0.5);}
-    #pb button{padding:4px 9px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);
-      border-radius:4px;color:white;cursor:pointer;font-size:11px;font-family:monospace;}
-    #pb button:hover{background:rgba(255,255,255,0.22);}
-    #pb button.on{background:#2D4A8A;border-color:rgba(255,255,255,0.7);}
-  </style>
-</head>
-<body>
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PREVIEW — Rubric Survey</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;padding-bottom:46px}
+#pb{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1B2B5E;
+  color:white;padding:7px 14px;display:flex;gap:5px;align-items:center;
+  flex-wrap:wrap;font-size:12px;font-family:monospace;
+  box-shadow:0 -2px 8px rgba(0,0,0,0.3);}
+#pb span{color:rgba(255,255,255,0.45);}
+#pb button{padding:4px 8px;background:rgba(255,255,255,0.10);
+  border:1px solid rgba(255,255,255,0.2);border-radius:4px;
+  color:white;cursor:pointer;font-size:11px;font-family:monospace;}
+#pb button:hover{background:rgba(255,255,255,0.2);}
+#pb button.on{background:#2D4A8A;border-color:rgba(255,255,255,0.7);}
+#pb .sep{color:rgba(255,255,255,0.2);margin:0 2px;}
+</style>
+</head><body>
 <div id="root"></div>
 <div id="pb">
-  <span>&#x1F50D; PREVIEW</span>
-  <button id='b0' onclick="pjump('consent')">Consent</button>
-  <button id='b1' onclick="pjump('instr')">Instructions</button>
-  <button id='b2' onclick="pjump('partA',0,0)">C1-R1 Part A</button>
-  <button id='b3' onclick="pjump('partB',0,0)">C1-R1 Part B</button>
-  <button id='b4' onclick="pjump('partA',0,2)">C1-R3 Part A</button>
-  <button id='b5' onclick="pjump('partA',1,0)">C3-R1 Part A</button>
-  <button id='b6' onclick="pjump('partA',2,0)">C4-R1 Part A</button>
-  <button id='b7' onclick="pjump('partA',3,0)">C5-R1 Part A</button>
-  <button id='b8' onclick="pjump('done')">Done Screen</button>
-  <span style='margin-left:8px'>Supabase blocked in preview</span>
+  <span>&#x1F50D;</span>
+  <button id="b0" onclick="pjump('consent')">Consent</button>
+  <button id="b1" onclick="pjump('instr')">Instructions</button>
+  <span class="sep">|</span>
+  <button onclick="pjump('partA',0,0)">C1-R1 A</button>
+  <button onclick="pjump('partB',0,0)">C1-R1 B</button>
+  <button onclick="pjump('partA',0,1)">C1-R2 A</button>
+  <button onclick="pjump('partB',0,1)">C1-R2 B</button>
+  <button onclick="pjump('partA',0,3)">C1-R4 A</button>
+  <span class="sep">|</span>
+  <button onclick="pjump('partA',1,0)">C3-R1 A</button>
+  <button onclick="pjump('partA',2,0)">C4-R1 A</button>
+  <button onclick="pjump('partA',3,0)">C5-R1 A</button>
+  <span class="sep">|</span>
+  <button id="b_dp" onclick="pjump('done_pre')">Done (pre-submit)</button>
+  <button id="b_ds" onclick="pjump('done_post')">Done (submitted ✓)</button>
+  <span style="margin-left:6px">Supabase blocked</span>
 </div>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script>
-const _f=window.fetch;
-window.fetch=function(url,o){if(url&&url.includes('supabase')){return Promise.resolve({ok:true,text:function(){return Promise.resolve('');}});}return _f(url,o);};
+const _f=window.fetch;window.fetch=function(url,o){if(url&&url.includes('supabase')){return Promise.resolve({ok:true,text:function(){return Promise.resolve('');}});}return _f(url,o);};
 const h = React.createElement;
 const { useState, useCallback, createContext, useContext } = React;
 const SUPABASE_URL = "https://qydinydhytepqptcvslb.supabase.co";
@@ -635,11 +640,7 @@ const CASES = [
   },
 ];
 
-// ─── DESIGN TOKENS (must match what's in survey_v4.jsx header) ───────────────
-// navy, navyMid, navyL, navyBd, white, pageBg, cardBd, txt, muted,
-// green, greenBg, greenBd, red, redBg, redBd, amber, amberBg, amberBd, ffs
-
-// ─── SHARED ──────────────────────────────────────────────────────────────────
+// ─── SHARED COMPONENTS ───────────────────────────────────────────────────────
 const Card = ({ children, style={} }) =>
   h('div', { style:{ background:white, border:"1px solid "+cardBd, borderRadius:12,
     boxShadow:"0 2px 12px rgba(27,43,94,0.07)", ...style }}, children);
@@ -657,23 +658,15 @@ const PrimaryBtn = ({ children, onClick, disabled, style:extra={} }) =>
 
 const scrollTop = () => window.scrollTo({top:0, behavior:'smooth'});
 
-// ─── TOP PROGRESS BAR ────────────────────────────────────────────────────────
-// Rendered inside sticky header, shows overall rubric progress
-const ProgressStrip = ({ done, total }) => {
-  const pct = Math.round((done/total)*100);
-  return h('div', {style:{height:3, background:"rgba(255,255,255,0.2)"}},
-    h('div', {style:{height:"100%", background:"rgba(255,255,255,0.85)",
-      width:pct+"%", transition:"width 0.6s ease"}}));
-};
-
 // ─── STICKY HEADER ───────────────────────────────────────────────────────────
-const StickyHeader = ({ lang, setLang, doneR, totalR, breadcrumb }) =>
-  h('div', {style:{position:"sticky", top:0, zIndex:100,
-    boxShadow:"0 2px 8px rgba(0,0,0,0.18)"}},
-    // Main bar
+const StickyHeader = ({ lang, setLang, doneR, totalR, breadcrumb }) => {
+  const pct = totalR > 0 ? (doneR / totalR) * 100 : 0;
+  return h('div', {style:{position:"sticky", top:0, zIndex:100,
+    boxShadow:"0 2px 8px rgba(0,0,0,0.15)"}},
+    // Navy title bar
     h('div', {style:{background:navy, padding:"0 28px", height:50,
       display:"flex", alignItems:"center", justifyContent:"space-between"}},
-      h('span', {style:{color:white, fontSize:13, fontWeight:600,
+      h('span', {style:{color:white, fontSize:14, fontWeight:600,
         flex:1, marginRight:12, whiteSpace:"nowrap", overflow:"hidden",
         textOverflow:"ellipsis"}},
         T("Evaluating AI-Generated Rubrics — Pediatric EM",
@@ -689,15 +682,21 @@ const StickyHeader = ({ lang, setLang, doneR, totalR, breadcrumb }) =>
             l==="en"?"EN":"한국어"))
       )
     ),
-    // Progress bar
-    h(ProgressStrip, {done:doneR, total:totalR}),
-    // Breadcrumb (only when surveying)
-    breadcrumb && h('div', {style:{background:"#162452", padding:"7px 28px",
-      display:"flex", alignItems:"center", justifyContent:"space-between"}},
-      h('span', {style:{fontSize:13, color:"rgba(255,255,255,0.8)"}}, breadcrumb),
-      h('span', {style:{fontSize:12, color:"rgba(255,255,255,0.5)"}},
-        doneR+"/"+totalR+" "+T("rubrics","기준표", lang)))
+    // Progress bar — thin clean line
+    h('div', {style:{background:"#CBD5E1", height:3}},
+      h('div', {style:{height:"100%", background:navyMid,
+        width:pct+"%", transition:"width 0.6s ease"}})
+    ),
+    // Breadcrumb — light background, high contrast
+    breadcrumb && h('div', {style:{background:"#F1F5F9", borderBottom:"1px solid #E2E8F0",
+      padding:"7px 28px", display:"flex", alignItems:"center",
+      justifyContent:"space-between"}},
+      h('span', {style:{fontSize:13, color:navy, fontWeight:600}}, breadcrumb),
+      h('span', {style:{fontSize:12, color:muted}},
+        doneR+" / "+totalR+" "+T("rubrics","기준표", lang))
+    )
   );
+};
 
 // ─── CONSENT SCREEN ──────────────────────────────────────────────────────────
 function ConsentScreen({ onAgree }) {
@@ -754,9 +753,9 @@ function ConsentScreen({ onAgree }) {
 
   return h(PageWrap, null,
     h('div',{style:{textAlign:"center", padding:"48px 0 36px"}},
-      h('div',{style:{width:68, height:68, borderRadius:"50%", background:navyL,
-        border:"2px solid "+navyBd, display:"flex", alignItems:"center",
-        justifyContent:"center", margin:"0 auto 24px"}},
+      h('div',{style:{width:68,height:68,borderRadius:"50%",background:navyL,
+        border:"2px solid "+navyBd,display:"flex",alignItems:"center",
+        justifyContent:"center",margin:"0 auto 24px"}},
         h('svg',{width:30,height:30,viewBox:"0 0 24 24",fill:"none",stroke:navy,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round"},
           h('path',{d:"M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"}),
           h('polyline',{points:"14 2 14 8 20 8"}))),
@@ -770,7 +769,7 @@ function ConsentScreen({ onAgree }) {
           t("Your clinical expertise matters — and so does this research.",
             "귀하의 임상 전문성이 중요합니다 — 그리고 이 연구도 마찬가지입니다.")),
         h('p',{style:{color:"rgba(255,255,255,0.85)",fontSize:14,margin:0,lineHeight:1.7}},
-          t("As AI tools begin to shape how clinical competence is assessed, the judgments of experienced pediatric clinicians like you are essential. This study asks a simple but important question: do AI-generated rubrics for clinical history-taking actually reflect how expert clinicians think?",
+          t("As AI tools begin to shape how clinical competence is assessed, the judgments of experienced pediatric clinicians like you are essential.",
             "AI 도구가 임상 역량 평가 방식을 변화시키기 시작하면서, 귀하와 같은 경험 있는 소아과 임상의의 판단이 필수적입니다."))),
       h('div',{style:{display:"grid",gridTemplateColumns:"1fr 1fr",borderBottom:"1px solid "+cardBd}},
         h('div',{style:{padding:"18px 28px",borderRight:"1px solid "+cardBd}},
@@ -792,7 +791,6 @@ function ConsentScreen({ onAgree }) {
             sec.body)
         )
       ),
-      // Section 8
       h('div',{style:{padding:"24px 28px 28px",borderTop:"1px solid "+cardBd,background:"#FAFBFD"}},
         h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:"0 0 10px"}},
           t("8. Consent Statement","8. 연구 참여 동의")),
@@ -821,27 +819,27 @@ function InstrScreen({ onStart }) {
   const lang = useLang();
   const t = (en,ko) => T(en,ko,lang);
   const steps = [
-    {num:1,en:"Read the clinical vignette carefully, including vital signs and physical exam findings.",ko:"활력징후 및 신체 검진 소견을 포함하여 임상 시나리오를 주의 깊게 읽으세요."},
-    {num:2,en:"Part A — For each rubric item, indicate whether you Agree or Disagree that it should be included. You may add an optional comment for each item.",ko:"파트 A — 각 루브릭 항목에 대해 포함되어야 한다고 동의하는지 비동의하는지 표시하세요. 각 항목에 선택적 의견을 추가할 수 있습니다."},
-    {num:3,en:"Part B — Rank the items within each domain by dragging them or using the arrow buttons.",ko:"파트 B — 항목을 드래그하거나 화살표 버튼을 사용하여 각 영역 내 항목을 중요도 순서로 순위를 매기세요."},
-    {num:4,en:"Submit your responses for each rubric to proceed to the next one.",ko:"각 루브릭에 대한 응답을 제출하세요. 이후 다음 루브릭으로 이동합니다."},
+    {num:1,en:"Read the clinical vignette carefully — including vital signs and physical exam findings.",ko:"활력징후 및 신체 검진 소견을 포함하여 임상 시나리오를 주의 깊게 읽으세요."},
+    {num:2,en:"Part A — For each rubric item, indicate whether you Agree or Disagree that it should be included. You may add an optional comment per item.",ko:"파트 A — 각 루브릭 항목에 대해 포함되어야 한다고 동의하는지 비동의하는지 표시하세요. 각 항목에 선택적 의견을 추가할 수 있습니다."},
+    {num:3,en:"Part B — Rank the items within each domain by dragging or using the arrow buttons.",ko:"파트 B — 항목을 드래그하거나 화살표 버튼을 사용하여 각 영역 내 항목을 중요도 순서로 순위를 매기세요."},
+    {num:4,en:"After Part B, continue to the next rubric. Repeat for all rubrics.",ko:"파트 B 완료 후 다음 루브릭으로 계속 진행하세요. 모든 루브릭에 대해 반복합니다."},
   ];
   return h(PageWrap, null,
     h('div',{style:{textAlign:"center",marginBottom:36}},
       h('h1',{style:{fontSize:24,fontWeight:700,color:navy,fontFamily:ffs,marginBottom:10}},t("Instructions","지침")),
-      h('p',{style:{fontSize:15,color:muted,lineHeight:1.6}},t("Please read carefully before starting the survey.","설문을 시작하기 전에 주의 깊게 읽어주세요."))),
+      h('p',{style:{fontSize:15,color:muted,lineHeight:1.6}},t("Please read carefully before starting.","시작 전에 주의 깊게 읽어주세요."))),
     h(Card,{style:{padding:"22px 32px",marginBottom:20}},
       h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:"0 0 10px"}},t("What you'll be reviewing:","검토하실 내용:")),
       h('p',{style:{fontSize:14,color:txt,lineHeight:1.8,margin:0}},
-        t("You will review 4 AI-generated rubric frameworks for each of 4 pediatric emergency cases (16 rubrics total). Each rubric assesses clinical history-taking competency.",
-          "4개의 소아 응급 사례 각각에 대해 4개의 AI 생성 루브릭 프레임워크를 검토합니다 (총 16개의 루브릭). 각 루브릭은 임상 병력 청취 역량을 평가합니다."))),
+        t("4 AI-generated rubric frameworks for each of 4 pediatric emergency cases — 16 rubrics in total. Each rubric has two parts: rating items (Part A) and ranking them (Part B).",
+          "4개의 소아 응급 사례 각각에 대해 4개의 AI 생성 루브릭 프레임워크 (총 16개). 각 루브릭은 두 파트로 구성됩니다: 항목 평가(파트 A)와 항목 순위 매기기(파트 B)."))),
     steps.map(s =>
-      h(Card,{key:s.num,style:{padding:"20px 28px",marginBottom:12,display:"flex",gap:18,alignItems:"flex-start"}},
-        h('div',{style:{width:38,height:38,borderRadius:"50%",background:navyL,
+      h(Card,{key:s.num,style:{padding:"18px 24px",marginBottom:12,display:"flex",gap:18,alignItems:"flex-start"}},
+        h('div',{style:{width:36,height:36,borderRadius:"50%",background:navyL,
           border:"2px solid "+navyBd,display:"flex",alignItems:"center",
-          justifyContent:"center",flexShrink:0,marginTop:1}},
-          h('span',{style:{fontSize:15,fontWeight:700,color:navy}},s.num)),
-        h('p',{style:{fontSize:14,color:txt,lineHeight:1.75,margin:0,paddingTop:8}},t(s.en,s.ko)))
+          justifyContent:"center",flexShrink:0,marginTop:2}},
+          h('span',{style:{fontSize:14,fontWeight:700,color:navy}},s.num)),
+        h('p',{style:{fontSize:14,color:txt,lineHeight:1.75,margin:0,paddingTop:6}},t(s.en,s.ko)))
     ),
     h(Card,{style:{padding:"18px 24px",marginBottom:32,background:amberBg,border:"1px solid "+amberBd}},
       h('div',{style:{display:"flex",gap:12,alignItems:"flex-start"}},
@@ -849,8 +847,8 @@ function InstrScreen({ onStart }) {
         h('div',null,
           h('p',{style:{fontSize:14,fontWeight:700,color:"#92400e",margin:"0 0 6px"}},t("Keep in mind","참고하세요")),
           h('ul',{style:{fontSize:14,color:"#78350f",margin:0,paddingLeft:18,lineHeight:1.8}},
-            h('li',null,t("Base your judgments on your own clinical experience — not the AI's apparent intent.","AI의 명백한 의도가 아닌 귀하 자신의 임상 경험을 바탕으로 판단하십시오.")),
-            h('li',null,t("There are no right or wrong answers — we want your genuine expert opinion.","정답이나 오답은 없습니다 — 귀하의 진정한 전문가 의견을 원합니다.")))))),
+            h('li',null,t("Base your judgments on your clinical experience — not the AI's apparent intent.","AI의 명백한 의도가 아닌 귀하 자신의 임상 경험을 바탕으로 판단하십시오.")),
+            h('li',null,t("There are no right or wrong answers.","정답이나 오답은 없습니다.")))))),
     h(PrimaryBtn,{onClick:()=>{scrollTop();onStart();}},t("Begin Survey →","설문 시작 →"))
   );
 }
@@ -859,46 +857,41 @@ function InstrScreen({ onStart }) {
 function VignetteSidebar({ caseData }) {
   const lang = useLang();
   const t = (en,ko) => T(en,ko,lang);
-  // Sidebar height: viewport minus sticky header (50px bar + 3px strip + 33px breadcrumb = ~90px) minus some padding
-  return h('div',{style:{width:340,flexShrink:0,position:"sticky",top:90,
-    maxHeight:"calc(100vh - 110px)",display:"flex",flexDirection:"column",gap:12}},
+  return h('div',{style:{width:336,flexShrink:0,position:"sticky",top:90}},
     h(Card,{style:{overflow:"hidden",display:"flex",flexDirection:"column",
-      maxHeight:"calc(100vh - 110px)"}},
-      h('div',{style:{padding:"14px 18px",borderBottom:"1px solid "+cardBd,
+      maxHeight:"calc(100vh - 106px)"}},
+      h('div',{style:{padding:"12px 16px",borderBottom:"1px solid "+cardBd,
         background:navyL,flexShrink:0}},
-        h('p',{style:{fontSize:13,fontWeight:700,color:navy,margin:0,lineHeight:1.45}},
+        h('p',{style:{fontSize:13,fontWeight:700,color:navy,margin:0,lineHeight:1.4}},
           t(caseData.en, caseData.ko))),
-      // Scrollable vignette content
-      h('div',{style:{overflowY:"auto",flex:1,padding:"4px 0"}},
+      h('div',{style:{overflowY:"auto",flex:1}},
         caseData.vignette.rows.map((r,i) =>
-          h('div',{key:i,style:{padding:"10px 18px",
-            borderBottom:"1px solid "+cardBd}},
-            h('p',{style:{fontSize:11,fontWeight:700,color:muted,
-              textTransform:"uppercase",letterSpacing:"0.04em",margin:"0 0 3px"}},
+          h('div',{key:i,style:{padding:"9px 16px",borderBottom:"1px solid "+cardBd}},
+            h('p',{style:{fontSize:12,fontWeight:700,color:muted,
+              textTransform:"uppercase",letterSpacing:"0.04em",margin:"0 0 2px"}},
               t(r.en,r.ko)),
-            h('p',{style:{fontSize:13,color:txt,lineHeight:1.65,margin:0}},
+            h('p',{style:{fontSize:13,color:txt,lineHeight:1.6,margin:0}},
               t(r.val_en,r.val_ko)))
         ),
-        h('div',{style:{padding:"10px 18px",borderBottom:"1px solid "+cardBd}},
-          h('p',{style:{fontSize:11,fontWeight:700,color:muted,
-            textTransform:"uppercase",letterSpacing:"0.04em",margin:"0 0 8px"}},
+        h('div',{style:{padding:"9px 16px",borderBottom:"1px solid "+cardBd}},
+          h('p',{style:{fontSize:12,fontWeight:700,color:muted,
+            textTransform:"uppercase",letterSpacing:"0.04em",margin:"0 0 6px"}},
             t("Vital Signs","활력 징후")),
           caseData.vignette.vitals.map((v,i) =>
             h('div',{key:i,style:{display:"flex",justifyContent:"space-between",
-              fontSize:13,padding:"3px 0",
+              alignItems:"flex-start",fontSize:13,padding:"3px 0",
               borderTop:i>0?"1px solid "+cardBd:"none"}},
-              h('span',{style:{color:muted}},t(v.en,v.ko)),
-              h('span',{style:{color:txt,fontWeight:500,textAlign:"right",maxWidth:"55%"}},
-                t(v.val_en,v.val_ko)))
+              h('span',{style:{color:muted,flexShrink:0,marginRight:8}},t(v.en,v.ko)),
+              h('span',{style:{color:txt,fontWeight:500,textAlign:"right"}},t(v.val_en,v.val_ko)))
           )
         ),
-        h('div',{style:{padding:"10px 18px"}},
-          h('p',{style:{fontSize:11,fontWeight:700,color:muted,
-            textTransform:"uppercase",letterSpacing:"0.04em",margin:"0 0 8px"}},
+        h('div',{style:{padding:"9px 16px"}},
+          h('p',{style:{fontSize:12,fontWeight:700,color:muted,
+            textTransform:"uppercase",letterSpacing:"0.04em",margin:"0 0 6px"}},
             t("Physical Exam","신체 검진")),
           caseData.vignette.exam.map((e,i) =>
             h('div',{key:i,style:{fontSize:13,padding:"3px 0",
-              borderTop:i>0?"1px solid "+cardBd:"none"}},
+              borderTop:i>0?"1px solid "+cardBd:"none",lineHeight:1.5}},
               h('span',{style:{color:muted,fontWeight:600}},t(e.en,e.ko)+": "),
               h('span',{style:{color:txt}},t(e.val_en,e.val_ko)))
           )
@@ -909,34 +902,31 @@ function VignetteSidebar({ caseData }) {
 }
 
 // ─── PART A SCREEN ───────────────────────────────────────────────────────────
-function PartAScreen({ caseData, rubric, ci, ri, totalR, doneR, onNext }) {
+function PartAScreen({ caseData, rubric, onNext }) {
   const lang = useLang();
   const t = (en,ko) => T(en,ko,lang);
   const [partA, setPartA] = useState({});
   const [comments, setComments] = useState({});
 
-  const totalItems = rubric.d1.length + rubric.d2.length;
+  const allItems = [...rubric.d1, ...rubric.d2];
+  const totalItems = allItems.length;
   const answeredItems = Object.keys(partA).length;
   const allAnswered = answeredItems === totalItems;
-
-  const setAns = (id, val) => setPartA(p=>({...p,[id]:val}));
-  const setCmt = (id, val) => setComments(c=>({...c,[id]:val}));
 
   const ItemRow = ({item, idx, showTop}) => {
     const ans = partA[item.id];
     const raw = t(item.en, item.ko);
-    const col = raw.indexOf(".");  // "Item 1. Chief Complaint..."
-    const lbl = col>-1 ? raw.slice(0,col+1) : raw;
-    const body = col>-1 ? raw.slice(col+1) : "";
+    // Split on first period to get "Item N." label and rest of text
+    const dotIdx = raw.indexOf(". ");
+    const lbl = dotIdx > -1 ? raw.slice(0, dotIdx+1) : raw;
+    const body = dotIdx > -1 ? " " + raw.slice(dotIdx+2) : "";
     return h('div',{style:{
-      padding:"20px 24px",
-      borderTop: showTop?"1px solid "+cardBd:"none",
-      background: ans===true?greenBg : ans===false?redBg : white,
+      padding:"20px 22px",
+      borderTop: showTop ? "1px solid "+cardBd : "none",
+      background: ans===true ? greenBg : ans===false ? redBg : white,
       transition:"background 0.18s"}},
-      // Item text
       h('p',{style:{fontSize:14,color:txt,lineHeight:1.75,margin:"0 0 14px"}},
         h('strong',{style:{color:navy}},lbl), body),
-      // Explanation
       h('div',{style:{
         background: ans===true?"#dcfce7" : ans===false?"#fee2e2" : "#F0F4FA",
         border:"1px solid "+(ans===true?greenBd:ans===false?redBd:cardBd),
@@ -947,27 +937,23 @@ function PartAScreen({ caseData, rubric, ci, ri, totalR, doneR, onNext }) {
           t("Explanation","설명")),
         h('p',{style:{fontSize:13,color:ans===true?"#14532d":ans===false?"#4c0519":"#374151",
           lineHeight:1.65,margin:0}},t(item.xEn,item.xKo))),
-      // Agree / Disagree
-      h('div',{style:{display:"flex",gap:10,marginBottom: ans!==undefined?12:0}},
-        h('button',{onClick:()=>setAns(item.id,true),
+      h('div',{style:{display:"flex",gap:10,marginBottom:ans!==undefined?12:0}},
+        h('button',{onClick:()=>setPartA(p=>({...p,[item.id]:true})),
           style:{flex:1,padding:"11px 0",borderRadius:8,fontSize:14,fontWeight:600,
             border:"2px solid "+(ans===true?green:cardBd),
-            background:ans===true?greenBg:white,
-            color:ans===true?green:muted,
+            background:ans===true?greenBg:white,color:ans===true?green:muted,
             cursor:"pointer",transition:"all 0.15s"}},
           "✓ "+t("Agree","동의")),
-        h('button',{onClick:()=>setAns(item.id,false),
+        h('button',{onClick:()=>setPartA(p=>({...p,[item.id]:false})),
           style:{flex:1,padding:"11px 0",borderRadius:8,fontSize:14,fontWeight:600,
             border:"2px solid "+(ans===false?red:cardBd),
-            background:ans===false?redBg:white,
-            color:ans===false?red:muted,
+            background:ans===false?redBg:white,color:ans===false?red:muted,
             cursor:"pointer",transition:"all 0.15s"}},
           "✗ "+t("Disagree","비동의"))),
-      // Comment (only after answering)
       ans!==undefined && h('textarea',{
         placeholder:t("Optional comment for this item…","이 항목에 대한 선택적 의견…"),
         value:comments[item.id]||"",
-        onChange:e=>setCmt(item.id,e.target.value),
+        onChange:e=>setComments(c=>({...c,[item.id]:e.target.value})),
         style:{width:"100%",padding:"9px 12px",fontSize:14,
           border:"1px solid "+cardBd,borderRadius:8,resize:"vertical",
           fontFamily:ffs,boxSizing:"border-box",minHeight:60,
@@ -983,8 +969,8 @@ function PartAScreen({ caseData, rubric, ci, ri, totalR, doneR, onNext }) {
         h('div',{style:{flex:1}},
           h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:"0 0 3px"}},label),
           desc && h('p',{style:{fontSize:13,color:muted,margin:0,lineHeight:1.5}},desc)),
-        h('span',{style:{fontSize:13,fontWeight:700,color:navyMid,
-          flexShrink:0,marginLeft:12,marginTop:1}},pts+t(" pts"," 점"))),
+        h('span',{style:{fontSize:13,fontWeight:700,color:navyMid,flexShrink:0,marginLeft:12,marginTop:2}},
+          pts+t(" pts"," 점"))),
       h('div',{style:{border:"1px solid "+cardBd,borderTop:"none",
         borderRadius:"0 0 10px 10px",overflow:"hidden"}},
         items.map((item,idx)=>h(ItemRow,{key:item.id,item,idx,showTop:idx>0})))
@@ -994,61 +980,44 @@ function PartAScreen({ caseData, rubric, ci, ri, totalR, doneR, onNext }) {
   const d2label = t("Domain 2: Case-Specific Diagnostic Reasoning","영역 2: 사례별 진단 추론");
 
   return h('div',{style:{flex:1,minWidth:0}},
-    // Rubric header
     h(Card,{style:{padding:"16px 22px",marginBottom:20,background:navyL,border:"1px solid "+navyBd}},
       h('div',{style:{display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:12}},
         h('div',null,
           h('p',{style:{fontSize:12,fontWeight:700,color:muted,textTransform:"uppercase",
             letterSpacing:"0.06em",margin:"0 0 4px"}},t("RUBRIC","루브릭")),
-          h('p',{style:{fontSize:16,fontWeight:700,color:navy,margin:0}},
+          h('p',{style:{fontSize:16,fontWeight:700,color:navy,margin:"0 0 4px"}},
             t(rubric.label_en,rubric.label_ko)+" — "+t("Part A","파트 A")),
-          h('p',{style:{fontSize:13,color:muted,margin:"4px 0 0"}},
+          h('p',{style:{fontSize:13,color:muted,margin:0}},
             t("Agree or disagree with each item's inclusion in the rubric",
               "각 항목이 루브릭에 포함되어야 하는지 동의 또는 비동의를 표시하세요"))),
         h('div',{style:{textAlign:"right",flexShrink:0}},
           h('p',{style:{fontSize:11,color:muted,margin:"0 0 2px"}},t("Total","총점")),
           h('p',{style:{fontSize:18,fontWeight:700,color:navyMid,margin:0}},
             (rubric.d1pts+rubric.d2pts)+t(" pts"," 점")))),
-      // Threshold / rationale note — amber info box
       (rubric.threshold_en||rubric.rationale_en) &&
         h('div',{style:{background:amberBg,border:"1px solid "+amberBd,
-          borderRadius:8,padding:"10px 14px",marginTop:12,
+          borderRadius:8,padding:"10px 14px",marginTop:14,
           display:"flex",gap:10,alignItems:"flex-start"}},
           h('span',{style:{fontSize:15,flexShrink:0}},"ℹ️"),
           h('p',{style:{fontSize:13,color:"#78350f",lineHeight:1.65,margin:0}},
             t(rubric.threshold_en||rubric.rationale_en,
               rubric.threshold_ko||rubric.rationale_ko)))
     ),
-    // Progress within this rubric
-    h('div',{style:{display:"flex",alignItems:"center",gap:10,
-      padding:"10px 20px",background:white,border:"1px solid "+cardBd,
-      borderRadius:10,marginBottom:20}},
-      h('div',{style:{flex:1,height:6,background:cardBd,borderRadius:3,overflow:"hidden"}},
-        h('div',{style:{height:"100%",background:navy,
-          width:Math.round(answeredItems/totalItems*100)+"%",
-          transition:"width 0.3s"}})),
-      h('span',{style:{fontSize:13,color:muted,flexShrink:0}},
-        answeredItems+"/"+totalItems+" "+t("answered","답변 완료"))),
-    // Domain 1
-    h(Domain,{items:rubric.d1,label:d1label,desc:t(rubric.d1desc_en,rubric.d1desc_ko),
-      pts:rubric.d1pts}),
-    // Domain 2
-    h(Domain,{items:rubric.d2,label:d2label,desc:t(rubric.d2desc_en,rubric.d2desc_ko),
-      pts:rubric.d2pts}),
-    // Next button
-    h('div',{style:{marginTop:8}},
-      !allAnswered && h('p',{style:{fontSize:13,color:red,margin:"0 0 10px",
-        textAlign:"center",fontWeight:600}},
-        t("Please answer all items before continuing — "+answeredItems+" of "+totalItems+" done.",
-          "계속하기 전에 모든 항목에 답해주세요 — "+answeredItems+"/"+totalItems+" 완료.")),
-      h(PrimaryBtn,{onClick:()=>{if(allAnswered){onNext({partA,comments});scrollTop();}},
-        disabled:!allAnswered},
-        t("Continue to Part B →","파트 B로 계속 →")))
+    h(Domain,{items:rubric.d1,label:d1label,desc:t(rubric.d1desc_en,rubric.d1desc_ko),pts:rubric.d1pts}),
+    h(Domain,{items:rubric.d2,label:d2label,desc:t(rubric.d2desc_en,rubric.d2desc_ko),pts:rubric.d2pts}),
+    !allAnswered && h('p',{style:{fontSize:13,color:red,margin:"0 0 10px",
+      textAlign:"center",fontWeight:600}},
+      t(answeredItems+" of "+totalItems+" items answered — please complete all before continuing.",
+        totalItems+"개 중 "+answeredItems+"개 답변 완료 — 계속하기 전에 모두 완료하세요.")),
+    h(PrimaryBtn,{
+      onClick:()=>{ if(allAnswered){ onNext({partA,comments}); scrollTop(); } },
+      disabled:!allAnswered},
+      t("Continue to Part B →","파트 B로 계속 →"))
   );
 }
 
 // ─── PART B SCREEN ───────────────────────────────────────────────────────────
-function PartBScreen({ caseData, rubric, ci, ri, totalR, doneR, isLast, onSubmit, partAData }) {
+function PartBScreen({ caseData, rubric, ci, ri, isLast, onSubmit, partAData }) {
   const lang = useLang();
   const t = (en,ko) => T(en,ko,lang);
   const [d1Order, setD1Order] = useState(()=>[...rubric.d1].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
@@ -1058,138 +1027,143 @@ function PartBScreen({ caseData, rubric, ci, ri, totalR, doneR, isLast, onSubmit
   const [dragDomain, setDragDomain] = useState(null);
 
   const moveItem = (order, setOrder, idx, dir) => {
-    const next=[...order];
-    const to=idx+dir;
+    const next=[...order]; const to=idx+dir;
     if(to<0||to>=next.length) return;
     [next[idx],next[to]]=[next[to],next[idx]];
     setOrder(next);
   };
 
-  const onDragStart = (id, domain) => { setDragId(id); setDragDomain(domain); };
+  const onDragStart = (id, domain, e) => {
+    setDragId(id); setDragDomain(domain);
+    e.dataTransfer.effectAllowed = "move";
+  };
   const onDragOver = (e, id, order, setOrder, domain) => {
     e.preventDefault();
-    if(dragId===null||dragDomain!==domain||dragId===id) return;
+    if(!dragId || dragDomain!==domain || dragId===id) return;
     const from=order.indexOf(dragId), to=order.indexOf(id);
-    if(from<0||to<0) return;
-    const next=[...order];
-    next.splice(from,1);
-    next.splice(to,0,dragId);
+    if(from<0||to<0||from===to) return;
+    const next=[...order]; next.splice(from,1); next.splice(to,0,dragId);
     setOrder(next);
   };
   const onDragEnd = () => { setDragId(null); setDragDomain(null); };
 
+  // Next button label — no "submit", just navigation
   const nextLabel = () => {
+    if(isLast) return t("Finish Survey →","설문 완료 →");
     const nr=ri+1;
-    if(nr<caseData.rubrics.length) return t("Submit & Continue to Rubric "+(nr+1)+" →","루브릭 "+(nr+1)+"로 제출 후 계속 →");
-    const nc=ci+1;
-    if(nc<CASES.length) return t("Submit & Continue to Case "+(nc+1)+" →","사례 "+(nc+1)+"로 제출 후 계속 →");
-    return t("Submit All Responses ✓","모든 응답 제출 ✓");
+    const nrInCase = nr < caseData.rubrics.length;
+    if(nrInCase) return t("Next Rubric →","다음 기준표 →");
+    return t("Next Case →","다음 사례 →");
   };
 
   const RankList = ({items, order, setOrder, domain}) =>
-    h('div',{style:{marginBottom:28}},
+    h('div',null,
       order.map((id,idx)=>{
         const item=items.find(i=>i.id===id); if(!item) return null;
         const raw=t(item.en,item.ko);
-        const dot=raw.indexOf(".");
-        const lbl=dot>-1?raw.slice(0,dot+1):raw.slice(0,raw.indexOf(":")+1)||raw;
-        const desc=dot>-1?raw.slice(dot+1).trim():"";
+        // Split label from description: "Item N. Description text"
+        const dotIdx = raw.indexOf(". ");
+        const lbl = dotIdx>-1 ? raw.slice(0, dotIdx+1) : raw;
+        const desc = dotIdx>-1 ? raw.slice(dotIdx+2).trim() : "";
         const isDragging=dragId===id;
         return h('div',{key:id,
           draggable:true,
-          onDragStart:()=>onDragStart(id,domain),
+          onDragStart:e=>onDragStart(id,domain,e),
           onDragOver:e=>onDragOver(e,id,order,setOrder,domain),
           onDragEnd,
-          style:{display:"flex",alignItems:"flex-start",gap:12,
-            padding:"12px 14px",background:isDragging?"#EEF2F8":white,
+          style:{display:"flex",alignItems:"flex-start",gap:10,
+            padding:"12px 14px",
+            background:isDragging?"#EEF2F8":white,
             border:"1px solid "+(isDragging?navyBd:cardBd),
-            borderRadius:8,marginBottom:8,cursor:"grab",
-            boxShadow:isDragging?"0 4px 14px rgba(27,43,94,0.15)":"0 1px 3px rgba(0,0,0,0.05)",
-            transition:"box-shadow 0.15s, opacity 0.15s",
-            opacity:isDragging?0.7:1}},
+            borderRadius:8,marginBottom:8,
+            boxShadow:isDragging?"0 4px 16px rgba(27,43,94,0.18)":"0 1px 3px rgba(0,0,0,0.05)",
+            transition:"box-shadow 0.15s",opacity:isDragging?0.75:1,
+            cursor:"grab"}},
+          // Drag handle
+          h('div',{style:{color:muted,fontSize:16,flexShrink:0,marginTop:14,
+            userSelect:"none",lineHeight:1,letterSpacing:"-1px"}},
+            "⠿"),
+          // Rank badge
           h('span',{style:{fontSize:13,fontWeight:700,color:navyMid,
             minWidth:28,textAlign:"center",background:navyL,
-            borderRadius:6,padding:"3px 7px",flexShrink:0,marginTop:2}},
+            borderRadius:6,padding:"3px 7px",flexShrink:0,marginTop:10}},
             "#"+(idx+1)),
-          h('div',{style:{flex:1}},
-            h('p',{style:{fontSize:14,color:navy,fontWeight:600,
-              margin:"0 0 2px",lineHeight:1.4}},lbl),
+          // Item text: label bold on its own line, description below
+          h('div',{style:{flex:1,paddingTop:8}},
+            h('p',{style:{fontSize:14,color:navy,fontWeight:700,
+              margin:"0 0 3px",lineHeight:1.4}},lbl),
             desc && h('p',{style:{fontSize:13,color:muted,margin:0,lineHeight:1.5}},desc)),
-          h('div',{style:{display:"flex",flexDirection:"column",gap:3,flexShrink:0}},
+          // Arrow buttons
+          h('div',{style:{display:"flex",flexDirection:"column",gap:3,flexShrink:0,paddingTop:8}},
             h('button',{onClick:()=>moveItem(order,setOrder,idx,-1),disabled:idx===0,
               style:{padding:"3px 9px",fontSize:13,border:"1px solid "+cardBd,
                 borderRadius:5,background:white,cursor:"pointer",
-                opacity:idx===0?0.3:1,lineHeight:1}},
+                opacity:idx===0?0.25:1,lineHeight:1.2}},
               "▲"),
             h('button',{onClick:()=>moveItem(order,setOrder,idx,1),
               disabled:idx===order.length-1,
               style:{padding:"3px 9px",fontSize:13,border:"1px solid "+cardBd,
                 borderRadius:5,background:white,cursor:"pointer",
-                opacity:idx===order.length-1?0.3:1,lineHeight:1}},
+                opacity:idx===order.length-1?0.25:1,lineHeight:1.2}},
               "▼"))
         );
       })
     );
 
+  const DomainRank = ({items, order, setOrder, label, domain}) =>
+    h('div',{style:{marginBottom:28}},
+      h('div',{style:{background:navyL,border:"1px solid "+navyBd,
+        borderRadius:"10px 10px 0 0",padding:"12px 20px"}},
+        h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:0}},label)),
+      h('div',{style:{border:"1px solid "+cardBd,borderTop:"none",
+        borderRadius:"0 0 10px 10px",padding:"14px",background:"#FAFBFD"}},
+        h(RankList,{items,order,setOrder,domain}))
+    );
+
   return h('div',{style:{flex:1,minWidth:0}},
-    // Header
-    h(Card,{style:{padding:"16px 22px",marginBottom:20,background:navyL,border:"1px solid "+navyBd}},
+    h(Card,{style:{padding:"16px 22px",marginBottom:16,background:navyL,border:"1px solid "+navyBd}},
       h('p',{style:{fontSize:12,fontWeight:700,color:muted,textTransform:"uppercase",
         letterSpacing:"0.06em",margin:"0 0 4px"}},t("RUBRIC","루브릭")),
       h('p',{style:{fontSize:16,fontWeight:700,color:navy,margin:"0 0 4px"}},
         t(rubric.label_en,rubric.label_ko)+" — "+t("Part B","파트 B")),
       h('p',{style:{fontSize:13,color:muted,margin:0}},
-        t("Drag items or use arrows to rank by clinical importance within each domain.",
-          "항목을 드래그하거나 화살표를 사용하여 각 영역 내에서 임상 중요도 순으로 순위를 매기세요."))
+        t("Rank items by clinical importance within each domain.",
+          "각 영역 내에서 임상 중요도 순으로 항목을 순위 매기세요."))
     ),
-    // Drag hint
-    h('div',{style:{background:"#EEF2F8",border:"1px solid "+navyBd,borderRadius:8,
+    // Single drag hint — no duplicate
+    h('div',{style:{background:"#F0F4FA",border:"1px solid "+navyBd,borderRadius:8,
       padding:"10px 16px",marginBottom:20,display:"flex",gap:10,alignItems:"center"}},
-      h('span',{style:{fontSize:16}},"↕️"),
-      h('p',{style:{fontSize:13,color:navyMid,margin:0}},
-        t("Drag to reorder, or use ▲ ▼ arrows. Items start sorted by point value.",
-          "드래그하거나 ▲ ▼ 화살표로 순서를 바꾸세요. 항목은 배점 순으로 초기 정렬됩니다."))),
-    // Domain 1 ranking
-    h('div',{style:{marginBottom:28}},
-      h('div',{style:{background:navyL,border:"1px solid "+navyBd,
-        borderRadius:"10px 10px 0 0",padding:"12px 20px",marginBottom:0}},
-        h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:0}},
-          t("Domain 1: General History-Taking","영역 1: 일반 병력 청취"))),
-      h('div',{style:{border:"1px solid "+cardBd,borderTop:"none",
-        borderRadius:"0 0 10px 10px",padding:"16px",background:white}},
-        h(RankList,{items:rubric.d1,order:d1Order,setOrder:setD1Order,domain:"d1"}))
+      h('span',{style:{fontSize:18}},"↕️"),
+      h('p',{style:{fontSize:14,color:navyMid,margin:0}},
+        t("Drag items to reorder, or use ▲ ▼ arrows. Items start sorted by point value.",
+          "항목을 드래그하거나 ▲ ▼ 화살표로 순서를 바꾸세요. 항목은 배점 순으로 초기 정렬됩니다."))
     ),
-    // Domain 2 ranking
-    h('div',{style:{marginBottom:28}},
-      h('div',{style:{background:navyL,border:"1px solid "+navyBd,
-        borderRadius:"10px 10px 0 0",padding:"12px 20px"}},
-        h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:0}},
-          t("Domain 2: Case-Specific Diagnostic Reasoning","영역 2: 사례별 진단 추론"))),
-      h('div',{style:{border:"1px solid "+cardBd,borderTop:"none",
-        borderRadius:"0 0 10px 10px",padding:"16px",background:white}},
-        h(RankList,{items:rubric.d2,order:d2Order,setOrder:setD2Order,domain:"d2"}))
-    ),
-    // Overall comment
-    h(Card,{style:{padding:"20px 24px",marginBottom:20}},
+    h(DomainRank,{items:rubric.d1,order:d1Order,setOrder:setD1Order,
+      label:t("Domain 1: General History-Taking","영역 1: 일반 병력 청취"),domain:"d1"}),
+    h(DomainRank,{items:rubric.d2,order:d2Order,setOrder:setD2Order,
+      label:t("Domain 2: Case-Specific Diagnostic Reasoning","영역 2: 사례별 진단 추론"),domain:"d2"}),
+    h(Card,{style:{padding:"20px 22px",marginBottom:20}},
       h('p',{style:{fontSize:14,fontWeight:700,color:navy,margin:"0 0 10px"}},
-        t("Overall Comment on This Rubric (optional)","이 루브릭에 대한 전반적인 의견 (선택사항)")),
+        t("Overall Comment (optional)","전반적인 의견 (선택사항)")),
       h('textarea',{
-        placeholder:t("Any overall comments or suggestions for this rubric?","이 루브릭에 대한 전반적인 의견이나 제안이 있으신가요?"),
+        placeholder:t("Any comments or suggestions for this rubric?","이 루브릭에 대한 의견이나 제안이 있으신가요?"),
         value:finalCmt,onChange:e=>setFinalCmt(e.target.value),
         style:{width:"100%",padding:"12px 14px",fontSize:14,
           border:"1px solid "+cardBd,borderRadius:8,resize:"vertical",
-          fontFamily:ffs,boxSizing:"border-box",minHeight:90}})
+          fontFamily:ffs,boxSizing:"border-box",minHeight:80}})
     ),
-    h(PrimaryBtn,{onClick:()=>{onSubmit(rubric.id,{...partAData,d1Order,d2Order,finalCmt});scrollTop();}},
+    h(PrimaryBtn,{
+      onClick:()=>{ onSubmit(rubric.id,{...partAData,d1Order,d2Order,finalCmt}); scrollTop(); }},
       nextLabel())
   );
 }
 
-// ─── DONE SCREEN ─────────────────────────────────────────────────────────────
-function DoneScreen({ responses }) {
+// ─── DONE SCREEN (two states: pre-submit and post-submit) ─────────────────────
+function DoneScreen({ responses, preSubmitState }) {
   const lang = useLang();
   const t = (en,ko) => T(en,ko,lang);
-  const [status, setStatus] = useState("idle");
+  // preSubmitState: if true, show pre-submit UI (used by preview)
+  const [status, setStatus] = useState(preSubmitState ? "idle" : "idle");
   const [pid] = useState(()=>"P-"+Math.random().toString(36).slice(2,8).toUpperCase());
   const blob = new Blob([JSON.stringify(responses,null,2)],{type:"application/json"});
   const url = URL.createObjectURL(blob);
@@ -1215,150 +1189,141 @@ function DoneScreen({ responses }) {
         body:JSON.stringify(rows)
       });
       if(res.ok) setStatus("success");
-      else { const e=await res.text(); console.error(e); setStatus("error"); }
+      else { console.error(await res.text()); setStatus("error"); }
     } catch(e){ console.error(e); setStatus("error"); }
   };
 
-  return h(PageWrap,null,
-    h('div',{style:{textAlign:"center",padding:"56px 0 36px"}},
+  // ── POST-SUBMIT (success) ───────────────────────────────────────────────────
+  if(status==="success") return h(PageWrap,null,
+    h('div',{style:{textAlign:"center",padding:"64px 0 48px"}},
       h('div',{style:{width:80,height:80,borderRadius:"50%",
-        background:"linear-gradient(135deg,"+navy+","+navyMid+")",
-        margin:"0 auto 24px",display:"flex",alignItems:"center",justifyContent:"center"}},
-        h('svg',{width:36,height:36,viewBox:"0 0 24 24",fill:"none",
+        background:"linear-gradient(135deg,"+green+",#059669)",
+        margin:"0 auto 28px",display:"flex",alignItems:"center",justifyContent:"center"}},
+        h('svg',{width:38,height:38,viewBox:"0 0 24 24",fill:"none",
           stroke:white,strokeWidth:2.5,strokeLinecap:"round",strokeLinejoin:"round"},
           h('path',{d:"M20 6L9 17l-5-5"}))),
+      h('h1',{style:{fontSize:26,fontWeight:700,color:navy,margin:"0 0 14px",fontFamily:ffs}},
+        t("Responses submitted — thank you.","응답 제출 완료 — 감사합니다.")),
+      h('p',{style:{fontSize:15,color:muted,lineHeight:1.75,maxWidth:480,margin:"0 auto 32px"}},
+        t("Your contribution to this research is appreciated. You may now close this window.",
+          "연구에 기여해 주셔서 감사합니다. 이제 이 창을 닫으셔도 됩니다.")),
+      h('p',{style:{fontSize:14,color:muted}},
+        t("Participant ID: ","참여자 ID: ")+h('strong',{style:{color:navy}},pid)),
+      h('div',{style:{marginTop:24}},
+        h('a',{href:url,download:"rubric_responses_"+pid+".json",
+          style:{color:navyMid,fontSize:14,fontWeight:600,textDecoration:"underline"}},
+          "📥 "+t("Download backup copy","응답 백업 사본 다운로드")))
+    )
+  );
+
+  // ── PRE-SUBMIT (idle / sending / error) ─────────────────────────────────────
+  return h(PageWrap,null,
+    h('div',{style:{textAlign:"center",padding:"48px 0 36px"}},
       h('h1',{style:{fontSize:26,fontWeight:700,color:navy,margin:"0 0 12px",fontFamily:ffs}},
-        t("All Rubrics Completed","모든 루브릭 완료")),
-      h('p',{style:{fontSize:15,color:muted,margin:"0 auto",maxWidth:500,lineHeight:1.75}},
-        t("You have reviewed all rubrics. Your responses are ready to submit.",
-          "모든 루브릭을 검토하셨습니다. 응답을 제출할 준비가 되었습니다."))),
+        t("All rubrics completed.","모든 기준표 완료.")),
+      h('p',{style:{fontSize:15,color:muted,lineHeight:1.75,maxWidth:500,margin:"0 auto"}},
+        t("When you're ready, click Submit below to send your responses to the research team.",
+          "준비가 되시면 아래 제출 버튼을 클릭하여 연구팀에 응답을 보내주세요."))
+    ),
     h(Card,{style:{padding:"32px 36px"}},
-      // Idle: prominent submit call to action
-      status==="idle" && h('div',null,
-        h('div',{style:{background:amberBg,border:"1px solid "+amberBd,
-          borderRadius:10,padding:"18px 22px",marginBottom:24}},
-          h('p',{style:{fontSize:15,fontWeight:700,color:"#92400e",margin:"0 0 8px"}},
-            "⚠ "+t("Final step: send your responses","마지막 단계: 응답 전송")),
-          h('p',{style:{fontSize:14,color:"#78350f",margin:0,lineHeight:1.65}},
-            t("Your responses are stored in your browser. Please click below to send them to our research database. This is required for your responses to be recorded.",
-              "귀하의 응답이 브라우저에 저장되어 있습니다. 아래를 클릭하여 연구 데이터베이스로 전송해 주세요. 응답이 기록되려면 이 단계가 필요합니다."))),
-        h('p',{style:{fontSize:13,color:muted,textAlign:"center",margin:"0 0 16px"}},
-          t("Participant ID: "+pid,"참여자 ID: "+pid)),
-        h(PrimaryBtn,{onClick:submit},
-          t("Send Responses to Research Database →","연구 데이터베이스로 응답 전송 →"))
-      ),
-      status==="sending" && h('div',{style:{textAlign:"center",padding:"20px",
+      h('p',{style:{fontSize:14,color:muted,textAlign:"center",margin:"0 0 24px"}},
+        t("Participant ID: ","참여자 ID: ")+h('strong',{style:{color:navy,fontSize:15}},pid)),
+      status==="idle" && h(PrimaryBtn,{onClick:submit},
+        t("Submit Responses →","응답 제출 →")),
+      status==="sending" && h('div',{style:{textAlign:"center",padding:"16px",
         background:navyL,borderRadius:10,color:navy,fontSize:15,fontWeight:600}},
-        t("Sending your responses…","응답을 전송하는 중…")),
-      status==="success" && h('div',null,
-        h('div',{style:{textAlign:"center",padding:"24px",
-          background:greenBg,border:"1px solid "+greenBd,borderRadius:10,marginBottom:20}},
-          h('p',{style:{fontSize:22,margin:"0 0 8px"}},"✅"),
-          h('p',{style:{color:green,fontSize:17,fontWeight:700,margin:"0 0 6px"}},
-            t("Responses submitted successfully!","응답이 성공적으로 제출되었습니다!")),
-          h('p',{style:{color:green,fontSize:14,margin:0}},
-            t("Thank you for contributing to this research. Your participant ID is "+pid+".",
-              "연구에 기여해 주셔서 감사합니다. 참여자 ID: "+pid+".")))),
+        t("Sending…","전송 중…")),
       status==="error" && h('div',null,
         h('div',{style:{padding:"14px",marginBottom:14,background:redBg,
           border:"1px solid "+redBd,borderRadius:10,color:red,fontSize:14,textAlign:"center"}},
           t("Submission failed. Please download your responses and email them to the research team.",
             "제출에 실패했습니다. 응답을 다운로드하여 연구팀에 이메일로 보내주세요.")),
-        h(PrimaryBtn,{onClick:submit},t("Try Again →","다시 시도 →"))
-      ),
-      h('div',{style:{borderTop:"1px solid "+cardBd,paddingTop:20,marginTop:20,
-        display:"flex",justifyContent:"center"}},
+        h(PrimaryBtn,{onClick:submit},t("Try Again →","다시 시도 →"))),
+      h('div',{style:{borderTop:"1px solid "+cardBd,paddingTop:20,marginTop:24,
+        textAlign:"center"}},
         h('a',{href:url,download:"rubric_responses_"+pid+".json",
-          style:{color:navyMid,fontSize:14,fontWeight:600,textDecoration:"underline"}},
+          style:{color:muted,fontSize:13,textDecoration:"underline"}},
           "📥 "+t("Download backup copy of responses","응답 백업 사본 다운로드")))
     )
   );
 }
 
 // ─── MAIN APP ────────────────────────────────────────────────────────────────
-
 function App() {
   const [lang, setLang] = useState("en");
-  const [step, setStep] = useState("consent"); // consent | instr | partA | partB | done
+  const [step, setStep] = useState("consent");
   const [ci, setCi] = useState(0);
   const [ri, setRi] = useState(0);
   const [partAData, setPartAData] = useState(null);
   const [responses, setResponses] = useState({});
 
   const totalR = CASES.reduce((s,c)=>s+c.rubrics.length,0);
-  const doneR = CASES.slice(0,ci).reduce((s,c)=>s+c.rubrics.length,0)+ri;
-  const curCase = CASES[ci];
+  const doneR  = CASES.slice(0,ci).reduce((s,c)=>s+c.rubrics.length,0)+ri;
+  const curCase   = CASES[ci];
   const curRubric = curCase ? curCase.rubrics[ri] : null;
 
-  const goPartA = useCallback(() => { setStep("partA"); scrollTop(); }, []);
-  const goPartB = useCallback((aData) => { setPartAData(aData); setStep("partB"); scrollTop(); }, []);
-  const submitRubric = useCallback((id, data) => {
+  const goPartB = useCallback((aData)=>{ setPartAData(aData); setStep("partB"); scrollTop(); },[]);
+  const submitRubric = useCallback((id,data)=>{
     setResponses(r=>({...r,[id]:data}));
     const nr=ri+1;
     if(nr<curCase.rubrics.length){ setRi(nr); setStep("partA"); }
-    else {
-      const nc=ci+1;
-      if(nc<CASES.length){ setCi(nc); setRi(0); setStep("partA"); }
-      else { setStep("done"); }
-    }
+    else { const nc=ci+1; if(nc<CASES.length){setCi(nc);setRi(0);setStep("partA");}else setStep("done"); }
     scrollTop();
-  }, [ci, ri, curCase]);
+  },[ci,ri,curCase]);
 
-  const t = (en,ko) => T(en,ko,lang);
-
-  // Build breadcrumb
   const breadcrumb = (step==="partA"||step==="partB") && curCase && curRubric
-    ? t("Case "+(ci+1)+" of "+CASES.length+" › Rubric "+(ri+1)+" of "+curCase.rubrics.length,
-        "사례 "+(ci+1)+"/"+CASES.length+" › 기준표 "+(ri+1)+"/"+curCase.rubrics.length)
+    ? T("Case "+(ci+1)+" of "+CASES.length+" › Rubric "+(ri+1)+" of "+curCase.rubrics.length,
+        "사례 "+(ci+1)+"/"+CASES.length+" › 기준표 "+(ri+1)+"/"+curCase.rubrics.length, lang)
     : null;
 
-  // Two-column survey layout
-  const SurveyLayout = ({children}) =>
-    h('div',{style:{maxWidth:1140,margin:"0 auto",padding:"28px 24px 80px",
-      display:"flex",gap:24,alignItems:"flex-start"}},
-      h(VignetteSidebar,{caseData:curCase}),
-      children
-    );
+  const SL = ({children}) => h('div',{style:{maxWidth:1140,margin:"0 auto",
+    padding:"28px 24px 80px",display:"flex",gap:24,alignItems:"flex-start"}},
+    h(VignetteSidebar,{caseData:curCase}), children);
 
   return h(LangCtx.Provider,{value:lang},
     h('div',{style:{background:pageBg,minHeight:"100vh",fontFamily:ffs}},
       h(StickyHeader,{lang,setLang,doneR,totalR,breadcrumb}),
       step==="consent" && h(ConsentScreen,{onAgree:()=>{setStep("instr");scrollTop();}}),
       step==="instr"   && h(InstrScreen,{onStart:()=>{setStep("partA");scrollTop();}}),
-      step==="partA" && curRubric &&
-        h(SurveyLayout,null,
-          h(PartAScreen,{key:"A-"+curRubric.id,caseData:curCase,rubric:curRubric,
-            ci,ri,totalR,doneR,onNext:goPartB})),
-      step==="partB" && curRubric &&
-        h(SurveyLayout,null,
-          h(PartBScreen,{key:"B-"+curRubric.id,caseData:curCase,rubric:curRubric,
-            ci,ri,totalR,doneR,isLast:doneR+1>=totalR,
-            onSubmit:submitRubric,partAData})),
+      step==="partA" && curRubric && h(SL,null,
+        h(PartAScreen,{key:"A-"+curRubric.id,caseData:curCase,rubric:curRubric,
+          ci,ri,onNext:goPartB})),
+      step==="partB" && curRubric && h(SL,null,
+        h(PartBScreen,{key:"B-"+curRubric.id,caseData:curCase,rubric:curRubric,
+          ci,ri,isLast:doneR+1>=totalR,onSubmit:submitRubric,partAData})),
       step==="done" && h(DoneScreen,{responses})
     )
   );
 }
 
 
-let _pDispatch = null;
+var _pDispatch = null;
 window.pjump = function(step, ci, ri) {
-  ci = ci||0; ri = ri||0;
+  ci = (ci === undefined) ? 0 : ci;
+  ri = (ri === undefined) ? 0 : ri;
   if(_pDispatch) _pDispatch({step:step, ci:ci, ri:ri});
   document.querySelectorAll('#pb button').forEach(function(b){b.classList.remove('on');});
-  var ids = {consent:'b0',instr:'b1',done:'b8'};
-  if(ids[step]) document.getElementById(ids[step]).classList.add('on');
+  var ids = {consent:'b0',instr:'b1',done_pre:'b_dp',done_post:'b_ds'};
+  if(ids[step]) { var el=document.getElementById(ids[step]); if(el) el.classList.add('on'); }
 };
 
 function PreviewApp() {
-  var _s = useState('consent'); var step=_s[0], setStep=_s[1];
-  var _ci = useState(0); var ci=_ci[0], setCi=_ci[1];
-  var _ri = useState(0); var ri=_ri[0], setRi=_ri[1];
-  var _l = useState('en'); var lang=_l[0], setLang=_l[1];
-  var _pa = useState(null); var partAData=_pa[0], setPartAData=_pa[1];
-  var _resp = useState({}); var responses=_resp[0], setResponses=_resp[1];
+  var _s=useState('consent'); var step=_s[0],setStep=_s[1];
+  var _ci=useState(0);        var ci=_ci[0],setCi=_ci[1];
+  var _ri=useState(0);        var ri=_ri[0],setRi=_ri[1];
+  var _l=useState('en');      var lang=_l[0],setLang=_l[1];
+  var _pa=useState(null);     var partAData=_pa[0],setPartAData=_pa[1];
+  var _rsp=useState({});      var responses=_rsp[0],setResponses=_rsp[1];
+  var _ds=useState(false);    var forceSuccess=_ds[0],setForceSuccess=_ds[1];
 
   React.useEffect(function(){
-    _pDispatch = function(t){ setStep(t.step); setCi(t.ci); setRi(t.ri); window.scrollTo({top:0}); };
+    _pDispatch = function(t){
+      setForceSuccess(false);
+      if(t.step==='done_pre'){ setStep('done'); return; }
+      if(t.step==='done_post'){ setStep('done'); setForceSuccess(true); return; }
+      setStep(t.step); setCi(t.ci); setRi(t.ri);
+      window.scrollTo({top:0});
+    };
   },[]);
 
   var totalR = CASES.reduce(function(s,c){return s+c.rubrics.length;},0);
@@ -1367,7 +1332,7 @@ function PreviewApp() {
   var curRubric = curCase ? curCase.rubrics[ri] : null;
 
   var goPartB = function(aData){ setPartAData(aData); setStep('partB'); window.scrollTo({top:0}); };
-  var submitRubric = function(id, data){
+  var submitRubric = function(id,data){
     setResponses(function(r){ var n=Object.assign({},r); n[id]=data; return n; });
     var nr=ri+1;
     if(nr<curCase.rubrics.length){ setRi(nr); setStep('partA'); }
@@ -1376,27 +1341,59 @@ function PreviewApp() {
   };
 
   var breadcrumb = (step==='partA'||step==='partB') && curCase && curRubric
-    ? T('Case '+(ci+1)+' of '+CASES.length+' › Rubric '+(ri+1)+' of '+curCase.rubrics.length,
-        '사례 '+(ci+1)+'/'+CASES.length+' › 기준표 '+(ri+1)+'/'+curCase.rubrics.length, lang)
+    ? T('Case '+(ci+1)+' of '+CASES.length+' \u203a Rubric '+(ri+1)+' of '+curCase.rubrics.length,
+        '\uc0ac\ub840 '+(ci+1)+'/'+CASES.length+' \u203a \uae30\uc900\ud45c '+(ri+1)+'/'+curCase.rubrics.length, lang)
     : null;
 
-  var SL = function(props) {
-    return h('div', {style:{maxWidth:1140,margin:'0 auto',padding:'28px 24px 80px',
-      display:'flex',gap:24,alignItems:'flex-start'}},
-      h(VignetteSidebar, {caseData:curCase}), props.children);
-  };
+  var SL = function(props){ return h('div',{style:{maxWidth:1140,margin:'0 auto',
+    padding:'28px 24px 80px',display:'flex',gap:24,alignItems:'flex-start'}},
+    h(VignetteSidebar,{caseData:curCase}), props.children); };
 
-  return h(LangCtx.Provider, {value:lang},
-    h('div', {style:{background:pageBg, minHeight:'100vh', fontFamily:ffs}},
-      h(StickyHeader, {lang:lang, setLang:setLang, doneR:doneR, totalR:totalR, breadcrumb:breadcrumb}),
-      step==='consent' && h(ConsentScreen, {onAgree:function(){setStep('instr');window.scrollTo({top:0});}}),
-      step==='instr'   && h(InstrScreen,   {onStart:function(){setStep('partA');window.scrollTo({top:0});}}),
-      step==='partA' && curRubric && h(SL, null, h(PartAScreen, {key:'A-'+curRubric.id,
-        caseData:curCase, rubric:curRubric, ci:ci, ri:ri, totalR:totalR, doneR:doneR, onNext:goPartB})),
-      step==='partB' && curRubric && h(SL, null, h(PartBScreen, {key:'B-'+curRubric.id,
-        caseData:curCase, rubric:curRubric, ci:ci, ri:ri, totalR:totalR, doneR:doneR,
-        isLast:doneR+1>=totalR, onSubmit:submitRubric, partAData:partAData})),
-      step==='done' && h(DoneScreen, {responses:responses})
+  // For done_post preview: render DoneScreen but force success state
+  var doneEl = null;
+  if(step==='done'){
+    if(forceSuccess){
+      // Render the success state directly
+      var pid='P-PREVIEW';
+      var blob=new Blob([JSON.stringify(responses,null,2)],{type:'application/json'});
+      var url=URL.createObjectURL(blob);
+      doneEl = h(PageWrap,null,
+        h('div',{style:{textAlign:'center',padding:'64px 0 48px'}},
+          h('div',{style:{width:80,height:80,borderRadius:'50%',
+            background:'linear-gradient(135deg,'+green+',#059669)',
+            margin:'0 auto 28px',display:'flex',alignItems:'center',justifyContent:'center'}},
+            h('svg',{width:38,height:38,viewBox:'0 0 24 24',fill:'none',
+              stroke:white,strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'},
+              h('path',{d:'M20 6L9 17l-5-5'}))),
+          h('h1',{style:{fontSize:26,fontWeight:700,color:navy,margin:'0 0 14px',fontFamily:ffs}},
+            T('Responses submitted \u2014 thank you.','응답 제출 완료 \u2014 감사합니다.',lang)),
+          h('p',{style:{fontSize:15,color:muted,lineHeight:1.75,maxWidth:480,margin:'0 auto 32px'}},
+            T('Your contribution to this research is appreciated. You may now close this window.',
+              '연구에 기여해 주셔서 감사합니다. 이제 이 창을 닫으셔도 됩니다.',lang)),
+          h('p',{style:{fontSize:14,color:muted}},T('Participant ID: ','참여자 ID: ',lang)+
+            h('strong',{style:{color:navy}},pid)),
+          h('div',{style:{marginTop:24}},
+            h('a',{href:url,download:'rubric_responses_'+pid+'.json',
+              style:{color:navyMid,fontSize:14,fontWeight:600,textDecoration:'underline'}},
+              '\ud83d\udce5 '+T('Download backup copy','응답 백업 사본 다운로드',lang)))
+        )
+      );
+    } else {
+      doneEl = h(DoneScreen,{responses:responses});
+    }
+  }
+
+  return h(LangCtx.Provider,{value:lang},
+    h('div',{style:{background:pageBg,minHeight:'100vh',fontFamily:ffs}},
+      h(StickyHeader,{lang:lang,setLang:setLang,doneR:doneR,totalR:totalR,breadcrumb:breadcrumb}),
+      step==='consent' && h(ConsentScreen,{onAgree:function(){setStep('instr');window.scrollTo({top:0});}}),
+      step==='instr'   && h(InstrScreen,{onStart:function(){setStep('partA');window.scrollTo({top:0});}}),
+      step==='partA' && curRubric && h(SL,null,h(PartAScreen,{key:'A-'+curRubric.id,
+        caseData:curCase,rubric:curRubric,ci:ci,ri:ri,onNext:goPartB})),
+      step==='partB' && curRubric && h(SL,null,h(PartBScreen,{key:'B-'+curRubric.id,
+        caseData:curCase,rubric:curRubric,ci:ci,ri:ri,
+        isLast:doneR+1>=totalR,onSubmit:submitRubric,partAData:partAData})),
+      step==='done' && doneEl
     )
   );
 }
@@ -1404,6 +1401,4 @@ function PreviewApp() {
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(PreviewApp));
 document.getElementById('b0').classList.add('on');
 
-</script>
-</body>
-</html>
+</script></body></html>
