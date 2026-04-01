@@ -5,33 +5,36 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;padding-bottom:46px}
-#pb{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1B2B5E;color:white;padding:7px 14px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:12px;font-family:monospace;box-shadow:0 -2px 8px rgba(0,0,0,0.3);}
-#pb span{color:rgba(255,255,255,0.45);}
-#pb button{padding:4px 8px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.2);border-radius:4px;color:white;cursor:pointer;font-size:11px;font-family:monospace;}
+#pb{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1B2B5E;color:white;
+  padding:7px 14px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;
+  font-size:12px;font-family:monospace;box-shadow:0 -2px 8px rgba(0,0,0,0.3);}
+#pb button{padding:4px 8px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.2);
+  border-radius:4px;color:white;cursor:pointer;font-size:11px;font-family:monospace;}
 #pb button:hover{background:rgba(255,255,255,0.2);}
 #pb button.on{background:#2D4A8A;border-color:rgba(255,255,255,0.7);}
 </style>
 </head><body>
 <div id="root"></div>
 <div id="pb">
-  <span>&#x1F50D;</span>
+  <span style="color:rgba(255,255,255,0.5)">&#x1F50D;</span>
   <button id="b0" onclick="pjump('consent')">Consent</button>
   <button id="b1" onclick="pjump('instr')">Instructions</button>
-  <button onclick="pjump('partA',0,0)">C1-R1 A</button>
-  <button onclick="pjump('partB',0,0)">C1-R1 B</button>
-  <button onclick="pjump('partA',1,0)">C2-R1 A</button>
-  <button onclick="pjump('partA',1,1)">C2-R2 A</button>
-  <button onclick="pjump('partA',2,0)">C3-R1 A</button>
-  <button onclick="pjump('partA',3,0)">C4-R1 A</button>
-  <button onclick="pjump('partA',4,0)">C5-R1 A</button>
+  <button onclick="pjump('partA',0,0)">C1-R1</button>
+  <button onclick="pjump('partA',1,0)">C2-R1</button>
+  <button onclick="pjump('partA',2,0)">C3-R1</button>
+  <button onclick="pjump('partA',3,0)">C4-R1</button>
+  <button onclick="pjump('partA',4,0)">C5-R1</button>
   <button id="b_dp" onclick="pjump('done_pre')">Done (pre)</button>
-  <button id="b_ds" onclick="pjump('done_post')">Done (submitted)</button>
-  <span style="margin-left:6px">Supabase blocked</span>
+  <button id="b_ds" onclick="pjump('done_post')">Done (✓)</button>
+  <span style="margin-left:6px;color:rgba(255,255,255,0.4)">Supabase blocked</span>
 </div>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script>
-const _f=window.fetch;window.fetch=function(url,o){if(url&&url.includes('supabase')){return Promise.resolve({ok:true,text:function(){return Promise.resolve('');}});}return _f(url,o);};
+const _f=window.fetch;window.fetch=function(url,o){
+  if(url&&url.includes('supabase')){return Promise.resolve({ok:true,text:function(){return Promise.resolve('');}});}
+  return _f(url,o);
+};
 const h = React.createElement;
 const { useState, useCallback, createContext, useContext } = React;
 const SUPABASE_URL = "https://qydinydhytepqptcvslb.supabase.co";
@@ -1875,19 +1878,99 @@ function App() {
   );
 }
 
+
+var _appDispatch = null;
+
+window.pjump = function(step, ci, ri) {
+  ci = (ci===undefined)?0:ci; ri = (ri===undefined)?0:ri;
+  if(_appDispatch) _appDispatch({step:step, ci:ci, ri:ri});
+  document.querySelectorAll('#pb button').forEach(function(b){b.classList.remove('on');});
+  var ids={consent:'b0',instr:'b1',done_pre:'b_dp',done_post:'b_ds'};
+  if(ids[step]){var el=document.getElementById(ids[step]);if(el)el.classList.add('on');}
+};
+
+function PreviewApp() {
+  var useState=React.useState, useCallback=React.useCallback, useEffect=React.useEffect;
+  var _l=useState('en'); var lang=_l[0],setLang=_l[1];
+  var _s=useState('consent'); var step=_s[0],setStep=_s[1];
+  var _ci=useState(0); var ci=_ci[0],setCi=_ci[1];
+  var _ri=useState(0); var ri=_ri[0],setRi=_ri[1];
+  var _pa=useState(null); var partAData=_pa[0],setPartAData=_pa[1];
+  var _rsp=useState({}); var responses=_rsp[0],setResponses=_rsp[1];
+  var _fs=useState(false); var forceSuccess=_fs[0],setForceSuccess=_fs[1];
+  var scrollTop=function(){window.scrollTo({top:0});};
+
+  useEffect(function(){
+    _appDispatch=function(t){
+      setForceSuccess(false);
+      if(t.step==='done_pre'){setStep('done');scrollTop();return;}
+      if(t.step==='done_post'){setStep('done');setForceSuccess(true);scrollTop();return;}
+      setStep(t.step);setCi(t.ci);setRi(t.ri);scrollTop();
+    };
+  },[]);
+
+  var totalR=CASES.reduce(function(s,c){return s+c.rubrics.length;},0);
+  var doneR=CASES.slice(0,ci).reduce(function(s,c){return s+c.rubrics.length;},0)+ri;
+  var curCase=CASES[ci];
+  var curRubric=curCase?curCase.rubrics[ri]:null;
+
+  var goPartB=useCallback(function(aData){setPartAData(aData);setStep('partB');scrollTop();},[]);
+  var submitRubric=useCallback(function(id,data){
+    setResponses(function(r){var n=Object.assign({},r);n[id]=data;return n;});
+    var nr=ri+1;
+    if(nr<curCase.rubrics.length){setRi(nr);setStep('partA');}
+    else{var nc=ci+1;if(nc<CASES.length){setCi(nc);setRi(0);setStep('partA');}else setStep('done');}
+    scrollTop();
+  },[ci,ri,curCase]);
+
+  var breadcrumb=(step==='partA'||step==='partB')&&curCase&&curRubric
+    ?T('Case '+(ci+1)+' of '+CASES.length+' › Rubric '+(ri+1)+' of '+curCase.rubrics.length,
+       '사례 '+(ci+1)+'/'+CASES.length+' › 기준표 '+(ri+1)+'/'+curCase.rubrics.length, lang)
+    :null;
+
+  var doneEl=null;
+  if(step==='done'){
+    if(forceSuccess){
+      var pid='P-PREVIEW';
+      var blob=new Blob([JSON.stringify(responses,null,2)],{type:'application/json'});
+      var url=URL.createObjectURL(blob);
+      doneEl=h('div',{style:{maxWidth:760,margin:'0 auto',padding:'40px 20px 80px'}},
+        h('div',{style:{textAlign:'center',padding:'64px 0 48px'}},
+          h('div',{style:{width:80,height:80,borderRadius:'50%',
+            background:'linear-gradient(135deg,'+navy+','+navyMid+')',
+            margin:'0 auto 28px',display:'flex',alignItems:'center',justifyContent:'center'}},
+            h('svg',{width:38,height:38,viewBox:'0 0 24 24',fill:'none',
+              stroke:white,strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'},
+              h('path',{d:'M20 6L9 17l-5-5'}))),
+          h('h1',{style:{fontSize:26,fontWeight:700,color:navy,margin:'0 0 14px',fontFamily:ffs}},
+            T('Your responses have been recorded.','응답이 기록되었습니다.',lang)),
+          h('p',{style:{fontSize:15,color:muted,lineHeight:1.75,maxWidth:480,margin:'0 auto 32px'}},
+            T('Thank you for completing this survey. Your clinical expertise and time are genuinely appreciated — responses like yours are what make this research meaningful.',
+              '이 설문을 완료해 주셔서 감사합니다. 귀하의 임상 전문성과 시간은 진심으로 소중하며, 귀하와 같은 응답이 이 연구를 의미 있게 만들어 줍니다.',lang)),
+          h('a',{href:url,download:'rubric_responses_'+pid+'.json',
+            style:{color:navyMid,fontSize:14,fontWeight:600,textDecoration:'underline',display:'block',marginTop:16}},
+            T('Download a copy of your responses','응답 사본 다운로드',lang))));
+    } else {
+      doneEl=h(DoneScreen,{responses:responses});
+    }
+  }
+
+  return h(LangCtx.Provider,{value:lang},
+    h('div',{style:{background:pageBg,minHeight:'100vh',fontFamily:ffs}},
+      h(StickyHeader,{lang:lang,setLang:setLang,doneR:doneR,totalR:totalR,breadcrumb:breadcrumb}),
+      step==='consent'&&h(ConsentScreen,{onAgree:function(){setStep('instr');scrollTop();}}),
+      step==='instr'&&h(InstrScreen,{onStart:function(){setStep('partA');scrollTop();}}),
+      step==='partA'&&curRubric&&h(SL,null,h(PartAScreen,{key:'A-'+curRubric.id,
+        caseData:curCase,rubric:curRubric,ci:ci,ri:ri,doneR:doneR,totalR:totalR,onNext:goPartB})),
+      step==='partB'&&curRubric&&h(SL,null,h(PartBScreen,{key:'B-'+curRubric.id,
+        caseData:curCase,rubric:curRubric,ci:ci,ri:ri,doneR:doneR,totalR:totalR,
+        isLast:doneR+1>=totalR,onSubmit:submitRubric,partAData:partAData})),
+      step==='done'&&doneEl
+    )
+  );
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(PreviewApp));
 document.getElementById('b0').classList.add('on');
 
 </script></body></html>
-</script>
-</body>
-</html>
-</script>
-</body>
-</html>
-</script>
-</body>
-</html>
-</script>
-</body>
-</html>
