@@ -5,17 +5,11 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;padding-bottom:46px}
-#pb{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1B2B5E;
-  color:white;padding:7px 14px;display:flex;gap:5px;align-items:center;
-  flex-wrap:wrap;font-size:12px;font-family:monospace;
-  box-shadow:0 -2px 8px rgba(0,0,0,0.3);}
+#pb{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1B2B5E;color:white;padding:7px 14px;display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:12px;font-family:monospace;box-shadow:0 -2px 8px rgba(0,0,0,0.3);}
 #pb span{color:rgba(255,255,255,0.45);}
-#pb button{padding:4px 8px;background:rgba(255,255,255,0.10);
-  border:1px solid rgba(255,255,255,0.2);border-radius:4px;
-  color:white;cursor:pointer;font-size:11px;font-family:monospace;}
+#pb button{padding:4px 8px;background:rgba(255,255,255,0.10);border:1px solid rgba(255,255,255,0.2);border-radius:4px;color:white;cursor:pointer;font-size:11px;font-family:monospace;}
 #pb button:hover{background:rgba(255,255,255,0.2);}
 #pb button.on{background:#2D4A8A;border-color:rgba(255,255,255,0.7);}
-#pb .sep{color:rgba(255,255,255,0.2);margin:0 2px;}
 </style>
 </head><body>
 <div id="root"></div>
@@ -23,19 +17,15 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;padding-bottom:46
   <span>&#x1F50D;</span>
   <button id="b0" onclick="pjump('consent')">Consent</button>
   <button id="b1" onclick="pjump('instr')">Instructions</button>
-  <span class="sep">|</span>
   <button onclick="pjump('partA',0,0)">C1-R1 A</button>
   <button onclick="pjump('partB',0,0)">C1-R1 B</button>
-  <button onclick="pjump('partA',0,1)">C1-R2 A</button>
-  <button onclick="pjump('partB',0,1)">C1-R2 B</button>
-  <button onclick="pjump('partA',0,3)">C1-R4 A</button>
-  <span class="sep">|</span>
-  <button onclick="pjump('partA',1,0)">C3-R1 A</button>
-  <button onclick="pjump('partA',2,0)">C4-R1 A</button>
-  <button onclick="pjump('partA',3,0)">C5-R1 A</button>
-  <span class="sep">|</span>
-  <button id="b_dp" onclick="pjump('done_pre')">Done (pre-submit)</button>
-  <button id="b_ds" onclick="pjump('done_post')">Done (submitted ✓)</button>
+  <button onclick="pjump('partA',1,0)">C2-R1 A</button>
+  <button onclick="pjump('partA',1,1)">C2-R2 A</button>
+  <button onclick="pjump('partA',2,0)">C3-R1 A</button>
+  <button onclick="pjump('partA',3,0)">C4-R1 A</button>
+  <button onclick="pjump('partA',4,0)">C5-R1 A</button>
+  <button id="b_dp" onclick="pjump('done_pre')">Done (pre)</button>
+  <button id="b_ds" onclick="pjump('done_post')">Done (submitted)</button>
   <span style="margin-left:6px">Supabase blocked</span>
 </div>
 <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -216,6 +206,575 @@ const CASES = [
         ],
       },
     ],
+  },
+  { id:2, en:"Case 2: Toddler with vomiting and diarrhea — viral gastroenteritis with moderate dehydration", ko:"사례 2: 구토와 설사를 호소하는 유아 — 중등도 탈수를 동반한 바이러스성 위장관염",
+    vignette:{rows:[
+        { en:"Chief Complaint", ko:"주 호소", val_en:"Vomiting, watery diarrhea, and poor oral intake", val_ko:"구토, 수양성 설사, 경구 섭취 감소" },
+        { en:"History of Presenting Illness", ko:"현병력", val_en:"3-year-old boy with 2 days of non-bloody, non-bilious vomiting (4 episodes) and watery diarrhea (6–7 stools/day). Low-grade fever to 38.2°C, generalized crampy abdominal pain, markedly reduced oral intake, no void in ~10 hours. No hematochezia, no bilious emesis, no recent travel. Several daycare contacts with similar illness.", val_ko:"3세 남아로 2일 전부터 비협성, 비담즙성 구토(4회)와 수양성 설사(하루 6–7회) 발생. 38.2°C까지 미열, 전반적 경련성 복통, 경구 섭취 현저히 감소, 약 10시간 동안 배뇈 없음. 협변 없음, 담즙성 구토 없음, 최근 여행력 없음. 어린이집에서 비슷한 증상 접촉자 여러 명 있음." },
+        { en:"Past Medical History", ko:"과거 병력", val_en:"Unremarkable; term birth; normal development.", val_ko:"특이사항 없음; 만삭 출생; 발달 정상." },
+        { en:"Medications", ko:"복용 약물", val_en:"None routinely; single dose acetaminophen last night.", val_ko:"정기 복용 약물 없음; 어젟밤 아세트아미노펜 1회 복용." },
+        { en:"Allergies", ko:"알레르기", val_en:"No known drug allergies.", val_ko:"알려진 약물 알레르기 없음." },
+        { en:"Family/Social History", ko:"사회력/가족력", val_en:"Lives with parents; attends daycare; no smokers at home.", val_ko:"부모와 함께 거주; 어린이집 등원 중; 집에서 흡연자 없음." },
+        { en:"Immunizations", ko:"예방접종", val_en:"Up-to-date for age (including rotavirus series completed).", val_ko:"연령에 맞게 접종 완료(로타바이러스 백신 포함)." },
+        { en:"Review of Systems", ko:"계통별 문진", val_en:"Positive: fever, vomiting, diarrhea, abdominal cramping, decreased urine output. Negative: severe localized pain, rash, cough, dysuria, blood in stool.", val_ko:"양성: 발열, 구토, 설사, 복부 경련, 소변량 감소. 음성: 심한 국소 복통, 발진, 기침, 배뇈통, 협변." },
+        { en:"Relevant Lab/Studies", ko:"관련 검사 결과", val_en:"CBC normal. BMP: Na 134 (low), CO₂ 16 (low), BUN 24 (high). VBG: pH 7.34, HCO₃⁻ 18 (low). Glucose 74. UA: SG 1.030, ketones 1+, nitrite/LE negative.", val_ko:"CBC 정상. BMP: Na 134 (낙음), CO₂ 16 (낙음), BUN 24 (높음). 정맥 혁가스: pH 7.34, HCO₃⁻ 18 (낙음). 혁당 74. 소변: 비중 1.030, 케톤 1+, 아질산염/LE 음성." }
+      ],
+      vitals:[
+        { en:"Age", ko:"연령", val_en:"3 years", val_ko:"3세" },
+        { en:"Temperature", ko:"체온", val_en:"38.1 °C (36.5–37.5 °C)", val_ko:"38.1°C (36.5–37.5°C)" },
+        { en:"Heart Rate", ko:"심박수", val_en:"138 bpm (80–120 bpm) — tachycardic", val_ko:"138 bpm (80–120 bpm) — 빈맥" },
+        { en:"Respiratory Rate", ko:"호흡수", val_en:"28 breaths/min (20–28 breaths/min)", val_ko:"28회/분 (20–28회/분)" },
+        { en:"Blood Pressure", ko:"협압", val_en:"92/58 mmHg (90–110/55–75 mmHg)", val_ko:"92/58 mmHg (90–110/55–75 mmHg)" },
+        { en:"SpO₂", ko:"산소포화도", val_en:"98% on room air (≥95%)", val_ko:"98% 실내 공기 (≥95%)" },
+        { en:"Weight", ko:"체중", val_en:"14.2 kg", val_ko:"14.2 kg" }
+      ],
+      exam:[
+        { en:"General", ko:"전반", val_en:"Tired but alert; mildly ill-appearing; no respiratory distress", val_ko:"피공해 보이나 의식 명료; 경미한 병색; 호흡공란 없음" },
+        { en:"HEENT", ko:"HEENT", val_en:"Dry mucous membranes, mild sunken eyes; no tonsillar exudates; TMs clear", val_ko:"점막 건조, 눈이 약간 들어감; 편도 삼출 없음; 고막 정상" },
+        { en:"Cardiovascular", ko:"심혁관", val_en:"Tachycardic, regular rhythm, no murmur; capillary refill ~3 seconds", val_ko:"빈맥, 규칙적 리듬, 심잡음 없음; 모세혁관 재충만 약 3초" },
+        { en:"Respiratory", ko:"호흡기", val_en:"Clear to auscultation; no wheeze/crackles; good air entry", val_ko:"청진 시 깨끗함; 천명/수포음 없음; 공기 유입 양호" },
+        { en:"Abdomen", ko:"복부", val_en:"Soft, nondistended; mild diffuse tenderness; bowel sounds hyperactive", val_ko:"부드럽고 팝만 없음; 전반적 경미 압통; 장음 증가" },
+        { en:"Skin", ko:"피부", val_en:"Warm; mild decreased turgor; no rash; no petechiae/purpura", val_ko:"따뜻함; 피부 긴장도 약간 감소; 발진 없음; 점상출혈/자반 없음" },
+        { en:"Neuro", ko:"신경", val_en:"Interactive; normal tone; no focal deficit", val_ko:"상호작용 가능; 근긴장도 정상; 국소 신경학적 결손 없음" }
+      ]},
+    rubrics:[
+      {
+        id:"2-1",
+        label_en:"Rubric 1",
+        label_ko:"기준표 1",
+        d1pts:50,d2pts:50,
+        d1desc_en:"영역 1: 일반 임상 병력 청취 (50점)",
+        d1desc_ko:"Item 1. Chief Complaint: Clearly elicits and articulates the primary presenting problem(s) in patient's/family's own words. — 5 points",
+        d2desc_en:"항목 10. 구토 특성 평가: 구토의 빈도, 양, 내용물(담즙성/혈성/분출성 여부), 발생 시 점, 유발 요인, 그리고 음식 섭취와의 관계를 확인한다. — 12점 Explanation: Primary symptom defining GE; high weight to differentiate obstruction vs. infectious causes. 설명: 위장관염을 특징짓는 주요 증상이다. 장폐색과 같은 질환과 감염성 원인을 구별하 는 데 중요하므로 높은 가중치를 부여하였다.",
+        d2desc_ko:"Item 10. Vomiting Characterization: Probes frequency, volume, content (bilious/bloody/projectile), timing, triggers, and relation to feeds/intake. — 12 points",
+        threshold_en:"",
+        threshold_ko:"",
+        rationale_en:"",
+        rationale_ko:"",
+        d1:[
+          {
+            id:"2-1-1-1",
+            pts:5,
+            en:"Item 1. Chief Complaint: Clearly elicits and articulates the primary presenting problem(s) in patient's/family's own words. — 5 points",
+            ko:"항목 1. 주호소(Chief Complaint): 환자 또는 보호자의 표현을 그대로 반영하여 주 요 호소 증상을 명확히 확인하고 정리한다.",
+            xEn:"Establishes encounter focus; foundational and routinely expected, modest weight.",
+            xKo:"진료의 초점을 설정하는 단계로 모든 병력 청취의 기초가 된다. 일반적으로 항상 수행되는 기본 항목이므로 비교적 낮은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-2",
+            pts:12,
+            en:"Item 2. History of Presenting Illness: Systematically explores onset, timing, duration, severity, progression, aggravating/alleviating factors, and associated symptoms using a structured approach (e.g., OPQRST). — 12 points",
+            ko:"항목 2. 현병력(History of Presenting Illness): OPQRST와 같은 구조화된 접근 을 사용하여 발병 시점, 발생 시기, 지속 기간, 중증도, 진행 양상, 악화/완화 요인, 동반 증상을 체계적으로 탐색한다.",
+            xEn:"Captures illness trajectory for urgency in pediatric EM; core to all differentials, highest general weight.",
+            xKo:"질환의 경과를 파악하여 소아 응급 상황에서 긴급도를 판단하는 데 도움이 된다. 모든 감별 진단의 핵심이 되는 요소이므로 일반 항목 중 가장 높은 가중치를 부여하였 다."
+          },
+          {
+            id:"2-1-1-3",
+            pts:7,
+            en:"Item 3. Past Medical History: Inquires about chronic illnesses, prior hospitalizations, surgeries, birth/developmental history, and previous similar episodes. — 7 points",
+            ko:"항목 3. 과거 병력: 만성 질환, 이전 입원 이력, 수술 이력, 출생력 및 발달력, 과거 유사 증상 발생 여부를 확인한다.",
+            xEn:"Identifies risks or patterns affecting management; moderate for baseline stratification.",
+            xKo:"치료 계획에 영향을 줄 수 있는 위험 요인이나 질환 패턴을 파악하는 데 도움이 된 다. 기본적인 위험도 평가를 위해 중간 수준의 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-4",
+            pts:4,
+            en:"Item 4. Medications: Documents current prescriptions, over-the-counter drugs, recent antibiotics, and adherence. — 4 points",
+            ko:"항목 4. 약물 복용력: 현재 처방약, 일반의약품, 최근 항생제 사용, 약물 복용 순응도를 확인한다.",
+            xEn:"Guides therapy and avoids interactions; straightforward, low weight.",
+            xKo:"치료 계획 수립에 도움이 되며 약물 상호작용을 예방한다. 비교적 확인이 간단한 항목이므로 낮은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-5",
+            pts:4,
+            en:"Item 5. Allergies: Asks about drug/food allergies, adverse reactions, and anaphylaxis history. — 4 points",
+            ko:"항목 5. 알레르기 병력: 약물 및 음식 알레르기, 이상 반응, 아나필락시스 병력을 확인한 다.",
+            xEn:"Ensures prescribing safety; low weight paired with medications.",
+            xKo:"안전한 처방을 위해 필수적인 확인 항목이다. 약물 복용력과 함께 환자 안전을 위 한 선별 항목이므로 낮은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-6",
+            pts:4,
+            en:"Item 6. Immunizations: Confirms status, recent vaccines, and gaps relevant to infectious risks. — 4 points",
+            ko:"항목 6. 예방접종: 예방접종 상태, 최근 접종 여부, 감염 위험과 관련된 접종 공백 여부 를 확인한다.",
+            xEn:"Critical in pediatrics for context; low as often documented.",
+            xKo:"소아 진료에서 감염 위험을 평가하는 데 중요한 배경 정보를 제공한다. 다만 대부 분 이미 기록되어 있는 경우가 많으므로 낮은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-7",
+            pts:5,
+            en:"Item 7. Family History: Explores hereditary conditions and relevant familial illnesses. — 5 points",
+            ko:"항목 7. 가족력: 유전 질환 및 관련 가족 질환 여부를 확인한다.",
+            xEn:"Uncovers genetic risks; pediatric-relevant, moderate weight.",
+            xKo:"유전적 위험 요인을 파악하는 데 도움이 된다. 소아 환자에서의 중요성을 고려하 여 중간 수준의 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-8",
+            pts:4,
+            en:"Item 8. Social History: Assesses home environment, caregivers, school/daycare exposure, and habits. — 4 points",
+            ko:"항목 8. 사회력: 가정 환경, 보호자, 학교/어린이집 노출, 생활 습관을 평가한다.",
+            xEn:"Contextualizes adherence/exposures; supportive, low weight.",
+            xKo:"치료 순응도와 환경적 노출을 이해하는 데 도움이 되는 맥락 정보를 제공한다. 보 조적인 역할이므로 낮은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-1-9",
+            pts:5,
+            en:"Item 9. Review of Systems: Performs age-appropriate screening for unrelated symptoms. — 5 points",
+            ko:"항목 9. 전신 증상 검토(Review of Systems): 관련되지 않은 증상을 확인하기 위해 연령에 적절한 선별 문진을 시행한다.",
+            xEn:"Safety net for comorbidities; moderate for comprehensiveness.",
+            xKo:"동반 질환을 놓치지 않도록 하는 안전망 역할을 한다. 포괄적인 평가를 위해 중간 수준의 가중치를 부여하였다."
+          },
+        ],
+        d2:[
+          {
+            id:"2-1-2-10",
+            pts:12,
+            en:"Item 10. Vomiting Characterization: Probes frequency, volume, content (bilious/bloody/projectile), timing, triggers, and relation to feeds/intake. — 12 points",
+            ko:"항목 10. 구토 특성 평가: 구토의 빈도, 양, 내용물(담즙성/혈성/분출성 여부), 발생 시 점, 유발 요인, 그리고 음식 섭취와의 관계를 확인한다.",
+            xEn:"Primary symptom defining GE; high weight to differentiate obstruction vs. infectious causes.",
+            xKo:"위장관염을 특징짓는 주요 증상이다. 장폐색과 같은 질환과 감염성 원인을 구별하 는 데 중요하므로 높은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-2-11",
+            pts:10,
+            en:"Item 11. Diarrhea Characterization: Details frequency, volume, consistency, blood/mucus, and fecal odor. — 10 points",
+            ko:"항목 11. 설사 특성 평가: 설사의 빈도, 양, 대변의 성상, 혈액 또는 점액 여부, 대변 냄 새 등을 확인한다.",
+            xEn:"Quantifies GE severity and rules out invasive pathogens; high but secondary to vomiting.",
+            xKo:"위장관염의 중증도를 파악하고 침습성 병원체 가능성을 배제하는 데 도움이 된다. 중요하지만 구토 평가보다는 2차적인 요소이므로 높은 수준이지만 그보다 낮은 가중치 를 부여하였다."
+          },
+          {
+            id:"2-1-2-12",
+            pts:12,
+            en:"Item 12. Dehydration History: Assesses oral intake (amount/type tolerated), urine output, tears, thirst, and activity changes. — 12 points",
+            ko:"항목 12. 탈수 관련 병력: 경구 섭취량(섭취 가능한 양과 종류), 소변량, 눈물 유무, 갈 증, 활동 수준 변화 등을 평가한다.",
+            xEn:"Pivotal for dehydration degree and disposition in peds EM; highest weight for rehydration decisions.",
+            xKo:"소아 응급 상황에서 탈수 정도와 처치 방향을 결정하는 데 핵심적인 요소이다. 특 히 수액 치료 및 재수화 방법을 결정하는 데 직접적인 영향을 미치므로 가장 높은 가중 치를 부여하였다."
+          },
+          {
+            id:"2-1-2-13",
+            pts:8,
+            en:"Item 13. Exposure History: Inquires about sick contacts, daycare outbreaks, travel, diet changes, and animal exposures. — 8 points",
+            ko:"항목 13. 노출력: 아픈 접촉자, 어린이집 집단 발생, 여행력, 식이 변화, 동물 접촉 여부 등을 확인한다.",
+            xEn:"Confirms viral etiology and outbreak risk; substantial for targeted dx/public health.",
+            xKo:"바이러스성 원인을 확인하고 집단 발생 가능성을 평가하는 데 도움이 된다. 또한 표적 진단과 공중보건적 대응 측면에서 중요하므로 비교적 높은 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-2-14",
+            pts:5,
+            en:"Item 14. Fever Pattern: Documents onset, peaks, chills, and antipyretic response. — 5 points",
+            ko:"항목 14. 발열 양상: 발열 시작 시점, 최고 체온, 오한 여부, 해열제에 대한 반응을 확인 한다.",
+            xEn:"Gauges inflammatory burden; moderate as supportive of systemic GE.",
+            xKo:"염증 반응의 정도를 파악하는 데 도움이 된다. 전신적 위장관염을 시사하는 보조 적 정보이므로 중간 수준의 가중치를 부여하였다."
+          },
+          {
+            id:"2-1-2-15",
+            pts:3,
+            en:"Item 15. Red Flag Screening: Explores bilious emesis, hematochezia, severe/localized pain, lethargy, or neurological changes. — 3 points",
+            ko:"항목 15. 위험 신호 선별: 담즙성 구토, 혈변, 심한 또는 국소적인 통증, 무기력, 신경학 적 변화 여부를 확인한다.",
+            xEn:"Excludes surgical emergencies (e.g., intussusception); lower confirmatory weight.",
+            xKo:"장중첩증과 같은 외과적 응급 질환을 배제하기 위한 질문이다. 주된 진단을 확인 하기보다는 배제를 위한 요소이므로 낮은 가중치를 부여하였다."
+          },
+        ]
+      },
+      {
+        id:"2-2",
+        label_en:"Rubric 2",
+        label_ko:"기준표 2",
+        d1pts:40,d2pts:60,
+        d1desc_en:"* Domain 2 (Case-Specific): 60 Points * Total: 100 Points 배점 요약 * 영역 1 (일반 병력 청취): 40점 * 영역 2 (사례 특이 병력): 60점 * 총점: 100점 Note to Evaluator: A score of zero on Item 2.1 (Hydration) or Item 2.2 (Bilious/Bloody screen) constitutes a \"Critical Fail,\" as these omissions endanger patient safety. 평가자 참고 사항: 항목 2.1(수분 상태 평가) 또는 항목 2.2(담즙성/혈성 구토 선별)에서 0점을 받을 경우 “Critical Fail(중대한 실패)”로 간주됩니다. 이러한 항목을 놓치는 것은 환자 안전에 위험을 초래할 수 있기 때문입니다. * A. Evaluation of Item Inclusion For each item below, please select “Agree” if you believe it should be included, or “Disagree” if not. A. 항목 포함 여부 평가 아래 각 항목에 대해 포함되어야 한다고 생각하시면 \"동의\", 그렇지 않으면 \"비동의\"를 선택해 주세요. Agree Disagree 동의 비동의 Domain 1: General Clinical History-Taking (40 Points) This domain evaluates standard pediatric interviewing techniques, ensuring a comprehensive background is obtained to contextualize the acute illness. 영역 1: 일반 임상 병력 청취 (40점) 이 영역은 표준적인 소아 문진 기법을 평가하며, 급성 질환을 이해하기 위한 포괄적인 배경 정보를 수집하는지를 확인한다.",
+        d1desc_ko:"* 영역 2 (사례 특이 병력): 60점 * 총점: 100점 Note to Evaluator: A score of zero on Item 2.1 (Hydration) or Item 2.2 (Bilious/Bloody screen) constitutes a \"Critical Fail,\" as these omissions endanger patient safety. 평가자 참고 사항: 항목 2.1(수분 상태 평가) 또는 항목 2.2(담즙성/혈성 구토 선별)에서 0점을 받을 경우 “Critical Fail(중대한 실패)”로 간주됩니다. 이러한 항목을 놓치는 것은 환자 안전에 위험을 초래할 수 있기 때문입니다. * A. Evaluation of Item Inclusion For each item below, please select “Agree” if you believe it should be included, or “Disagree” if not. A. 항목 포함 여부 평가 아래 각 항목에 대해 포함되어야 한다고 생각하시면 \"동의\", 그렇지 않으면 \"비동의\"를 선택해 주세요. Agree Disagree 동의 비동의 Domain 1: General Clinical History-Taking (40 Points) This domain evaluates standard pediatric interviewing techniques, ensuring a comprehensive background is obtained to contextualize the acute illness. 영역 1: 일반 임상 병력 청취 (40점) 이 영역은 표준적인 소아 문진 기법을 평가하며, 급성 질환을 이해하기 위한 포괄적인 배경 정보를 수집하는지를 확인한다. Item 1. Introduction and Dyadic Engagement: Introduces self to parents and the toddler. Attempts to engage the toddler (e.g., wave, smile, simple question) to assess baseline alertness while obtaining history from caregivers. — 5 points",
+        d2desc_en:"항목 6. 수분 상태 정량화(“In and Out” 평가): 섭취(In) — 시도한 수분의 종류(물, 주스, 경구 수분 보충 용액 등)와 섭취량을 구체적으로 확인한다; 배설(Out) — 마지막 기저귀가 젖은 시간/마지막 배뇨 시점과 평소와 비교한 소변량을 구체적으로 확인한다. — 20점 Explanation: This is the most heavily weighted item. The vignette indicates no void for 10 hours and tachycardia, signaling moderate dehydration. The history of urine output is the most reliable historical proxy for end-organ perfusion. Failure to ask this misses the severity of the case. 설명: 이 항목은 가장 높은 가중치를 가진다. 사례에서는 10시간 동안 배뇨가 없고 빈맥 이 나타나 중등도 탈수를 시사한다. 소변량 병력은 말초 장기 관류 상태를 평가하는 가 장 신뢰할 수 있는 병력 기반 지표이다. 이를 질문하지 않으면 환자의 중증도를 놓치게 된다.",
+        d2desc_ko:"이 영역은 지원자의 임상적 추론 능력을 평가하며, 특히 탈수 정도를 정량화하고, 외과 적 복증의 위험 신호를 배제하며, 입원 필요 여부를 판단할 수 있는지를 평가한다. Item 6. Quantification of Hydration Status (The \"In and Out\" Assessment): Intake - Specifics on ﬂuid type (water vs. juice vs. rehydration solution) and volume attempted; Output - Specific inquiry regarding the time of last wet diaper/void and the quantity of urine relative to baseline. — 20 points",
+        threshold_en:"",
+        threshold_ko:"",
+        rationale_en:"",
+        rationale_ko:"",
+        d1:[
+          {
+            id:"2-2-1-1",
+            pts:5,
+            en:"Item 1. Introduction and Dyadic Engagement: Introduces self to parents and the toddler. Attempts to engage the toddler (e.g., wave, smile, simple question) to assess baseline alertness while obtaining history from caregivers. — 5 points",
+            ko:"항목 1. 소개 및 부모-아동 상호작용: 보호자와 유아에게 자신을 소개하고, 유아와의 상 호작용을 시도한다(예: 손 흔들기, 미소, 간단한 질문). 동시에 보호자로부터 병력을 청 취하면서 아이의 기본적인 각성 상태를 평가한다.",
+            xEn:"In a dehydrated child, the initial interaction is data. A child who engages back is less likely to be in shock. Establishing rapport with anxious parents is essential for obtaining an accurate history of intake.",
+            xKo:"탈수된 소아에서 초기 상호작용 자체가 중요한 임상 정보가 된다. 아이가 상호작 용에 반응한다면 쇼크 상태일 가능성은 낮다. 또한 불안한 보호자와 신뢰 관계를 형성하 는 것은 섭취량과 관련된 정확한 병력을 얻는 데 중요하다."
+          },
+          {
+            id:"2-2-1-2",
+            pts:10,
+            en:"Item 2. Chronology and Symptom Progression: Establishes the exact onset of vomiting vs. diarrhea. Determines the frequency of episodes over the last 24–48 hours and whether symptoms are improving or worsening. — 10 points",
+            ko:"항목 2. 시간 경과 및 증상 진행 양상: 구토와 설사의 정확한 발생 시점을 구분하여 확 인한다. 지난 24–48시간 동안의 증상 발생 빈도와 증상이 호전되는지 또는 악화되는지 를 파악한다.",
+            xEn:"Differentiating viral gastroenteritis (often vomiting first, then diarrhea) from other pathologies requires a clear timeline. It also establishes the \"pace\" of fluid loss.",
+            xKo:"바이러스성 위장관염(대개 구토가 먼저 나타난 후 설사가 발생)과 다른 질환을 감 별하기 위해서는 명확한 시간 경과가 필요하다. 또한 이는 체액 손실이 얼마나 빠르게 진행되고 있는지를 판단하는 데에도 중요하다."
+          },
+          {
+            id:"2-2-1-3",
+            pts:10,
+            en:"Item 3. Past Medical History and Immunization Status: Asks about birth history, underlying chronic conditions, and specifically confirms Rotavirus vaccination status. — 10 points",
+            ko:"항목 3. 과거 병력 및 예방접종 상태: 출생력, 기저 만성 질환 여부를 확인하고 특히 로 타바이러스 예방접종 여부를 확인한다.",
+            xEn:"A history of prematurity or prior surgeries could raise the risk for adhesions/obstruction. Knowing the Rotavirus status helps risk-stratify the likelihood of severe viral illness versus other causes.",
+            xKo:"미숙아 출생력이나 이전 수술 병력이 있는 경우 유착이나 장폐색 위험이 증가할 수 있다. 또한 로타바이러스 예방접종 여부를 확인하면 중증 바이러스성 질환의 가능성 과 다른 원인의 가능성을 구분하는 데 도움이 된다."
+          },
+          {
+            id:"2-2-1-4",
+            pts:10,
+            en:"Item 4. Epidemiology and Sick Contacts: Inquires about daycare attendance, recent travel, and similar symptoms in family members or close contacts. — 10 points",
+            ko:"항목 4. 역학적 요인 및 접촉력: 어린이집 등원 여부, 최근 여행력, 가족이나 가까운 접 촉자 중 유사한 증상이 있는지 확인한다.",
+            xEn:"The presence of \"cluster cases\" (like the daycare contacts in this vignette) strongly supports a viral diagnosis and lowers the probability of surgical pathology, though it does not eliminate it.",
+            xKo:"집단 발생 사례(이 사례에서처럼 어린이집 접촉자)가 있는 경우 바이러스성 원인 을 강하게 시사하며, 외과적 질환 가능성은 낮아진다. 다만 이러한 가능성을 완전히 배 제할 수는 없다."
+          },
+          {
+            id:"2-2-1-5",
+            pts:5,
+            en:"Item 5. Medication and Allergy Review: Confirms current medications (including recent antipyretics or anti-emetics given at home) and allergies. — 5 points",
+            ko:"항목 5. 약물 및 알레르기 확인: 현재 복용 중인 약물(집에서 투여한 해열제나 항구토제 포함)과 알레르기 여부를 확인한다.",
+            xEn:"Essential to ensure no toxic ingestions mimic gastroenteritis and to determine if the child has already failed home management (e.g., vomited after Tylenol).",
+            xKo:"독성 물질 섭취가 위장관염처럼 보이는 증상을 유발했을 가능성을 배제하고, 아이 가 이미 가정에서의 처치에 실패했는지(예: 타이레놀 복용 후에도 구토) 판단하는 데 중 요하다."
+          },
+        ],
+        d2:[
+          {
+            id:"2-2-2-6",
+            pts:20,
+            en:"Item 6. Quantification of Hydration Status (The \"In and Out\" Assessment): Intake - Specifics on fluid type (water vs. juice vs. rehydration solution) and volume attempted; Output - Specific inquiry regarding the time of last wet diaper/void and the quantity of urine relative to baseline. — 20 points",
+            ko:"항목 6. 수분 상태 정량화(“In and Out” 평가): 섭취(In) — 시도한 수분의 종류(물, 주스, 경구 수분 보충 용액 등)와 섭취량을 구체적으로 확인한다; 배설(Out) — 마지막 기저귀가 젖은 시간/마지막 배뇨 시점과 평소와 비교한 소변량을 구체적으로 확인한다.",
+            xEn:"This is the most heavily weighted item. The vignette indicates no void for 10 hours and tachycardia, signaling moderate dehydration. The history of urine output is the most reliable historical proxy for end-organ perfusion. Failure to ask this misses the severity of the case.",
+            xKo:"이 항목은 가장 높은 가중치를 가진다. 사례에서는 10시간 동안 배뇨가 없고 빈맥 이 나타나 중등도 탈수를 시사한다. 소변량 병력은 말초 장기 관류 상태를 평가하는 가 장 신뢰할 수 있는 병력 기반 지표이다. 이를 질문하지 않으면 환자의 중증도를 놓치게 된다."
+          },
+          {
+            id:"2-2-2-7",
+            pts:15,
+            en:"Item 7. Characterization of Emesis and Stool (Red Flag Screen): Explicitly asks if vomit is bilious (green) or bloody, and if stool contains blood (hematochezia) or mucus (dysentery). — 15 points",
+            ko:"항목 7. 구토 및 대변 특성 평가(위험 신호 선별): 구토물이 담즙성(녹색)인지 또는 혈 성인지, 대변에 혈액(혈변)이나 점액(이질성 설사)이 있는지 명확히 질문한다.",
+            xEn:"Bilious vomiting in a toddler is a surgical emergency (volvulus/malrotation) until proven otherwise. Bloody stool changes the differential to bacterial enteritis or intussusception. These questions must be asked to safely diagnose \"simple\" gastroenteritis.",
+            xKo:"유아에서 담즙성 구토는 장염전/장회전 이상과 같은 외과적 응급 상황을 시사할 수 있으므로, 반증될 때까지 응급으로 간주해야 한다. 또한 혈변이 있는 경우 세균성 장 염이나 장중첩증 가능성을 고려해야 한다. 따라서 “단순한” 위장관염으로 진단하기 전 에 반드시 확인해야 하는 질문이다."
+          },
+          {
+            id:"2-2-2-8",
+            pts:10,
+            en:"Item 8. Pain Characterization (Intussusception/Appendicitis Screen): Distinguishes between generalized cramping (typical of gastroenteritis) vs. focal pain (RLQ) or severe, intermittent, colicky pain (intussusception). — 10 points",
+            ko:"항목 8. 통증 특성 평가(장중첩증/충수염 선별): 전반적인 경련성 통증(위장관염에서 흔함)인지, 국소적인 통증(우하복부)인지, 또는 심하고 간헐적인 산통성 통증(장중첩증) 을 구분하여 확인한다.",
+            xEn:"While the child has diarrhea, the clinician must ensure this isn't a surgical abdomen presenting atypically. Intussusception often presents with lethargy and vomiting; failing to characterize the pain pattern can lead to a missed diagnosis.",
+            xKo:"이 아이에게 설사가 있지만, 임상의는 이것이 비전형적으로 나타난 외과적 복증이 아닌지 반드시 확인해야 한다. 장중첩증은 무기력과 구토로 나타나는 경우가 많으며, 통 증의 양상을 제대로 평가하지 않으면 진단을 놓칠 수 있다."
+          },
+          {
+            id:"2-2-2-9",
+            pts:10,
+            en:"Item 9. Activity Level and Mental Status (Perfusion Assessment): Asks about the child’s behavior at home. Are they playing? Are they lethargic/floppy? Are they producing tears when crying? — 10 points",
+            ko:"항목 9. 활동 수준 및 정신 상태 평가(관류 상태 평가): 집에서 아이의 행동 상태에 대 해 질문한다. 아이가 평소처럼 놀고 있는지, 무기력하거나 축 늘어져 있는지, 울 때 눈물 이 나는지 등을 확인한다.",
+            xEn:"Parental report of activity is a sensitive indicator of systemic illness. A child who is \"not acting himself\" or is difficult to arouse suggests severe dehydration or sepsis/metabolic derangement (e.g., hypoglycemia or electrolyte imbalance).",
+            xKo:"부모가 보고하는 아이의 활동 수준은 전신 질환을 평가하는 데 민감한 지표이다. 아이가 “평소와 다르게 행동한다”거나 깨우기 어려운 상태라면 중증 탈수나 패혈증, 또 는 대사 이상(예: 저혈당이나 전해질 불균형)을 시사할 수 있다."
+          },
+          {
+            id:"2-2-2-10",
+            pts:5,
+            en:"Item 10. Systemic Review for Extraintestinal Causes: Screens for non- GI causes of vomiting, specifically asking about cough/tachypnea (pneumonia), dysuria (UTI), or headache/stiff neck (meningitis). — 5 points",
+            ko:"항목 10. 장관 외 원인에 대한 전신 문진: 구토의 비위장관 원인을 선별하기 위해 기침/ 빈호흡(폐렴), 배뇨통(요로감염), 두통/경부 강직(수막염) 여부를 질문한다.",
+            xEn:"In pediatrics, vomiting is a nonspecific sign of infection. A thorough clinician considers sources outside the abdomen, such as a lower lobe pneumonia or UTI, which are ruled out in the vignette but must be asked about.",
+            xKo:"소아에서 구토는 비특이적인 감염 증상일 수 있다. 숙련된 임상의는 복부 외의 원 인도 고려해야 하며, 예를 들어 하엽 폐렴이나 요로감염 등이 해당된다. 이러한 원인들 은 이 사례에서는 배제되지만, 반드시 문진을 통해 확인해야 한다."
+          },
+        ]
+      },
+      {
+        id:"2-3",
+        label_en:"Rubric 3",
+        label_ko:"기준표 3",
+        d1pts:38,d2pts:62,
+        d1desc_en:"총점: 100점 (영역 1: 38점 | 영역 2: 62점) Design Rationale for Domain Weighting: Domain 2 receives a heavier weighting (62/38) because in pediatric gastroenteritis, the quality of the clinical encounter depends overwhelmingly on the accuracy of dehydration assessment and the ability to exclude surgical mimics — both of which are history-driven skills. The general history elements in Domain 1 provide essential context and safety checks but are less discriminating of clinical competence for this specific presentation. The rubric intentionally emphasizes that the most impactful questions in this case are quantitative (how much in, how much out, how long since last void) rather than purely qualitative, reﬂecting the ﬂuid-balance–centered reasoning that defines excellent management of this common pediatric emergency. 영역 가중치 설계 근거: 소아 위장관염에서는 탈수 평가의 정확성과 외과적 질환 가능성을 배제하는 능력이 임상 평가의 핵심이 므로 영역 2에 더 높은 가중치(62/38)를 부여하였다. 이 두 가지는 모두 병력 청취에 크게 의존하는 기술이다. 영역 1의 일반 병 력 요소들은 중요한 배경 정보와 안전 확인 역할을 하지만, 이 증례에서 임상 역량을 구별하는 요소로서는 상대적으로 영향이 적 다. 따라서 이 기준표는 이 사례에서 가장 중요한 질문이 질적 질문이 아니라 정량적 질문(얼마나 섭취했는지, 얼마나 배출했는 지, 마지막 배뇨가 언제였는지 등)이라는 점을 강조하도록 설계되었다. 이는 소아에서 흔한 응급 상황인 위장관염 관리에서 핵심 이 되는 체액 균형 중심의 임상 추론을 반영한다. * A. Evaluation of Item Inclusion For each item below, please select “Agree” if you believe it should be included, or “Disagree” if not. A. 항목 포함 여부 평가 아래 각 항목에 대해 포함되어야 한다고 생각하시면 \"동의\", 그렇지 않으면 \"비동의\"를 선택해 주세요. Agree Disagree 동의 비동의 Domain 1: General Clinical History-Taking (38 points) 영역 1: 일반 임상 병력 청취 (38점)",
+        d1desc_ko:"Design Rationale for Domain Weighting: Domain 2 receives a heavier weighting (62/38) because in pediatric gastroenteritis, the quality of the clinical encounter depends overwhelmingly on the accuracy of dehydration assessment and the ability to exclude surgical mimics — both of which are history-driven skills. The general history elements in Domain 1 provide essential context and safety checks but are less discriminating of clinical competence for this specific presentation. The rubric intentionally emphasizes that the most impactful questions in this case are quantitative (how much in, how much out, how long since last void) rather than purely qualitative, reﬂecting the ﬂuid-balance–centered reasoning that defines excellent management of this common pediatric emergency. 영역 가중치 설계 근거: 소아 위장관염에서는 탈수 평가의 정확성과 외과적 질환 가능성을 배제하는 능력이 임상 평가의 핵심이 므로 영역 2에 더 높은 가중치(62/38)를 부여하였다. 이 두 가지는 모두 병력 청취에 크게 의존하는 기술이다. 영역 1의 일반 병 력 요소들은 중요한 배경 정보와 안전 확인 역할을 하지만, 이 증례에서 임상 역량을 구별하는 요소로서는 상대적으로 영향이 적 다. 따라서 이 기준표는 이 사례에서 가장 중요한 질문이 질적 질문이 아니라 정량적 질문(얼마나 섭취했는지, 얼마나 배출했는 지, 마지막 배뇨가 언제였는지 등)이라는 점을 강조하도록 설계되었다. 이는 소아에서 흔한 응급 상황인 위장관염 관리에서 핵심 이 되는 체액 균형 중심의 임상 추론을 반영한다. * A. Evaluation of Item Inclusion For each item below, please select “Agree” if you believe it should be included, or “Disagree” if not. A. 항목 포함 여부 평가 아래 각 항목에 대해 포함되어야 한다고 생각하시면 \"동의\", 그렇지 않으면 \"비동의\"를 선택해 주세요. Agree Disagree 동의 비동의 Domain 1: General Clinical History-Taking (38 points) 영역 1: 일반 임상 병력 청취 (38점) Item 1. Presenting Complaint Characterization: Systematic exploration of each presenting symptom (vomiting, diarrhea, poor intake) including onset, duration, frequency, volume, progression, and character. — 8 points",
+        d2desc_en:"항목 10. 병력 기반 탈수 평가: 소변량(마지막 젖은 기저귀/배뇨 시점, 배뇨 빈도, 소변 색), 울 때 눈물 여부, 지난 24시간 동안의 경구 섭취량, 활동/에너지 수준, 그리고 아이 의 상태 변화에 대한 보호자의 인식을 체계적으로 확인한다. — 14점 Explanation: This is the single most important line of questioning for this case. The clinical decision — oral rehydration versus IV ﬂuids, observation versus admission — hinges almost entirely on the assessed degree of dehydration. Urine output (no void in ~10 hours in this case) is the most reliable caregiver-reported proxy for hydration status. This receives the highest individual weighting because it directly and immediately determines management. 설명: 이 사례에서 가장 중요한 질문 영역이다. 경구 수분 보충인지 정맥 수액 치료인지, 관찰 후 귀가인지 입원이 필요한지에 대한 임상 결정은 거의 전적으로 탈수 정도 평가에 달려 있다. 특히 소변량(이 사례에서는 약 10시간 동안 배뇨 없음)은 보호자가 보고할 수 있는 수분 상태의 가장 신뢰할 수 있는 지표이다. 따라서 치료 결정에 직접적이고 즉 각적인 영향을 미친다는 점에서 가장 높은 개별 가중치를 부여하였다.",
+        d2desc_ko:"Item 10. Dehydration Assessment Through History: Systematic inquiry into urine output (last wet nappy/void, frequency, color), tears when crying, oral intake volume over past 24 hours, activity/energy level, and parental perception of clinical change. — 14 points",
+        threshold_en:"",
+        threshold_ko:"",
+        rationale_en:"Design Rationale for Domain Weighting: Domain 2 receives a heavier weighting (62/38) because in pediatric gastroenteritis, the quality of the clinical encounter depends overwhelmingly on the accuracy of dehydration assessment and the ability to exclude surgical mimics — both of which are history-driven skills. The general history elements in Domain 1 provide essential context and safety checks but are less discriminating of clinical competence for this specific presentation. The rubric intentionally emphasizes that the most impactful questions in this case are quantitative (how much in, how much out, how long since last void) rather than purely qualitative, reﬂecting the ﬂuid-balance–centered reasoning that defines excellent management of this common pediatric emergency. 영역 가중치 설계 근거: 소아 위장관염에서는 탈수 평가의 정확성과 외과적 질환 가능성을 배제하는 능력이 임상 평가의 핵심이 므로 영역 2에 더 높은 가중치(62/38)를 부여하였다. 이 두 가지는 모두 병력 청취에 크게 의존하는 기술이다. 영역 1의 일반 병 력 요소들은 중요한 배경 정보와 안전 확인 역할을 하지만, 이 증례에서 임상 역량을 구별하는 요소로서는 상대적으로 영향이 적 다. 따라서 이 기준표는 이 사례에서 가장 중요한 질문이 질적 질문이 아니라 정량적 질문(얼마나 섭취했는지, 얼마나 배출했는 지, 마지막 배뇨가 언제였는지 등)이라는 점을 강조하도록 설계되었다. 이는 소아에서 흔한 응급 상황인 위장관염 관리에서 핵심 이 되는 체액 균형 중심의 임상 추론을 반영한다.",
+        rationale_ko:"영역 가중치 설계 근거: 소아 위장관염에서는 탈수 평가의 정확성과 외과적 질환 가능성을 배제하는 능력이 임상 평가의 핵심이 므로 영역 2에 더 높은 가중치(62/38)를 부여하였다. 이 두 가지는 모두 병력 청취에 크게 의존하는 기술이다. 영역 1의 일반 병 력 요소들은 중요한 배경 정보와 안전 확인 역할을 하지만, 이 증례에서 임상 역량을 구별하는 요소로서는 상대적으로 영향이 적 다. 따라서 이 기준표는 이 사례에서 가장 중요한 질문이 질적 질문이 아니라 정량적 질문(얼마나 섭취했는지, 얼마나 배출했는 지, 마지막 배뇨가 언제였는지 등)이라는 점을 강조하도록 설계되었다. 이는 소아에서 흔한 응급 상황인 위장관염 관리에서 핵심 이 되는 체액 균형 중심의 임상 추론을 반영한다.",
+        d1:[
+          {
+            id:"2-3-1-1",
+            pts:8,
+            en:"Item 1. Presenting Complaint Characterization: Systematic exploration of each presenting symptom (vomiting, diarrhea, poor intake) including onset, duration, frequency, volume, progression, and character. — 8 points",
+            ko:"항목 1. 주증상 특성 파악: 구토, 설사, 경구 섭취 감소 등 각 주증상에 대해 발생 시점, 지속 기간, 빈도, 양, 진행 양상, 특성을 체계적으로 탐색한다.",
+            xEn:"Precise quantification of vomiting episodes and stool output is foundational to this case. Unlike many presentations where symptom characterization is primarily diagnostic, here it directly determines the degree of dehydration and guides fluid resuscitation calculations. The high weighting reflects the dual diagnostic and management value.",
+            xKo:"구토 횟수와 대변 배출량을 정확히 정량화하는 것은 이 사례에서 매우 중요하다. 많은 경우 증상 특성 파악이 주로 진단적 목적을 가지지만, 이 사례에서는 탈수 정도를 판단하고 수액 보충량을 계산하는 데 직접적으로 사용된다. 따라서 진단과 치료 결정 모 두에 영향을 미친다는 점에서 높은 가중치를 부여하였다."
+          },
+          {
+            id:"2-3-1-2",
+            pts:5,
+            en:"Item 2. Past Medical History: Inquiry into prior illnesses, hospitalizations, chronic conditions, prior episodes of dehydration, and neonatal/birth history. — 5 points",
+            ko:"항목 2. 과거 병력: 이전 질환, 입원 이력, 만성 질환, 과거 탈수 에피소드, 신생아/출생 력에 대해 확인한다.",
+            xEn:"A history of prematurity, metabolic disorders, congenital heart disease, or immunodeficiency would significantly alter the risk profile for a child with gastroenteritis. Prior episodes of dehydration requiring IV fluids inform the threshold for intervention. Standard but consistently important.",
+            xKo:"미숙아 출생력, 대사 질환, 선천성 심장 질환, 면역결핍 등의 병력이 있는 경우 위 장관염을 앓는 소아의 위험도는 크게 달라질 수 있다. 또한 과거 정맥 수액 치료가 필요 했던 탈수 병력은 치료 개입의 기준을 판단하는 데 도움이 된다. 표준적인 항목이지만 지속적으로 중요한 요소이다."
+          },
+          {
+            id:"2-3-1-3",
+            pts:4,
+            en:"Item 3. Medication and Allergy History: Current medications, recent antibiotic use, recently administered anti-emetics or anti-diarrheals, and drug allergies with reaction type. — 4 points",
+            ko:"항목 3. 약물 및 알레르기 병력: 현재 복용 중인 약물, 최근 항생제 사용 여부, 최근 투여 된 항구토제 또는 지사제, 그리고 반응 유형을 포함한 약물 알레르기를 확인한다. — 4 점",
+            xEn:"Recent antibiotic use raises the possibility of Clostridioides difficile or antibiotic-associated diarrhea. Knowledge of what the family has already administered (e.g., acetaminophen, ondansetron) prevents therapeutic duplication and informs what has already been tried. Allergy documentation is a safety essential before prescribing ondansetron or IV fluids.",
+            xKo:"최근 항생제 사용은 Clostridioides difficile 감염이나 항생제 관련 설사 가능 성을 높일 수 있다. 또한 보호자가 이미 투여한 약물(예: 아세트아미노펜, 온단세트론)을 확인하면 치료 중복을 방지하고 어떤 처치가 이미 시도되었는지 파악할 수 있다. 온단세 트론이나 정맥 수액 처방 전 알레르기 확인은 환자 안전을 위해 필수적이다."
+          },
+          {
+            id:"2-3-1-4",
+            pts:3,
+            en:"Item 4. Immunization History: Confirmation of vaccination status with particular attention to rotavirus series completion. — 3 points",
+            ko:"항목 4. 예방접종 병력: 예방접종 상태를 확인하고 특히 로타바이러스 백신 접종 완료 여부를 확인한다.",
+            xEn:"Rotavirus vaccination status is directly relevant to the differential in a toddler with gastroenteritis. Incomplete vaccination shifts the pre-test probability toward rotavirus as an etiology and may influence decisions about stool testing. This item bridges general and case-specific relevance.",
+            xKo:"위장관염이 있는 유아에서 로타바이러스 예방접종 여부는 감별 진단에 직접적으 로 관련된다. 예방접종이 완료되지 않은 경우 로타바이러스 감염 가능성이 높아지며, 이 는 대변 검사 여부 결정에도 영향을 줄 수 있다. 이 항목은 일반 병력과 사례 특이적 중 요성을 모두 연결하는 요소이다."
+          },
+          {
+            id:"2-3-1-5",
+            pts:3,
+            en:"Item 5. Birth, Growth, and Developmental History: Perinatal history, growth trajectory, baseline weight if available, and developmental milestones. — 3 points",
+            ko:"항목 5. 출생력, 성장 및 발달력: 주산기 병력, 성장 경과, 가능하다면 최근 기준 체중, 발달 이정표를 확인한다.",
+            xEn:"A recent baseline weight is invaluable for calculating percentage weight loss and quantifying dehydration. Growth faltering may suggest an underlying condition. Developmental status affects communication and behavioral assessment of illness severity. Moderate weight reflects supporting rather than primary diagnostic value.",
+            xKo:"최근 기준 체중은 체중 감소 비율을 계산하여 탈수 정도를 정량화하는 데 매우 유 용하다. 성장 지연은 기저 질환을 시사할 수 있으며, 발달 상태는 질병 중증도를 평가할 때 의사소통과 행동 관찰에 영향을 준다. 주요 진단 요소라기보다는 보조적 정보이므로 중간 수준의 가중치를 부여하였다."
+          },
+          {
+            id:"2-3-1-6",
+            pts:4,
+            en:"Item 6. Social and Family History: Household composition, daycare attendance, caregivers' ability to manage oral rehydration at home, access to follow-up care, and any safeguarding considerations. — 4 points",
+            ko:"항목 6. 사회력 및 가족력: 가족 구성, 어린이집 등원 여부, 보호자가 가정에서 경구 수 분 보충을 관리할 수 있는지, 추적 진료에 접근 가능한지, 아동 보호와 관련된 고려 사항 을 확인한다.",
+            xEn:"Social context is a critical determinant of disposition in gastroenteritis. A family's ability to administer oral rehydration, recognize worsening, and return if needed directly affects the safety of discharge. Daycare attendance is epidemiologically relevant. Safeguarding screening is mandatory in all pediatric emergency encounters.",
+            xKo:"위장관염에서 사회적 환경은 처치 결정에 중요한 영향을 미친다. 보호자가 경구 수분 보충을 시행하고 상태 악화를 인지하여 필요 시 다시 내원할 수 있는지 여부는 안 전한 퇴원 결정에 직접적으로 관련된다. 어린이집 등원 여부는 역학적으로도 중요하며, 아동 보호에 대한 선별은 모든 소아 응급 진료에서 필수적이다."
+          },
+          {
+            id:"2-3-1-7",
+            pts:4,
+            en:"Item 7. Review of Systems: Structured screening of non-GI systems to identify alternative diagnoses or complications. — 4 points",
+            ko:"항목 7. 전신 증상 검토(Review of Systems): 다른 진단이나 합병증을 확인하기 위 해 비위장관 계통에 대한 구조화된 선별 문진을 시행한다.",
+            xEn:"Targeted screening for respiratory symptoms (otitis media can cause vomiting in toddlers), urinary symptoms (UTI mimic), rash (viral exanthem, Henoch-Schönlein purpura), neurological symptoms (raised intracranial pressure), and joint complaints ensures the clinician has not anchored prematurely on gastroenteritis.",
+            xKo:"호흡기 증상(예: 중이염은 유아에서 구토를 유발할 수 있음), 배뇨 증상(요로감염 과의 감별), 발진(바이러스 발진, 헤노흐-쇤라인 자반증), 신경학적 증상(두개내압 상 승), 관절 증상 등을 확인하는 것은 임상의가 위장관염에만 성급히 집중하는 것을 방지 한다."
+          },
+          {
+            id:"2-3-1-8",
+            pts:3,
+            en:"Item 8. Structured and Organized Approach: History obtained in logical sequence, demonstrates clinical reasoning, avoids redundancy, and integrates information across domains. — 3 points",
+            ko:"항목 8. 체계적이고 조직적인 접근: 병력 청취가 논리적인 순서로 이루어지고, 임상적 추론을 보여주며, 불필요한 반복을 피하고 여러 영역의 정보를 통합한다.",
+            xEn:"Process quality matters — a disorganized history risks missing critical dehydration cues or red flags. This is an overall competency marker reflecting the trainee's ability to conduct an efficient, focused emergency history.",
+            xKo:"과정의 질 또한 중요하다. 병력 청취가 체계적이지 않으면 탈수의 중요한 단서나 위험 신호를 놓칠 수 있다. 이 항목은 수련의가 응급 상황에서 효율적이고 집중된 병력 청취를 수행할 수 있는지를 평가하는 전반적인 역량 지표이다."
+          },
+          {
+            id:"2-3-1-9",
+            pts:4,
+            en:"Item 9. Parental Concerns and Health Literacy Assessment: Exploration of the family's specific worries, their understanding of the illness, and what prompted the emergency visit. — 4 points",
+            ko:"항목 9. 보호자의 우려 및 건강 이해도 평가: 가족이 특별히 걱정하는 점, 질환에 대한 이해 정도, 그리고 응급실 방문을 결정하게 된 이유를 탐색한다.",
+            xEn:"Understanding why the family presented now (e.g., decreased urine output, inability to keep fluids down, concern about lethargy) provides indirect evidence of illness severity and trajectory. It also establishes rapport and informs the approach to discharge education. In a toddler, the caregiver's observations are the primary data source, and respecting their assessment improves history quality.",
+            xKo:"보호자가 지금 내원하게 된 이유(예: 소변량 감소, 수분을 유지하지 못함, 무기력 에 대한 우려 등)를 이해하는 것은 질병의 중증도와 진행 경과에 대한 간접적인 정보를 제공한다. 또한 이는 보호자와의 신뢰 관계를 형성하고 퇴원 교육 접근 방식을 결정하는 데 도움이 된다. 유아의 경우 보호자의 관찰이 가장 중요한 정보원이므로, 보호자의 판 단을 존중하는 것은 병력의 질을 높이는 데 기여한다."
+          },
+        ],
+        d2:[
+          {
+            id:"2-3-2-10",
+            pts:14,
+            en:"Item 10. Dehydration Assessment Through History: Systematic inquiry into urine output (last wet nappy/void, frequency, color), tears when crying, oral intake volume over past 24 hours, activity/energy level, and parental perception of clinical change. — 14 points",
+            ko:"항목 10. 병력 기반 탈수 평가: 소변량(마지막 젖은 기저귀/배뇨 시점, 배뇨 빈도, 소변 색), 울 때 눈물 여부, 지난 24시간 동안의 경구 섭취량, 활동/에너지 수준, 그리고 아이 의 상태 변화에 대한 보호자의 인식을 체계적으로 확인한다.",
+            xEn:"This is the single most important line of questioning for this case. The clinical decision — oral rehydration versus IV fluids, observation versus admission — hinges almost entirely on the assessed degree of dehydration. Urine output (no void in ~10 hours in this case) is the most reliable caregiver-reported proxy for hydration status. This receives the highest individual weighting because it directly and immediately determines management.",
+            xKo:"이 사례에서 가장 중요한 질문 영역이다. 경구 수분 보충인지 정맥 수액 치료인지, 관찰 후 귀가인지 입원이 필요한지에 대한 임상 결정은 거의 전적으로 탈수 정도 평가에 달려 있다. 특히 소변량(이 사례에서는 약 10시간 동안 배뇨 없음)은 보호자가 보고할 수 있는 수분 상태의 가장 신뢰할 수 있는 지표이다. 따라서 치료 결정에 직접적이고 즉 각적인 영향을 미친다는 점에서 가장 높은 개별 가중치를 부여하였다."
+          },
+          {
+            id:"2-3-2-11",
+            pts:10,
+            en:"Item 11. Vomiting Characterization: Frequency, volume, timing relative to oral intake, character (non-bilious vs. bilious, bloody vs. non-bloody), relationship to feeding, projectile nature, and whether the child can tolerate any sips between episodes. — 10 points",
+            ko:"항목 11. 구토 특성 평가: 구토의 빈도, 양, 경구 섭취와의 시간적 관계, 성상(비담즙성 vs 담즙성, 비혈성 vs 혈성), 수유와의 관계, 분출성 여부, 그리고 구토 사이에 소량의 수 분이라도 섭취하고 유지할 수 있는지 여부를 확인한다.",
+            xEn:"The character of vomiting is both diagnostically and prognostically critical. Bilious emesis mandates exclusion of surgical pathology (malrotation/volvulus). The ability or inability to retain any oral fluids is the key determinant of whether oral rehydration is feasible. Frequency and trajectory (improving vs. worsening) inform disposition. High weighting reflects dual diagnostic and management implications.",
+            xKo:"구토의 성상은 진단과 예후 평가 모두에서 매우 중요하다. 담즙성 구토는 외과적 병변(장회전 이상/장염전)을 반드시 배제해야 하는 신호이다. 또한 어떤 형태로든 경구 수분을 유지할 수 있는지 여부는 경구 수분 보충 치료 가능성을 판단하는 핵심 요소이 다. 구토 빈도와 경과(호전되는지, 악화되는지)는 처치 방향과 귀가 여부 결정에 영향을 준다. 이러한 진단적·치료적 중요성을 반영하여 높은 가중치를 부여하였다."
+          },
+          {
+            id:"2-3-2-12",
+            pts:8,
+            en:"Item 12. Diarrhea Characterization: Frequency, volume, consistency, presence of blood or mucus, color, and trajectory over the illness course. — 8 points",
+            ko:"항목 12. 설사 특성 평가: 설사의 빈도, 양, 성상, 혈액 또는 점액 존재 여부, 색깔, 그리 고 질병 경과 동안의 변화 양상을 확인한다.",
+            xEn:"Bloody or mucosanguineous diarrhea shifts the differential toward bacterial enteritis (Salmonella, Shigella, Campylobacter, EHEC) or intussusception and may trigger stool studies or imaging. High-volume watery diarrhea informs ongoing loss calculations for fluid management. The distinction between improving and escalating stool output affects disposition planning.",
+            xKo:"혈성 또는 점액성 설사는 세균성 장염(Salmonella, Shigella, Campylobacter, EHEC)이나 장중첩증 가능성을 시사하며, 대변 검사나 영상 검사를 고려하게 만든다. 또한 다량의 수양성 설사는 체액 손실을 계산하여 수액 치료 계획을 세우는 데 중요하 다. 설사 양상이 호전되는지 악화되는지는 처치 방향과 퇴원 여부 결정에도 영향을 준 다."
+          },
+          {
+            id:"2-3-2-13",
+            pts:8,
+            en:"Item 13. Oral Intake and Rehydration Attempts: What fluids have been offered (type, volume), how much is being retained, timing and frequency of intake attempts, and whether oral rehydration solution has been tried. — 8 points",
+            ko:"항목 13. 경구 섭취 및 재수화 시도: 어떤 종류의 수분이 제공되었는지(종류, 양), 실제 로 유지된 양, 섭취 시도의 시간과 빈도, 경구 수분 보충 용액(ORS)을 사용해 보았는지 여부를 확인한다.",
+            xEn:"This is a direct assessment of whether outpatient oral rehydration has been adequately attempted and failed — a key threshold for escalation to IV rehydration. Knowing the type of fluid (juice, water, ORS) also matters, as inappropriate fluids can worsen osmotic diarrhea. High weighting reflects direct management impact.",
+            xKo:"이는 외래에서의 경구 재수화 치료가 충분히 시도되었고 실패했는지를 직접적으 로 평가하는 항목으로, 정맥 수액 치료로 전환할지 결정하는 중요한 기준이 된다. 또한 제공된 수분의 종류(주스, 물, ORS 등)도 중요하다. 부적절한 음료는 삼투성 설사를 악 화시킬 수 있기 때문이다. 치료 결정에 직접적인 영향을 미치므로 높은 가중치를 부여하 였다."
+          },
+          {
+            id:"2-3-2-14",
+            pts:8,
+            en:"Item 14. Red Flags for Surgical and Serious Pathology: Targeted questioning to exclude bilious vomiting, severe or localized abdominal pain, abdominal distension, \"currant jelly\" stools, episodic inconsolable crying (intussusception), recent abdominal trauma, and testicular symptoms. — 8 points",
+            ko:"항목 14. 외과적 및 중증 질환의 위험 신호 확인: 담즙성 구토, 심하거나 국소적인 복 통, 복부 팽만, “커런트 젤리” 양상의 대변, 간헐적으로 달래기 어려운 울음(장중첩증), 최근 복부 외상, 고환 관련 증상 등을 배제하기 위한 표적 질문을 한다.",
+            xEn:"The most dangerous error in a child presenting with vomiting is missing a surgical abdomen. Malrotation with volvulus, intussusception, and appendicitis can all present with vomiting and abdominal pain in a toddler. Actively excluding these through targeted history questions is a patient safety imperative and a hallmark of competent emergency assessment.",
+            xKo:"구토를 보이는 소아에서 가장 위험한 오류는 외과적 복증을 놓치는 것이다. 장회 전 이상에 의한 장염전, 장중첩증, 충수염은 모두 유아에서 구토와 복통으로 나타날 수 있다. 이러한 질환을 표적 병력 질문을 통해 적극적으로 배제하는 것은 환자 안전을 위 해 필수적이며, 숙련된 응급 평가의 중요한 특징이다."
+          },
+          {
+            id:"2-3-2-15",
+            pts:5,
+            en:"Item 15. Epidemiological Context and Infectious Exposure: Sick contacts at daycare or home, recent travel, food exposures (undercooked meat, unpasteurized products), water source, and animal contact. — 5 points",
+            ko:"항목 15. 역학적 배경 및 감염 노출력: 어린이집이나 가정 내 아픈 접촉자, 최근 여행 력, 음식 노출(덜 익힌 고기, 비살균 제품), 물의 출처, 동물 접촉 여부를 확인한다. — 5 점",
+            xEn:"Epidemiological history helps differentiate viral from bacterial gastroenteritis and identifies exposures requiring specific investigation (e.g., travel-associated diarrhea, food-borne outbreaks). Daycare outbreaks strongly support a viral etiology and reduce the need for stool cultures. Moderate weighting reflects supporting diagnostic value.",
+            xKo:"역학적 병력은 바이러스성 위장관염과 세균성 위장관염을 구별하는 데 도움을 주 며, 특정 검사가 필요한 노출(예: 여행 관련 설사, 식중독 집단 발생)을 확인할 수 있다. 어린이집에서의 집단 발생은 바이러스성 원인을 강하게 시사하며 대변 배양 검사의 필 요성을 줄일 수 있다. 보조적인 진단 가치가 있으므로 중간 수준의 가중치를 부여하였 다."
+          },
+          {
+            id:"2-3-2-16",
+            pts:5,
+            en:"Item 16. Fever Pattern and Systemic Toxicity Assessment: Duration and height of fever, response to antipyretics, associated rigors, irritability versus consolability, lethargy, and parental assessment of how the child \"looks\" compared to previous illnesses. — 5 points",
+            ko:"항목 16. 발열 양상 및 전신 중독 증상 평가: 발열의 지속 기간과 최고 체온, 해열제에 대한 반응, 동반된 오한, 보챔 여부와 달래짐 가능성, 무기력, 그리고 이전 질병과 비교 했을 때 아이의 상태가 어떤지에 대한 보호자의 평가를 확인한다.",
+            xEn:"While low-grade fever is expected in viral gastroenteritis, high or persistent fever raises concern for bacterial enteritis, bacteremia, or a concurrent infection (UTI, meningitis). The child's consolability and interaction level are among the most reliable indicators of serious illness in toddlers. Parental comparison to prior illnesses is a valuable gestalt measure.",
+            xKo:"바이러스성 위장관염에서는 저등도 발열이 흔하지만, 고열이거나 지속되는 발열 은 세균성 장염, 균혈증, 또는 동반 감염(요로감염, 수막염 등)을 의심하게 한다. 또한 아 이가 달래지는지 여부와 상호작용 수준은 유아에서 중증 질환을 평가하는 가장 신뢰할 수 있는 지표 중 하나이다. 보호자가 이전 질병과 비교하여 설명하는 전반적 인상 역시 중요한 임상적 판단 자료가 된다."
+          },
+          {
+            id:"2-3-2-17",
+            pts:4,
+            en:"Item 17. Baseline Weight and Weight Change: Inquiry into the most recent known weight (e.g., well-child visit, home scale) and comparison with current measured weight. — 4 points",
+            ko:"항목 17. 기준 체중 및 체중 변화 확인: 최근에 알려진 체중(예: 영유아 건강검진, 가정 용 체중계)과 현재 측정된 체중을 비교하여 확인한다.",
+            xEn:"Percentage acute weight loss is the gold standard for quantifying dehydration. If a recent baseline weight is available, this single data point can convert a subjective dehydration assessment into an objective one (e.g., 5% loss = moderate dehydration). Clinicians who actively seek this information demonstrate strong clinical reasoning. Moderate weighting because a reliable baseline is often unavailable but should always be sought.",
+            xKo:"급성 체중 감소 비율은 탈수 정도를 정량화하는 가장 정확한 기준이다. 최근 기준 체중을 알 수 있다면 이 한 가지 정보만으로도 주관적인 탈수 평가를 객관적인 평가로 전환할 수 있다(예: 5% 체중 감소 = 중등도 탈수). 이러한 정보를 적극적으로 확인하는 임상의는 높은 수준의 임상적 추론 능력을 보여준다. 다만 신뢰할 수 있는 기준 체중이 없는 경우도 많기 때문에 중간 수준의 가중치를 부여하였다."
+          },
+        ]
+      },
+      {
+        id:"2-4",
+        label_en:"Rubric 4",
+        label_ko:"기준표 4",
+        d1pts:40,d2pts:60,
+        d1desc_en:"영역 1: 일반 임상 병력 청취 (40점)",
+        d1desc_ko:"Item 1. Establishes Chief Concern and Symptom Timeline: Clearly identifies vomiting, diarrhea, and poor intake as primary concerns; defines onset, duration (2 days), sequence of symptoms, and progression. — 8 points",
+        d2desc_en:"항목 9. 탈수 정도 정량화: 지난 24시간 동안의 젖은 기저귀/배뇨 횟수, 마지막 배뇨 시 점, 수분 섭취 유지 가능 여부, 지속적인 구토, 울 때 눈물 여부, 눈이 들어가 보이는지, 행동 변화 등을 구체적으로 확인한다. — 15점 Explanation: Severity of dehydration determines need for oral rehydration vs IV ﬂuids and possible admission. This is the highest-yield element in this case. 설명: 탈수의 중증도는 경구 수분 보충 치료인지 정맥 수액 치료인지, 그리고 입원이 필 요한지 여부를 결정한다. 이 사례에서 가장 중요한 핵심 평가 요소이다.",
+        d2desc_ko:"Item 9. Quantifies Degree of Dehydration: Specifically asks about number of wet diapers/voids in 24 hours, last urine output, ability to tolerate ﬂuids, persistent vomiting, presence of tears, sunken eyes, and behavioral changes. — 15 points",
+        threshold_en:"",
+        threshold_ko:"",
+        rationale_en:"",
+        rationale_ko:"",
+        d1:[
+          {
+            id:"2-4-1-1",
+            pts:8,
+            en:"Item 1. Establishes Chief Concern and Symptom Timeline: Clearly identifies vomiting, diarrhea, and poor intake as primary concerns; defines onset, duration (2 days), sequence of symptoms, and progression. — 8 points",
+            ko:"항목 1. 주호소 및 증상 시간 경과 파악: 구토, 설사, 경구 섭취 감소를 주요 문제로 명 확히 확인하고, 발생 시점, 지속 기간(2일), 증상의 순서와 진행 양상을 규명한다. — 8 점",
+            xEn:"A precise timeline distinguishes acute self-limited illness from evolving surgical or systemic pathology and guides urgency of management.",
+            xKo:"정확한 시간 경과를 파악하면 급성의 자연적으로 호전되는 질환과 진행 중인 외과 적 또는 전신 질환을 구별할 수 있으며, 처치의 긴급도를 결정하는 데 도움이 된다."
+          },
+          {
+            id:"2-4-1-2",
+            pts:8,
+            en:"Item 2. Characterizes Vomiting and Diarrhea in Detail: Elicits frequency, volume, color (bilious/non-bilious), presence of blood or mucus, projectile nature, relation to feeds, nocturnal symptoms, stool consistency and volume. — 8 points",
+            ko:"항목 2. 구토 및 설사 증상의 상세 특성 파악: 구토와 설사의 빈도, 양, 색(담즙성/비담 즙성), 혈액 또는 점액 존재 여부, 분출성 여부, 수유와의 관계, 야간 증상 여부, 대변의 성상과 양을 확인한다.",
+            xEn:"Detailed characterization differentiates viral gastroenteritis from obstruction, bacterial colitis, intracranial causes, or metabolic disease.",
+            xKo:"증상의 세부적인 특성 파악은 바이러스성 위장관염을 장폐색, 세균성 대장염, 두 개내 원인, 대사 질환 등과 감별하는 데 도움이 된다."
+          },
+          {
+            id:"2-4-1-3",
+            pts:6,
+            en:"Item 3. Assesses Associated and Red-Flag Symptoms: Screens for severe localized abdominal pain, bilious emesis, hematochezia, persistent high fever, lethargy, severe headache, rash, or altered mental status. — 6 points",
+            ko:"항목 3. 동반 증상 및 위험 신호 평가: 심한 국소 복통, 담즙성 구토, 혈변, 지속적인 고 열, 무기력, 심한 두통, 발진, 의식 상태 변화 여부를 확인한다.",
+            xEn:"Identifying red flags prevents missed surgical abdomen, intussusception, meningitis, or invasive bacterial infection.",
+            xKo:"이러한 위험 신호를 확인하는 것은 외과적 복증, 장중첩증, 수막염, 또는 침습성 세균 감염을 놓치지 않기 위해 중요하다."
+          },
+          {
+            id:"2-4-1-4",
+            pts:6,
+            en:"Item 4. Hydration-Focused Review of Systems: Asks about urine output, tears, thirst, activity level, dizziness, dry mouth, weight change. — 6 points",
+            ko:"항목 4. 수분 상태 중심 계통별 문진: 소변량, 울 때 눈물 여부, 갈증, 활동 수준, 어지러 움, 구강 건조, 체중 변화 등을 확인한다.",
+            xEn:"In pediatric gastroenteritis, hydration status drives disposition and treatment decisions.",
+            xKo:"소아 위장관염에서 수분 상태는 치료 방법과 처치 방향을 결정하는 핵심 요소이 다."
+          },
+          {
+            id:"2-4-1-5",
+            pts:4,
+            en:"Item 5. Past Medical and Birth History: Reviews chronic illness, prior admissions for dehydration, metabolic disorders, growth pattern. — 4 points",
+            ko:"항목 5. 과거 병력 및 출생력: 만성 질환, 탈수로 인한 이전 입원 병력, 대사 질환, 성장 양상을 확인한다.",
+            xEn:"Underlying conditions increase risk for complications and influence threshold for admission.",
+            xKo:"기저 질환이 있는 경우 합병증 위험이 증가하며 입원 결정 기준에도 영향을 미친 다."
+          },
+          {
+            id:"2-4-1-6",
+            pts:3,
+            en:"Item 6. Medication and Allergy History: Identifies recent medications (antiemetics, antibiotics, antipyretics) and allergies. — 3 points",
+            ko:"항목 6. 약물 및 알레르기 병력: 최근 복용한 약물(항구토제, 항생제, 해열제 등)과 알레 르기 여부를 확인한다.",
+            xEn:"Impacts management and differential (e.g., antibiotic- associated diarrhea).",
+            xKo:"치료 결정과 감별 진단에 영향을 미칠 수 있다(예: 항생제 관련 설사)."
+          },
+          {
+            id:"2-4-1-7",
+            pts:2,
+            en:"Item 7. Immunization Status: Confirms vaccines, especially rotavirus. — 2 points",
+            ko:"항목 7. 예방접종 상태: 예방접종 여부를 확인하고 특히 로타바이러스 백신 접종 여부를 확인한다.",
+            xEn:"Rotavirus vaccination status affects likelihood and severity of viral gastroenteritis.",
+            xKo:"로타바이러스 예방접종 여부는 바이러스성 위장관염의 발생 가능성과 중증도에 영향을 미친다."
+          },
+          {
+            id:"2-4-1-8",
+            pts:3,
+            en:"Item 8. Social and Exposure History: Assesses daycare exposure, sick contacts, travel, food exposures, water sources. — 3 points",
+            ko:"항목 8. 사회력 및 노출력: 어린이집 노출, 아픈 접촉자, 여행력, 음식 노출, 물의 출처 등을 확인한다.",
+            xEn:"Exposure history supports viral etiology and screens for bacterial/parasitic causes.",
+            xKo:"노출력은 바이러스성 원인을 지지하는 근거가 되며 세균성 또는 기생충성 원인을 선별하는 데 도움이 된다."
+          },
+        ],
+        d2:[
+          {
+            id:"2-4-2-9",
+            pts:15,
+            en:"Item 9. Quantifies Degree of Dehydration: Specifically asks about number of wet diapers/voids in 24 hours, last urine output, ability to tolerate fluids, persistent vomiting, presence of tears, sunken eyes, and behavioral changes. — 15 points",
+            ko:"항목 9. 탈수 정도 정량화: 지난 24시간 동안의 젖은 기저귀/배뇨 횟수, 마지막 배뇨 시 점, 수분 섭취 유지 가능 여부, 지속적인 구토, 울 때 눈물 여부, 눈이 들어가 보이는지, 행동 변화 등을 구체적으로 확인한다.",
+            xEn:"Severity of dehydration determines need for oral rehydration vs IV fluids and possible admission. This is the highest-yield element in this case.",
+            xKo:"탈수의 중증도는 경구 수분 보충 치료인지 정맥 수액 치료인지, 그리고 입원이 필 요한지 여부를 결정한다. 이 사례에서 가장 중요한 핵심 평가 요소이다."
+          },
+          {
+            id:"2-4-2-10",
+            pts:8,
+            en:"Item 10. Evaluates Oral Intake and Fluid Replacement Attempts: Clarifies type and amount of fluids offered (water, juice, oral rehydration solution), tolerance, and caregiver strategies. — 8 points",
+            ko:"항목 10. 경구 섭취 및 수분 보충 시도 평가: 제공된 수분의 종류(물, 주스, 경구 수분 보충 용액), 섭취량, 유지 가능 여부, 보호자가 사용한 수분 보충 방법을 확인한다. — 8 점",
+            xEn:"Determines feasibility of oral rehydration therapy and identifies inappropriate fluids worsening diarrhea.",
+            xKo:"경구 수분 보충 치료의 가능성을 판단하고 설사를 악화시킬 수 있는 부적절한 음 료 섭취 여부를 확인하는 데 도움이 된다."
+          },
+          {
+            id:"2-4-2-11",
+            pts:8,
+            en:"Item 11. Screens for Surgical Abdomen and Intussusception: Asks about episodic severe colicky pain, drawing up of legs, persistent focal tenderness, abdominal distension, bilious vomiting, or currant jelly stools. — 8 points",
+            ko:"항목 11. 외과적 복증 및 장중첩증 선별: 간헐적으로 심한 산통성 복통, 다리를 끌어올 리는 행동, 지속적인 국소 압통, 복부 팽만, 담즙성 구토, 또는 커런트 젤리 양상의 대변 여부를 질문한다.",
+            xEn:"Critical to exclude surgical emergencies in toddlers presenting with vomiting and abdominal pain.",
+            xKo:"구토와 복통을 보이는 유아에서 외과적 응급 질환을 배제하는 것은 매우 중요하 다."
+          },
+          {
+            id:"2-4-2-12",
+            pts:8,
+            en:"Item 12. Assesses for Invasive/Bacterial Gastroenteritis: Asks about bloody stools, high persistent fever, severe abdominal pain, recent travel, reptile exposure, undercooked foods. — 8 points",
+            ko:"항목 12. 침습성/세균성 위장관염 평가: 혈변, 지속적인 고열, 심한 복통, 최근 여행력, 파충류 접촉, 덜 익힌 음식 섭취 여부를 확인한다.",
+            xEn:"Identifies children needing stool studies, antibiotics, or closer monitoring.",
+            xKo:"대변 검사, 항생제 치료, 또는 보다 면밀한 관찰이 필요한 아동을 식별하는 데 도 움이 된다."
+          },
+          {
+            id:"2-4-2-13",
+            pts:6,
+            en:"Item 13. Evaluates Risk of Hypoglycemia or Metabolic Compromise: Screens for lethargy, tremors, seizures, prolonged poor intake, or underlying metabolic disease. — 6 points",
+            ko:"항목 13. 저혈당 또는 대사 이상 위험 평가: 무기력, 떨림, 발작, 장기간의 섭취 감소, 기저 대사 질환 여부를 확인한다.",
+            xEn:"Toddlers are prone to hypoglycemia and metabolic acidosis with decreased intake.",
+            xKo:"유아는 섭취 감소가 지속될 경우 저혈당이나 대사성 산증이 발생하기 쉽다."
+          },
+          {
+            id:"2-4-2-14",
+            pts:5,
+            en:"Item 14. Reviews Frequency and Trend of Symptoms: Clarifies whether vomiting is improving or worsening, whether diarrhea frequency is increasing, and duration beyond expected viral course. — 5 points",
+            ko:"항목 14. 증상 빈도 및 경과 평가: 구토가 호전되는지 또는 악화되는지, 설사 빈도가 증 가하는지, 증상이 일반적인 바이러스성 경과보다 오래 지속되는지 여부를 확인한다.",
+            xEn:"Symptom trajectory informs need for further evaluation or admission.",
+            xKo:"증상의 진행 양상은 추가 평가나 입원 필요 여부를 판단하는 데 중요한 정보를 제 공한다."
+          },
+          {
+            id:"2-4-2-15",
+            pts:5,
+            en:"Item 15. Assesses Household Impact and Caregiver Capacity: Determines caregiver ability to provide frequent small-volume rehydration, recognize worsening dehydration, and access follow-up care. — 5 points",
+            ko:"항목 15. 가정 내 영향 및 보호자 관리 능력 평가: 보호자가 소량씩 자주 수분을 공급할 수 있는지, 탈수 악화를 인지할 수 있는지, 추적 진료에 접근할 수 있는지 여부를 확인한 다.",
+            xEn:"Safe outpatient management depends on reliable caregivers and follow-up.",
+            xKo:"안전한 외래 관리 여부는 신뢰할 수 있는 보호자와 적절한 추적 관찰 가능성에 크 게 의존한다."
+          },
+          {
+            id:"2-4-2-16",
+            pts:5,
+            en:"Item 16. Identifies Predisposing or High-Risk Conditions: Asks about immunocompromise, chronic GI disease, renal disease, or prior severe dehydration episodes. — 5 points",
+            ko:"항목 16. 소인 또는 고위험 상태 확인: 면역저하 상태, 만성 위장관 질환, 신장 질환, 이 전의 중증 탈수 병력 여부를 확인한다.",
+            xEn:"High-risk children may require lower threshold for labs, IV fluids, or admission.",
+            xKo:"고위험 아동의 경우 검사 시행, 정맥 수액 치료, 또는 입원 결정의 기준이 더 낮아 질 수 있다."
+          },
+        ]
+      },
+    ]
   },
   {
     id: 3,
@@ -742,8 +1301,8 @@ function ConsentScreen({ onAgree }) {
       h('p',{style:bp},"본 연구 참여로 인한 직접적인 개인적 이익은 없습니다. 그러나 연구 결과는 의료 교육에서 AI 기반 평가 프레임워크 개선 및 책임 있는 AI 활용에 기여할 수 있습니다."))
     },
     {n:"6", en:"Confidentiality", ko:"개인정보 보호", body: t(
-      h('p',{style:bp},"All data collected will be anonymized and stored securely. No personally identifiable information will be collected. Data will be used solely for the purposes of this research study and associated academic publications."),
-      h('p',{style:bp},"수집된 모든 데이터는 익명으로 처리되어 안전하게 저장됩니다. 개인 식별 정보는 수집되지 않습니다. 데이터는 본 연구 및 관련 학술 발표 목적으로만 사용됩니다."))
+      h('p',{style:bp},"No patient data will be collected. Your responses will be anonymized at the time of data collection. No identifying information will be included in the analysis or publications resulting from this study. All data will be stored securely and accessed only by the research team in accordance with institutional data protection policies."),
+      h('p',{style:bp},"본 연구에서는 환자 정보는 수집되지 않습니다. 응답 데이터는 수집 단계에서 익명화(anonymized) 되며, 연구 분석 및 논문 발표 시 개인을 식별할 수 있는 정보는 포함되지 않습니다. 모든 데이터는 기관의 데이터 보호 정책에 따라 안전하게 저장 및 관리되며 연구팀만 접근할 수 있습니다."))
     },
     {n:"7", en:"Questions", ko:"문의 사항", body: t(
       h('p',{style:bp},"If you have questions about this study, please contact the Principal Investigator: Meong Hi Son, MD, Department of Emergency Medicine, Samsung Medical Center, Seoul, Republic of Korea."),
@@ -1299,105 +1858,66 @@ function App() {
 
 var _pDispatch = null;
 window.pjump = function(step, ci, ri) {
-  ci = (ci === undefined) ? 0 : ci;
-  ri = (ri === undefined) ? 0 : ri;
-  if(_pDispatch) _pDispatch({step:step, ci:ci, ri:ri});
+  ci = (ci===undefined)?0:ci; ri = (ri===undefined)?0:ri;
+  if(_pDispatch) _pDispatch({step:step,ci:ci,ri:ri});
   document.querySelectorAll('#pb button').forEach(function(b){b.classList.remove('on');});
-  var ids = {consent:'b0',instr:'b1',done_pre:'b_dp',done_post:'b_ds'};
-  if(ids[step]) { var el=document.getElementById(ids[step]); if(el) el.classList.add('on'); }
+  var ids={consent:'b0',instr:'b1',done_pre:'b_dp',done_post:'b_ds'};
+  if(ids[step]){var el=document.getElementById(ids[step]);if(el)el.classList.add('on');}
 };
-
-function PreviewApp() {
-  var _s=useState('consent'); var step=_s[0],setStep=_s[1];
-  var _ci=useState(0);        var ci=_ci[0],setCi=_ci[1];
-  var _ri=useState(0);        var ri=_ri[0],setRi=_ri[1];
-  var _l=useState('en');      var lang=_l[0],setLang=_l[1];
-  var _pa=useState(null);     var partAData=_pa[0],setPartAData=_pa[1];
-  var _rsp=useState({});      var responses=_rsp[0],setResponses=_rsp[1];
-  var _ds=useState(false);    var forceSuccess=_ds[0],setForceSuccess=_ds[1];
-
+function PreviewApp(){
+  var _s=useState('consent');var step=_s[0],setStep=_s[1];
+  var _ci=useState(0);var ci=_ci[0],setCi=_ci[1];
+  var _ri=useState(0);var ri=_ri[0],setRi=_ri[1];
+  var _l=useState('en');var lang=_l[0],setLang=_l[1];
+  var _pa=useState(null);var partAData=_pa[0],setPartAData=_pa[1];
+  var _rsp=useState({});var responses=_rsp[0],setResponses=_rsp[1];
+  var _fs=useState(false);var forceSuccess=_fs[0],setForceSuccess=_fs[1];
   React.useEffect(function(){
-    _pDispatch = function(t){
+    _pDispatch=function(t){
       setForceSuccess(false);
-      if(t.step==='done_pre'){ setStep('done'); return; }
-      if(t.step==='done_post'){ setStep('done'); setForceSuccess(true); return; }
-      setStep(t.step); setCi(t.ci); setRi(t.ri);
-      window.scrollTo({top:0});
+      if(t.step==='done_pre'){setStep('done');return;}
+      if(t.step==='done_post'){setStep('done');setForceSuccess(true);return;}
+      setStep(t.step);setCi(t.ci);setRi(t.ri);window.scrollTo({top:0});
     };
   },[]);
-
-  var totalR = CASES.reduce(function(s,c){return s+c.rubrics.length;},0);
-  var doneR  = CASES.slice(0,ci).reduce(function(s,c){return s+c.rubrics.length;},0)+ri;
-  var curCase   = CASES[ci];
-  var curRubric = curCase ? curCase.rubrics[ri] : null;
-
-  var goPartB = function(aData){ setPartAData(aData); setStep('partB'); window.scrollTo({top:0}); };
-  var submitRubric = function(id,data){
-    setResponses(function(r){ var n=Object.assign({},r); n[id]=data; return n; });
+  var totalR=CASES.reduce(function(s,c){return s+c.rubrics.length;},0);
+  var doneR=CASES.slice(0,ci).reduce(function(s,c){return s+c.rubrics.length;},0)+ri;
+  var curCase=CASES[ci];var curRubric=curCase?curCase.rubrics[ri]:null;
+  var goPartB=function(aData){setPartAData(aData);setStep('partB');window.scrollTo({top:0});};
+  var submitRubric=function(id,data){
+    setResponses(function(r){var n=Object.assign({},r);n[id]=data;return n;});
     var nr=ri+1;
-    if(nr<curCase.rubrics.length){ setRi(nr); setStep('partA'); }
-    else { var nc=ci+1; if(nc<CASES.length){setCi(nc);setRi(0);setStep('partA');}else setStep('done'); }
+    if(nr<curCase.rubrics.length){setRi(nr);setStep('partA');}
+    else{var nc=ci+1;if(nc<CASES.length){setCi(nc);setRi(0);setStep('partA');}else setStep('done');}
     window.scrollTo({top:0});
   };
-
-  var breadcrumb = (step==='partA'||step==='partB') && curCase && curRubric
-    ? T('Case '+(ci+1)+' of '+CASES.length+' \u203a Rubric '+(ri+1)+' of '+curCase.rubrics.length,
-        '\uc0ac\ub840 '+(ci+1)+'/'+CASES.length+' \u203a \uae30\uc900\ud45c '+(ri+1)+'/'+curCase.rubrics.length, lang)
-    : null;
-
-  var SL = function(props){ return h('div',{style:{maxWidth:1140,margin:'0 auto',
-    padding:'28px 24px 80px',display:'flex',gap:24,alignItems:'flex-start'}},
-    h(VignetteSidebar,{caseData:curCase}), props.children); };
-
-  // For done_post preview: render DoneScreen but force success state
-  var doneEl = null;
+  var breadcrumb=(step==='partA'||step==='partB')&&curCase&&curRubric
+    ?T('Case '+(ci+1)+' of '+CASES.length+' › Rubric '+(ri+1)+' of '+curCase.rubrics.length,
+       '사례 '+(ci+1)+'/'+CASES.length+' › 기준표 '+(ri+1)+'/'+curCase.rubrics.length,lang)
+    :null;
+  var SL=function(props){return h('div',{style:{maxWidth:1140,margin:'0 auto',padding:'28px 24px 80px',display:'flex',gap:24,alignItems:'flex-start'}},h(VignetteSidebar,{caseData:curCase}),props.children);};
+  var doneEl=null;
   if(step==='done'){
     if(forceSuccess){
-      // Render the success state directly
-      var pid='P-PREVIEW';
-      var blob=new Blob([JSON.stringify(responses,null,2)],{type:'application/json'});
-      var url=URL.createObjectURL(blob);
-      doneEl = h(PageWrap,null,
-        h('div',{style:{textAlign:'center',padding:'64px 0 48px'}},
-          h('div',{style:{width:80,height:80,borderRadius:'50%',
-            background:'linear-gradient(135deg,'+green+',#059669)',
-            margin:'0 auto 28px',display:'flex',alignItems:'center',justifyContent:'center'}},
-            h('svg',{width:38,height:38,viewBox:'0 0 24 24',fill:'none',
-              stroke:white,strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'},
-              h('path',{d:'M20 6L9 17l-5-5'}))),
-          h('h1',{style:{fontSize:26,fontWeight:700,color:navy,margin:'0 0 14px',fontFamily:ffs}},
-            T('Responses submitted \u2014 thank you.','응답 제출 완료 \u2014 감사합니다.',lang)),
-          h('p',{style:{fontSize:15,color:muted,lineHeight:1.75,maxWidth:480,margin:'0 auto 32px'}},
-            T('Your contribution to this research is appreciated. You may now close this window.',
-              '연구에 기여해 주셔서 감사합니다. 이제 이 창을 닫으셔도 됩니다.',lang)),
-          h('p',{style:{fontSize:14,color:muted}},T('Participant ID: ','참여자 ID: ',lang)+
-            h('strong',{style:{color:navy}},pid)),
-          h('div',{style:{marginTop:24}},
-            h('a',{href:url,download:'rubric_responses_'+pid+'.json',
-              style:{color:navyMid,fontSize:14,fontWeight:600,textDecoration:'underline'}},
-              '\ud83d\udce5 '+T('Download backup copy','응답 백업 사본 다운로드',lang)))
-        )
-      );
-    } else {
-      doneEl = h(DoneScreen,{responses:responses});
-    }
+      var pid='P-PREVIEW';var blob=new Blob([JSON.stringify(responses,null,2)],{type:'application/json'});var url=URL.createObjectURL(blob);
+      doneEl=h(PageWrap,null,h('div',{style:{textAlign:'center',padding:'64px 0 48px'}},
+        h('div',{style:{width:80,height:80,borderRadius:'50%',background:'linear-gradient(135deg,'+green+',#059669)',margin:'0 auto 28px',display:'flex',alignItems:'center',justifyContent:'center'}},
+          h('svg',{width:38,height:38,viewBox:'0 0 24 24',fill:'none',stroke:white,strokeWidth:2.5,strokeLinecap:'round',strokeLinejoin:'round'},h('path',{d:'M20 6L9 17l-5-5'}))),
+        h('h1',{style:{fontSize:26,fontWeight:700,color:navy,margin:'0 0 14px',fontFamily:ffs}},T('Responses submitted — thank you.','응답 제출 완료 — 감사합니다.',lang)),
+        h('p',{style:{fontSize:15,color:muted,lineHeight:1.75,maxWidth:480,margin:'0 auto 32px'}},T('Your contribution to this research is appreciated. You may now close this window.','연구에 기여해 주셔서 감사합니다. 이제 이 창을 닫으셔도 됩니다.',lang)),
+        h('p',{style:{fontSize:14,color:muted}},T('Participant ID: ','참여자 ID: ',lang)+h('strong',{style:{color:navy}},pid)),
+        h('div',{style:{marginTop:24}},h('a',{href:url,download:'rubric_responses_'+pid+'.json',style:{color:navyMid,fontSize:14,fontWeight:600,textDecoration:'underline'}},'Download backup / 응답 백업 다운로드'))));
+    } else { doneEl=h(DoneScreen,{responses:responses}); }
   }
-
-  return h(LangCtx.Provider,{value:lang},
-    h('div',{style:{background:pageBg,minHeight:'100vh',fontFamily:ffs}},
-      h(StickyHeader,{lang:lang,setLang:setLang,doneR:doneR,totalR:totalR,breadcrumb:breadcrumb}),
-      step==='consent' && h(ConsentScreen,{onAgree:function(){setStep('instr');window.scrollTo({top:0});}}),
-      step==='instr'   && h(InstrScreen,{onStart:function(){setStep('partA');window.scrollTo({top:0});}}),
-      step==='partA' && curRubric && h(SL,null,h(PartAScreen,{key:'A-'+curRubric.id,
-        caseData:curCase,rubric:curRubric,ci:ci,ri:ri,onNext:goPartB})),
-      step==='partB' && curRubric && h(SL,null,h(PartBScreen,{key:'B-'+curRubric.id,
-        caseData:curCase,rubric:curRubric,ci:ci,ri:ri,
-        isLast:doneR+1>=totalR,onSubmit:submitRubric,partAData:partAData})),
-      step==='done' && doneEl
-    )
-  );
+  return h(LangCtx.Provider,{value:lang},h('div',{style:{background:pageBg,minHeight:'100vh',fontFamily:ffs}},
+    h(StickyHeader,{lang:lang,setLang:setLang,doneR:doneR,totalR:totalR,breadcrumb:breadcrumb}),
+    step==='consent'&&h(ConsentScreen,{onAgree:function(){setStep('instr');window.scrollTo({top:0});}}),
+    step==='instr'&&h(InstrScreen,{onStart:function(){setStep('partA');window.scrollTo({top:0});}}),
+    step==='partA'&&curRubric&&h(SL,null,h(PartAScreen,{key:'A-'+curRubric.id,caseData:curCase,rubric:curRubric,ci:ci,ri:ri,onNext:goPartB})),
+    step==='partB'&&curRubric&&h(SL,null,h(PartBScreen,{key:'B-'+curRubric.id,caseData:curCase,rubric:curRubric,ci:ci,ri:ri,isLast:doneR+1>=totalR,onSubmit:submitRubric,partAData:partAData})),
+    step==='done'&&doneEl
+  ));
 }
-
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(PreviewApp));
 document.getElementById('b0').classList.add('on');
 
