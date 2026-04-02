@@ -1653,11 +1653,22 @@ function PartAScreen({ caseData, rubric, onNext, onBack, draftAnswers, onDraftCh
 function PartBScreen({ caseData, rubric, ci, ri, isLast, onSubmit, partAData, onBack, bDraft, onBDraftChange }) {
   const lang = useLang();
   const t = (en,ko) => T(en,ko,lang);
-  const [d1Order, setD1Order] = useState(()=>bDraft?.d1Order||[...rubric.d1].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
-  const [d2Order, setD2Order] = useState(()=>bDraft?.d2Order||[...rubric.d2].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
-  const [finalCmt, setFinalCmt] = useState(bDraft?.finalCmt||"");
-  React.useEffect(()=>{ onBDraftChange(d1Order,d2Order,finalCmt); },[d1Order,d2Order,finalCmt]);
-
+  const [d1Order, setD1Order_] = useState(()=>bDraft?.d1Order||[...rubric.d1].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
+  const [d2Order, setD2Order_] = useState(()=>bDraft?.d2Order||[...rubric.d2].sort((a,b)=>b.pts-a.pts).map(i=>i.id));
+  const [finalCmt, setFinalCmt_] = useState(bDraft?.finalCmt||"");
+  // Wrapped setters that also persist draft immediately (no useEffect = no re-render cascade)
+  const d1OrderRef  = React.useRef(d1Order);
+  const d2OrderRef  = React.useRef(d2Order);
+  const finalCmtRef = React.useRef(finalCmt);
+  const setD1Order = React.useCallback((valOrFn)=>{
+    setD1Order_(prev=>{ const next=typeof valOrFn==='function'?valOrFn(prev):valOrFn; d1OrderRef.current=next; onBDraftChange(next,d2OrderRef.current,finalCmtRef.current); return next; });
+  },[onBDraftChange]);
+  const setD2Order = React.useCallback((valOrFn)=>{
+    setD2Order_(prev=>{ const next=typeof valOrFn==='function'?valOrFn(prev):valOrFn; d2OrderRef.current=next; onBDraftChange(d1OrderRef.current,next,finalCmtRef.current); return next; });
+  },[onBDraftChange]);
+  const setFinalCmt = React.useCallback((val)=>{
+    setFinalCmt_(val); finalCmtRef.current=val; onBDraftChange(d1OrderRef.current,d2OrderRef.current,val);
+  },[onBDraftChange]);
   const moveItem = (order, setOrder, idx, dir) => {
     const next=[...order]; const to=idx+dir;
     if(to<0||to>=next.length) return;
