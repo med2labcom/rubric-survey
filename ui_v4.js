@@ -27,8 +27,8 @@ const StickyHeader = ({ lang, setLang, doneR, totalR, breadcrumb }) => {
       h('span', {style:{color:white, fontSize:14, fontWeight:600,
         flex:1, marginRight:12, whiteSpace:"nowrap", overflow:"hidden",
         textOverflow:"ellipsis"}},
-        T("Evaluating AI-Generated Rubrics — Pediatric EM",
-          "소아 응급의학 AI 생성 루브릭 평가", lang)),
+        T("AI-Generated Rubric Frameworks — Clinical History-Taking Assessment",
+          "임상 병력 청취 평가 — AI 생성 루브릭 프레임워크", lang)),
       h('div', {style:{display:"flex", gap:4}},
         ["en","ko"].map(l =>
           h('button', {key:l, onClick:()=>setLang(l),
