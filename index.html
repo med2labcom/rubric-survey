@@ -8,12 +8,44 @@
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script>
 // rubrics_data.js
-// ─── SURVEY CONTENT ──────────────────────────────────────────────────────────
-// Edit this file to update cases, vignettes, rubrics, and items.
-// After editing, run: python3 build.py
-// This file is auto-embedded into index.html by the build script.
-// DO NOT edit index.html directly for content changes.
+// Edit cases/vignettes/rubrics/items here. Run: python3 build.py to rebuild.
 
+const h = React.createElement;
+const { useState, useCallback, createContext, useContext } = React;
+
+// ─── SUPABASE ────────────────────────────────────────────────────────────────
+const SUPABASE_URL = "https://qydinydhytepqptcvslb.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5ZGlueWRoeXRlcHFwdGN2c2xiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4Mjk0NTUsImV4cCI6MjA5MDQwNTQ1NX0.ZniqFMfctWHgbA4dJSlrvlFxWRcRfCrVuA9S3gjcA5o";
+
+// ─── LANGUAGE CONTEXT ────────────────────────────────────────────────────────
+const LangCtx = createContext("en");
+const useLang = () => useContext(LangCtx);
+const T = (en, ko, lang) => lang === "ko" ? ko : en;
+
+// ─── DESIGN TOKENS ───────────────────────────────────────────────────────────
+const navy    = "#1B2B5E";
+const navyMid = "#2D4A8A";
+const navyL   = "#EEF2F8";
+const navyBd  = "#C5D2E8";
+const white   = "#FFFFFF";
+const pageBg  = "#F0F3F8";
+const cardBd  = "#DDE4EF";
+const txt     = "#1A2340";
+const muted   = "#6B7A99";
+const green   = "#16A34A";
+const greenBg = "#F0FDF4";
+const greenBd = "#86EFAC";
+const red     = "#DC2626";
+const redBg   = "#FEF2F2";
+const redBd   = "#FECACA";
+const amber   = "#92400e";
+const amberBg = "#FFFBEB";
+const amberBd = "#FCD34D";
+const ff      = "'Segoe UI',system-ui,-apple-system,sans-serif";
+const ffs     = ff;
+
+
+// ─── SURVEY CONTENT ──────────────────────────────────────────────────────────
 const CASES = [
   {
     id: 1,
@@ -1149,6 +1181,7 @@ const CASES = [
   },
 ];
 
+// ─── SHARED COMPONENTS
 // ─── SHARED COMPONENTS ───────────────────────────────────────────────────────
 const Card = ({ children, style={} }) =>
   h('div', { style:{ background:white, border:"1px solid "+cardBd, borderRadius:12,
@@ -1966,6 +1999,5 @@ function App() {
     )
   );
 }
-
 ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
 </script></body></html>
